@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { createMemoryRouter, RouterProvider } from 'react-router'
 import { routes } from '@/router'
 
@@ -24,4 +24,36 @@ test('mostra il pannello dentro il layout admin', () => {
 
   expect(screen.getByRole('heading', { name: 'Pannello' })).toBeInTheDocument()
   expect(screen.getByText('Ferrary Admin')).toBeInTheDocument()
+})
+
+test('mostra il "non trovato" del sito con la navigazione pubblica', () => {
+  renderAt('/indirizzo-inventato')
+
+  expect(
+    screen.getByRole('heading', { name: 'Pagina non trovata' }),
+  ).toBeInTheDocument()
+  expect(screen.getByRole('link', { name: 'Archivio' })).toBeInTheDocument()
+  expect(
+    screen.getByRole('link', { name: "Torna all'inizio" }),
+  ).toHaveAttribute('href', '/')
+})
+
+test('mostra il "non trovato" del pannello con la sua barra laterale', () => {
+  renderAt('/admin/indirizzo-inventato')
+
+  expect(
+    screen.getByRole('heading', { name: 'Pagina non trovata' }),
+  ).toBeInTheDocument()
+  expect(screen.getByText('Ferrary Admin')).toBeInTheDocument()
+  expect(
+    screen.getByRole('link', { name: "Torna all'inizio" }),
+  ).toHaveAttribute('href', '/admin')
+})
+
+test('naviga tra le pagine con i link', () => {
+  renderAt('/')
+
+  fireEvent.click(screen.getByRole('link', { name: 'Archivio' }))
+
+  expect(screen.getByRole('heading', { name: 'Archivio' })).toBeInTheDocument()
 })
