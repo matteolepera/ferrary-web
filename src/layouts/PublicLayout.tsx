@@ -1,9 +1,13 @@
 import { Link, NavLink, Outlet } from 'react-router'
+import { useTranslation } from 'react-i18next'
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 
 /**
  * Cornice del sito pubblico: intestazione, contenuto e piè di pagina.
  */
 export function PublicLayout() {
+  const { t } = useTranslation()
+
   return (
     <div className="flex min-h-screen flex-col bg-white text-neutral-900">
       <header className="border-b border-neutral-200">
@@ -11,14 +15,17 @@ export function PublicLayout() {
           <Link to="/" className="text-xl font-bold">
             Ferrary
           </Link>
-          <NavLink
-            to="/modelli"
-            className={({ isActive }) =>
-              isActive ? 'font-semibold' : 'text-neutral-600'
-            }
-          >
-            Archivio
-          </NavLink>
+          <div className="flex items-center gap-6">
+            <NavLink
+              to="/modelli"
+              className={({ isActive }) =>
+                isActive ? 'font-semibold' : 'text-neutral-600'
+              }
+            >
+              {t('nav.archive')}
+            </NavLink>
+            <LanguageSwitcher />
+          </div>
         </nav>
       </header>
 
@@ -28,7 +35,7 @@ export function PublicLayout() {
       </main>
 
       <footer className="border-t border-neutral-200 py-6 text-center text-sm text-neutral-500">
-        Ferrary · Archivio delle Ferrari
+        Ferrary · {t('footer.tagline')}
       </footer>
     </div>
   )

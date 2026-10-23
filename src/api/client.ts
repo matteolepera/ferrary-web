@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { i18n } from '@/i18n'
 
 /**
  * Client HTTP per l'API di Ferrary.
@@ -23,3 +24,10 @@ export function initCsrf() {
     baseURL: import.meta.env.VITE_API_URL,
   })
 }
+
+// Ogni richiesta chiede i contenuti nella lingua scelta dal visitatore
+api.interceptors.request.use((config) => {
+  config.headers['Accept-Language'] = i18n.language
+
+  return config
+})

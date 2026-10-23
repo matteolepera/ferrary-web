@@ -1,0 +1,25 @@
+{
+  "nav": {
+    "archive": "Archivio"
+  },
+  "footer": {
+    "tagline": "Archivio delle Ferrari"
+  },
+  "home": {
+    "title": "L'archivio di tutte le Ferrari"
+  },
+  "archive": {
+    "title": "Archivio",
+    "loading": "Caricamento…",
+    "error": "Impossibile caricare l'archivio. Riprova tra qualche istante."
+  },
+  "notFound": {
+    "code": "Errore 404",
+    "title": "Pagina non trovata",
+    "description": "L'indirizzo che hai aperto non esiste, oppure è stato spostato.",
+    "back": "Torna all'inizio"
+  },
+  "language": {
+    "label": "Lingua"
+  }
+}
