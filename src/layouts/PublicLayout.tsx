@@ -1,9 +1,12 @@
 import { Link, NavLink, Outlet } from 'react-router'
+import { useTranslation } from 'react-i18next'
 
 /**
  * Cornice del sito pubblico: intestazione, contenuto e piè di pagina.
  */
 export function PublicLayout() {
+  const { t } = useTranslation()
+
   return (
     <div className="flex min-h-screen flex-col bg-white text-neutral-900">
       <header className="border-b border-neutral-200">
@@ -17,7 +20,7 @@ export function PublicLayout() {
               isActive ? 'font-semibold' : 'text-neutral-600'
             }
           >
-            Archivio
+            {t('nav.archive')}
           </NavLink>
         </nav>
       </header>
@@ -28,7 +31,7 @@ export function PublicLayout() {
       </main>
 
       <footer className="border-t border-neutral-200 py-6 text-center text-sm text-neutral-500">
-        Ferrary · Archivio delle Ferrari
+        Ferrary · {t('footer.tagline')}
       </footer>
     </div>
   )

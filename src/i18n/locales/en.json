@@ -1,0 +1,22 @@
+{
+  "nav": {
+    "archive": "Archive"
+  },
+  "footer": {
+    "tagline": "The Ferrari archive"
+  },
+  "home": {
+    "title": "The archive of every Ferrari"
+  },
+  "archive": {
+    "title": "Archive",
+    "loading": "Loading…",
+    "error": "Unable to load the archive. Please try again in a moment."
+  },
+  "notFound": {
+    "code": "Error 404",
+    "title": "Page not found",
+    "description": "The address you opened does not exist, or it has been moved.",
+    "back": "Back to the start"
+  }
+}
