@@ -18,5 +18,8 @@
     "title": "Page not found",
     "description": "The address you opened does not exist, or it has been moved.",
     "back": "Back to the start"
+  },
+  "language": {
+    "label": "Language"
   }
 }

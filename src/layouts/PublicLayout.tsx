@@ -1,5 +1,6 @@
 import { Link, NavLink, Outlet } from 'react-router'
 import { useTranslation } from 'react-i18next'
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 
 /**
  * Cornice del sito pubblico: intestazione, contenuto e piè di pagina.
@@ -14,14 +15,17 @@ export function PublicLayout() {
           <Link to="/" className="text-xl font-bold">
             Ferrary
           </Link>
-          <NavLink
-            to="/modelli"
-            className={({ isActive }) =>
-              isActive ? 'font-semibold' : 'text-neutral-600'
-            }
-          >
-            {t('nav.archive')}
-          </NavLink>
+          <div className="flex items-center gap-6">
+            <NavLink
+              to="/modelli"
+              className={({ isActive }) =>
+                isActive ? 'font-semibold' : 'text-neutral-600'
+              }
+            >
+              {t('nav.archive')}
+            </NavLink>
+            <LanguageSwitcher />
+          </div>
         </nav>
       </header>
 
