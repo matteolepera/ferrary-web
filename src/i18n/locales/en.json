@@ -11,7 +11,15 @@
     "quick": "Quick navigation"
   },
   "footer": {
-    "tagline": "The Ferrari archive"
+    "tagline": "The digital museum of Ferrari: the story of the Prancing Horse, model by model.",
+    "explore": "Explore",
+    "families": "Families",
+    "project": "The project",
+    "webCode": "Website code",
+    "apiCode": "API code",
+    "apiDocs": "API documentation",
+    "newTab": "(opens in a new tab)",
+    "rights": "© {{year}} Ferrary. Independent archive, not affiliated with Ferrari S.p.A."
   },
   "home": {
     "hero": {
@@ -51,6 +59,11 @@
       "models_one": "{{count}} model",
       "models_other": "{{count}} models",
       "error": "Unable to load the families."
+    },
+    "invite": {
+      "titleStart": "The whole archive,",
+      "titleEnd": "in one place.",
+      "cta": "Open the archive"
     }
   },
   "archive": {

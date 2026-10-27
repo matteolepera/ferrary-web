@@ -11,7 +11,15 @@
     "quick": "Navigazione rapida"
   },
   "footer": {
-    "tagline": "Archivio delle Ferrari"
+    "tagline": "Il museo digitale delle Ferrari: la storia del Cavallino, modello dopo modello.",
+    "explore": "Esplora",
+    "families": "Famiglie",
+    "project": "Il progetto",
+    "webCode": "Codice del sito",
+    "apiCode": "Codice dell'API",
+    "apiDocs": "Documentazione API",
+    "newTab": "(si apre in una nuova scheda)",
+    "rights": "© {{year}} Ferrary. Archivio indipendente, non affiliato a Ferrari S.p.A."
   },
   "home": {
     "hero": {
@@ -51,6 +59,11 @@
       "models_one": "{{count}} modello",
       "models_other": "{{count}} modelli",
       "error": "Impossibile caricare le famiglie."
+    },
+    "invite": {
+      "titleStart": "Tutto l'archivio,",
+      "titleEnd": "in un solo posto.",
+      "cta": "Apri l'archivio"
     }
   },
   "archive": {

@@ -17,12 +17,16 @@ export function HomeFamilies() {
   return (
     <section
       id="famiglie"
+      aria-labelledby="famiglie-titolo"
       className="mx-auto max-w-[1360px] px-5 pb-18 md:px-10 md:pb-24 lg:pb-36"
     >
       <p className="text-rosso-acceso text-[0.6875rem] font-semibold tracking-[0.22em] uppercase md:text-xs">
         {t('home.families.eyebrow')}
       </p>
-      <h2 className="font-display mt-2.5 text-[2.125rem] leading-[1.05] font-extrabold tracking-[-0.035em] md:mt-3 md:text-5xl lg:text-[clamp(2.25rem,4.4vw,4rem)]">
+      <h2
+        id="famiglie-titolo"
+        className="font-display mt-2.5 text-[2.125rem] leading-[1.05] font-extrabold tracking-[-0.035em] md:mt-3 md:text-5xl lg:text-[clamp(2.25rem,4.4vw,4rem)]"
+      >
         {t('home.families.title')}
       </h2>
       <p className="mt-4 text-[0.9375rem] leading-relaxed text-neutral-300 md:max-w-[52ch] md:text-[1.0625rem]">

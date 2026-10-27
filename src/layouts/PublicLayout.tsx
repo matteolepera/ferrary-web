@@ -3,6 +3,7 @@ import { Link, NavLink, Outlet, ScrollRestoration } from 'react-router'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { Logo } from '@/components/Logo'
 import { Dock } from '@/components/layout/Dock'
+import { SiteFooter } from '@/components/layout/SiteFooter'
 
 /**
  * Cornice del sito pubblico. L'intestazione è trasparente e sta sopra l'apertura di ogni pagina.
@@ -41,13 +42,12 @@ export function PublicLayout() {
         </div>
       </header>
 
-      {/* Spazio in fondo su mobile e tablet, così il dock non copre il contenuto */}
-      <main className="flex-1 pb-28 lg:pb-0">
+      <main className="flex-1">
         <Outlet />
       </main>
 
+      <SiteFooter />
       <Dock />
-
       {/* Scorre fino alle ancore e ricorda la posizione tornando indietro */}
       <ScrollRestoration />
     </div>
