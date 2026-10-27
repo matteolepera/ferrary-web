@@ -4,7 +4,11 @@
     "eras": "Eras",
     "story": "History",
     "main": "Main",
-    "home": "Ferrary, back to home"
+    "home": "Ferrary, back to home",
+    "search": "Search",
+    "menu": "Menu",
+    "close": "Close",
+    "quick": "Quick navigation"
   },
   "footer": {
     "tagline": "The Ferrari archive"

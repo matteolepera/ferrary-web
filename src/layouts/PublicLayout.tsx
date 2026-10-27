@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, NavLink, Outlet } from 'react-router'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { Logo } from '@/components/Logo'
+import { Dock } from '@/components/layout/Dock'
 
 /**
  * Cornice del sito pubblico. L'intestazione è trasparente e sta sopra l'apertura di ogni pagina.
@@ -40,9 +41,12 @@ export function PublicLayout() {
         </div>
       </header>
 
-      <main className="flex-1">
+      {/* Spazio in fondo su mobile e tablet, così il dock non copre il contenuto */}
+      <main className="flex-1 pb-28 lg:pb-0">
         <Outlet />
       </main>
+
+      <Dock />
     </div>
   )
 }
