@@ -69,12 +69,15 @@ export function Dock() {
             >
               {t('nav.archive')}
             </Link>
-            <Link to="/#ere" onClick={close} className={menuLinkClass}>
-              {t('nav.eras')}
-            </Link>
-            <Link to="/storia" onClick={close} className={menuLinkClass}>
+            <NavLink
+              to="/storia"
+              className={({ isActive }) =>
+                `${itemClass} ${isActive ? 'text-white' : idle}`
+              }
+            >
+              <History aria-hidden="true" className="size-5 md:size-4" />
               {t('nav.story')}
-            </Link>
+            </NavLink>
           </nav>
           <div className="mt-auto">
             <LanguageSwitcher />
@@ -101,9 +104,8 @@ export function Dock() {
           {t('nav.archive')}
         </NavLink>
 
-        <Link to="/#ere" className={`${itemClass} ${idle}`}>
-          <History aria-hidden="true" className="size-5 md:size-4" />
-          {t('nav.eras')}
+        <Link to="/#famiglie" onClick={close} className={menuLinkClass}>
+          {t('nav.families')}
         </Link>
 
         {/* Il monogramma: sollevato sopra la barra, riporta alla home */}

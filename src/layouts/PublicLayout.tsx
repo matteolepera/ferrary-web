@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Link, NavLink, Outlet } from 'react-router'
+import { Link, NavLink, Outlet, ScrollRestoration } from 'react-router'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { Logo } from '@/components/Logo'
 import { Dock } from '@/components/layout/Dock'
@@ -29,8 +29,8 @@ export function PublicLayout() {
             <NavLink to="/modelli" className={linkClass}>
               {t('nav.archive')}
             </NavLink>
-            <Link to="/#ere" className={linkClass({ isActive: false })}>
-              {t('nav.eras')}
+            <Link to="/#famiglie" className={linkClass({ isActive: false })}>
+              {t('nav.families')}
             </Link>
             <NavLink to="/storia" className={linkClass}>
               {t('nav.story')}
@@ -47,6 +47,9 @@ export function PublicLayout() {
       </main>
 
       <Dock />
+
+      {/* Scorre fino alle ancore e ricorda la posizione tornando indietro */}
+      <ScrollRestoration />
     </div>
   )
 }

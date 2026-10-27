@@ -1,7 +1,7 @@
 {
   "nav": {
     "archive": "Archivio",
-    "eras": "Le ere",
+    "families": "Le famiglie",
     "story": "La storia",
     "main": "Principale",
     "home": "Ferrary, torna alla home",
@@ -20,8 +20,7 @@
       "titleEnd": "dalla prima all'ultima.",
       "text": "Stradali, auto da corsa, Formula 1 e concept: un archivio che racconta la storia del Cavallino, modello dopo modello.",
       "cta": "Esplora l'archivio",
-      "eras": "Le ere",
-      "caption": "In copertina: SF90 Stradale, 2019",
+      "families": "Le famiglie",
       "imageAlt": "Ferrari SF90 Stradale rossa"
     },
     "manifesto": {
@@ -44,6 +43,14 @@
       "notAvailable": "n.d.",
       "noPhoto": "Foto in arrivo",
       "error": "Impossibile caricare i modelli in evidenza."
+    },
+    "families": {
+      "eyebrow": "Le famiglie",
+      "title": "Da dove vuoi partire?",
+      "text": "Ogni Ferrari appartiene a una famiglia: sceglila, e l'archivio ti mostrerà solo quelle.",
+      "models_one": "{{count}} modello",
+      "models_other": "{{count}} modelli",
+      "error": "Impossibile caricare le famiglie."
     }
   },
   "archive": {

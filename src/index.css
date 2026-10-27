@@ -53,6 +53,13 @@
       transition-duration: 0.01ms !important;
     }
   }
+
+  /* Scorrimento morbido verso le ancore, solo per chi non ha ridotto le animazioni */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
 }
 
 /* La scena dell'apertura: un riflettore dall'alto e l'ombra dell'auto sul pavimento */

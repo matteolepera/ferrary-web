@@ -1,7 +1,7 @@
 {
   "nav": {
     "archive": "Archive",
-    "eras": "Eras",
+    "families": "Families",
     "story": "History",
     "main": "Main",
     "home": "Ferrary, back to home",
@@ -20,8 +20,7 @@
       "titleEnd": "from the first to the latest.",
       "text": "Road cars, racing cars, Formula 1 and concepts: an archive that tells the story of the Prancing Horse, model by model.",
       "cta": "Explore the archive",
-      "eras": "The eras",
-      "caption": "On the cover: SF90 Stradale, 2019",
+      "families": "Families",
       "imageAlt": "Red Ferrari SF90 Stradale"
     },
     "manifesto": {
@@ -44,6 +43,14 @@
       "notAvailable": "n/a",
       "noPhoto": "Photo coming soon",
       "error": "Unable to load the featured models."
+    },
+    "families": {
+      "eyebrow": "Families",
+      "title": "Where do you want to start?",
+      "text": "Every Ferrari belongs to a family: pick one, and the archive will show you only those.",
+      "models_one": "{{count}} model",
+      "models_other": "{{count}} models",
+      "error": "Unable to load the families."
     }
   },
   "archive": {

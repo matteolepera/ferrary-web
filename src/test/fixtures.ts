@@ -1,5 +1,10 @@
 import type { Paginated } from '@/types/api'
-import type { CarModel, Version } from '@/types/catalog'
+import type { CarModel, Version, Category } from '@/types/catalog'
+
+export const families: Category[] = [
+  { id: 2, name: 'Stradali', slug: 'stradali', models_count: 12 },
+  { id: 1, name: 'Hypercar', slug: 'hypercar', models_count: 1 },
+]
 
 /**
  * Dati di esempio con la forma delle risposte dell'API, per i test.

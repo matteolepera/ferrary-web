@@ -20,6 +20,8 @@ export type Category = {
   id: number
   name: string
   slug: string
+  /** Numero di modelli visibili, solo nell'elenco delle famiglie */
+  models_count?: number
 }
 
 export type Image = {
