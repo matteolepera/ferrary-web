@@ -1,6 +1,10 @@
 {
   "nav": {
-    "archive": "Archive"
+    "archive": "Archive",
+    "eras": "Eras",
+    "story": "History",
+    "main": "Main",
+    "home": "Ferrary, back to home"
   },
   "footer": {
     "tagline": "The Ferrari archive"

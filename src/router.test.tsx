@@ -48,3 +48,11 @@ test('naviga tra le pagine con i link', () => {
 
   expect(screen.getByRole('heading', { name: 'Archivio' })).toBeInTheDocument()
 })
+
+test('il logo riporta alla home', () => {
+  renderRoute('/modelli')
+
+  expect(
+    screen.getByRole('link', { name: 'Ferrary, torna alla home' }),
+  ).toHaveAttribute('href', '/')
+})

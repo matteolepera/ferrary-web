@@ -14,11 +14,7 @@ export function LanguageSwitcher() {
   const { t, i18n } = useTranslation()
 
   return (
-    <div
-      role="group"
-      aria-label={t('language.label')}
-      className="flex gap-1 text-sm"
-    >
+    <div role="group" aria-label={t('language.label')} className="flex gap-4">
       {languages.map((language) => (
         <button
           key={language}
@@ -27,11 +23,13 @@ export function LanguageSwitcher() {
           aria-label={labels[language]}
           aria-pressed={i18n.language === language}
           onClick={() => i18n.changeLanguage(language)}
-          className={`rounded px-2 py-1 font-medium ${
+          className={[
+            'border-b py-1 text-xs font-semibold tracking-[0.18em] transition-colors',
+            'focus-visible:outline-rosso-acceso focus-visible:outline-2 focus-visible:outline-offset-4',
             i18n.language === language
-              ? 'bg-neutral-900 text-white'
-              : 'text-neutral-600 hover:bg-neutral-100'
-          }`}
+              ? 'border-white text-white'
+              : 'border-transparent text-neutral-400 hover:text-white',
+          ].join(' ')}
         >
           {language.toUpperCase()}
         </button>

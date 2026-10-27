@@ -1,6 +1,10 @@
 {
   "nav": {
-    "archive": "Archivio"
+    "archive": "Archivio",
+    "eras": "Le ere",
+    "story": "La storia",
+    "main": "Principale",
+    "home": "Ferrary, torna alla home"
   },
   "footer": {
     "tagline": "Archivio delle Ferrari"
