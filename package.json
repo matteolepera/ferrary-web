@@ -16,7 +16,8 @@
     "check": "npm run format:check && npm run lint && npm run typecheck && npm test"
   },
   "dependencies": {
-    "@fontsource-variable/saira": "^5.3.0",
+    "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource-variable/sora": "^5.3.0",
     "@tailwindcss/vite": "^4.3.3",
     "@tanstack/react-query": "^5.104.5",
     "axios": "^1.20.0",
