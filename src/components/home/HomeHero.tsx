@@ -23,7 +23,7 @@ export function HomeHero() {
         />
       </div>
 
-      <div className="relative mx-auto mt-10 w-full max-w-[1360px] px-5 pb-8 md:mt-14 md:px-10 md:pb-14 lg:mt-auto lg:flex lg:items-end lg:justify-between lg:gap-8 lg:pb-20">
+      <div className="relative mx-auto mt-10 w-full max-w-[1360px] px-5 pb-8 md:mt-14 md:px-10 md:pb-14 lg:mt-auto lg:pb-20">
         <div className="lg:max-w-[36rem]">
           <p className="text-rosso-acceso text-[0.6875rem] font-semibold tracking-[0.22em] uppercase md:text-xs">
             {t('home.hero.eyebrow')}
@@ -54,10 +54,6 @@ export function HomeHero() {
             </Link>
           </div>
         </div>
-
-        <p className="mt-3.5 text-center text-xs text-neutral-400 md:text-left lg:mt-0 lg:text-sm">
-          {t('home.hero.caption')}
-        </p>
       </div>
     </section>
   )
