@@ -14,7 +14,16 @@
     "tagline": "Archivio delle Ferrari"
   },
   "home": {
-    "title": "L'archivio di tutte le Ferrari"
+    "hero": {
+      "eyebrow": "Il museo digitale",
+      "titleStart": "Ogni Ferrari,",
+      "titleEnd": "dalla prima all'ultima.",
+      "text": "Stradali, auto da corsa, Formula 1 e concept: un archivio che racconta la storia del Cavallino, modello dopo modello.",
+      "cta": "Esplora l'archivio",
+      "eras": "Le ere",
+      "caption": "In copertina: SF90 Stradale, 2019",
+      "imageAlt": "Ferrari SF90 Stradale rossa"
+    }
   },
   "archive": {
     "title": "Archivio",

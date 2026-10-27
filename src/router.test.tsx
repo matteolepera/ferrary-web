@@ -9,7 +9,9 @@ test('mostra la home dentro il layout pubblico', () => {
   renderRoute('/')
 
   expect(
-    screen.getByRole('heading', { name: "L'archivio di tutte le Ferrari" }),
+    screen.getByRole('heading', {
+      name: "Ogni Ferrari, dalla prima all'ultima.",
+    }),
   ).toBeInTheDocument()
   expect(dock().getByRole('link', { name: 'Archivio' })).toBeInTheDocument()
 })

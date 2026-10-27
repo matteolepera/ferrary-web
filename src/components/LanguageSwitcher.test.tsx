@@ -8,7 +8,7 @@ test('cambia la lingua del sito', async () => {
 
   expect(
     await screen.findByRole('heading', {
-      name: 'The archive of every Ferrari',
+      name: 'Every Ferrari, from the first to the latest.',
     }),
   ).toBeInTheDocument()
   expect(screen.getByRole('button', { name: 'English' })).toHaveAttribute(
@@ -25,7 +25,9 @@ test('ricorda la scelta e aggiorna la lingua della pagina', async () => {
   renderRoute('/')
 
   fireEvent.click(screen.getByRole('button', { name: 'English' }))
-  await screen.findByRole('heading', { name: 'The archive of every Ferrari' })
+  await screen.findByRole('heading', {
+    name: 'Every Ferrari, from the first to the latest.',
+  })
 
   expect(localStorage.getItem('ferrary-language')).toBe('en')
   expect(document.documentElement.lang).toBe('en')

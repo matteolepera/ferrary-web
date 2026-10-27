@@ -14,7 +14,16 @@
     "tagline": "The Ferrari archive"
   },
   "home": {
-    "title": "The archive of every Ferrari"
+    "hero": {
+      "eyebrow": "The digital museum",
+      "titleStart": "Every Ferrari,",
+      "titleEnd": "from the first to the latest.",
+      "text": "Road cars, racing cars, Formula 1 and concepts: an archive that tells the story of the Prancing Horse, model by model.",
+      "cta": "Explore the archive",
+      "eras": "The eras",
+      "caption": "On the cover: SF90 Stradale, 2019",
+      "imageAlt": "Red Ferrari SF90 Stradale"
+    }
   },
   "archive": {
     "title": "Archive",

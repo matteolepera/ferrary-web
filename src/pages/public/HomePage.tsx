@@ -1,7 +1,5 @@
-import { useTranslation } from 'react-i18next'
+import { HomeHero } from '@/components/home/HomeHero'
 
 export function HomePage() {
-  const { t } = useTranslation()
-
-  return <h1 className="text-3xl font-bold">{t('home.title')}</h1>
+  return <HomeHero />
 }
