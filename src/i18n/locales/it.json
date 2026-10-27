@@ -23,6 +23,27 @@
       "eras": "Le ere",
       "caption": "In copertina: SF90 Stradale, 2019",
       "imageAlt": "Ferrari SF90 Stradale rossa"
+    },
+    "manifesto": {
+      "eyebrow": "Il progetto",
+      "titleStart": "Non un catalogo.",
+      "titleEnd": "Un museo, acceso nel buio.",
+      "text": "Dalle granturismo per la strada ai prototipi da corsa, fino ai concept che immaginano il futuro. Ogni scheda è una vetrina: luce, ombra, dati tecnici e racconto."
+    },
+    "featured": {
+      "label": "Modelli in evidenza",
+      "eyebrow": "In evidenza",
+      "title": "Modelli",
+      "all": "Archivio completo",
+      "discover": "Scopri il modello",
+      "previous": "Modello precedente",
+      "next": "Modello successivo",
+      "power": "Potenza",
+      "acceleration": "0–100 km/h",
+      "topSpeed": "Velocità max",
+      "notAvailable": "n.d.",
+      "noPhoto": "Foto in arrivo",
+      "error": "Impossibile caricare i modelli in evidenza."
     }
   },
   "archive": {

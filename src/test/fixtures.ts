@@ -13,6 +13,19 @@ export const f40: CarModel = {
   cover: null,
   versions_count: 1,
   first_year: 1987,
+  highlights: { power_cv: 478, zero_to_100_sec: 4.1, top_speed_kmh: 324 },
+}
+
+export const sf90: CarModel = {
+  id: 2,
+  name: 'SF90 Stradale',
+  slug: 'sf90-stradale',
+  description: 'La prima Ferrari ibrida plug-in di serie.',
+  category: { id: 2, name: 'Stradali', slug: 'stradali' },
+  cover: null,
+  highlights: { power_cv: 1000, zero_to_100_sec: 2.5, top_speed_kmh: 340 },
+  versions_count: 3,
+  first_year: 2019,
 }
 
 export const sf90Stradale: Version = {
@@ -29,14 +42,14 @@ export const sf90Stradale: Version = {
 }
 
 export const modelsPage: Paginated<CarModel> = {
-  data: [f40],
+  data: [f40, sf90],
   links: { first: null, last: null, prev: null, next: null },
   meta: {
     current_page: 1,
     last_page: 1,
     per_page: 24,
-    total: 1,
+    total: 2,
     from: 1,
-    to: 1,
+    to: 2,
   },
 }

@@ -23,6 +23,27 @@
       "eras": "The eras",
       "caption": "On the cover: SF90 Stradale, 2019",
       "imageAlt": "Red Ferrari SF90 Stradale"
+    },
+    "manifesto": {
+      "eyebrow": "The project",
+      "titleStart": "Not a catalogue.",
+      "titleEnd": "A museum, lit in the dark.",
+      "text": "From grand tourers built for the road to racing prototypes and the concepts that imagine the future. Every page is a showcase: light, shadow, technical data and story."
+    },
+    "featured": {
+      "label": "Featured models",
+      "eyebrow": "Featured",
+      "title": "Models",
+      "all": "Full archive",
+      "discover": "Discover the model",
+      "previous": "Previous model",
+      "next": "Next model",
+      "power": "Power",
+      "acceleration": "0–100 km/h",
+      "topSpeed": "Top speed",
+      "notAvailable": "n/a",
+      "noPhoto": "Photo coming soon",
+      "error": "Unable to load the featured models."
     }
   },
   "archive": {
