@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
-import heroImage from '@/assets/images/sf90-stradale.webp'
+import heroLarge from '@/assets/images/sf90-stradale-2400.webp'
+import heroSmall from '@/assets/images/sf90-stradale-1200.webp'
 import { buttonClass } from '@/components/ui/buttonClass'
 
 /**
@@ -13,13 +14,17 @@ export function HomeHero() {
     <section className="relative flex flex-col items-center overflow-hidden lg:min-h-[54rem] lg:items-stretch">
       <div aria-hidden="true" className="riflettore absolute inset-0" />
 
-      {/* L'auto: più larga dello schermo su mobile, grande e a destra dal desktop */}
-      <div className="relative mt-24 w-[112%] md:mt-28 md:w-[96%] lg:absolute lg:top-1/2 lg:right-[-4%] lg:mt-0 lg:w-[64%] lg:-translate-y-[42%]">
+      {/* L'auto: a tutta larghezza su mobile e tablet, a destra dal desktop */}
+      <div className="relative mt-24 w-full px-2 md:mt-28 md:w-[92%] md:px-0 lg:absolute lg:top-1/2 lg:right-0 lg:mt-0 lg:w-[60%] lg:-translate-y-[42%]">
+        {/* L'ombra sul pavimento, sotto le ruote */}
+        <div aria-hidden="true" className="absolute inset-x-[6%] -bottom-[7%] h-[20%] ombra-pavimento" />
         <img
-          src={heroImage}
+          src={heroLarge}
+          srcSet={`${heroSmall} 1200w, ${heroLarge} 2400w`}
+          sizes="(min-width: 1024px) 60vw, 100vw"
           alt={t('home.hero.imageAlt')}
           fetchPriority="high"
-          className="w-full"
+          className="relative w-full"
         />
       </div>
 
