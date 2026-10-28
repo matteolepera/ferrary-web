@@ -17,7 +17,10 @@ export function HomeHero() {
       {/* L'auto: a tutta larghezza su mobile e tablet, a destra dal desktop */}
       <div className="relative mt-24 w-full px-2 md:mt-28 md:w-[92%] md:px-0 lg:absolute lg:top-1/2 lg:right-0 lg:mt-0 lg:w-[60%] lg:-translate-y-[42%]">
         {/* L'ombra sul pavimento, sotto le ruote */}
-        <div aria-hidden="true" className="absolute inset-x-[6%] -bottom-[7%] h-[20%] ombra-pavimento" />
+        <div
+          aria-hidden="true"
+          className="ombra-pavimento absolute inset-x-[6%] -bottom-[7%] h-[20%]"
+        />
         <img
           src={heroLarge}
           srcSet={`${heroSmall} 1200w, ${heroLarge} 2400w`}

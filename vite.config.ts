@@ -13,9 +13,20 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  server: {
+    // In sviluppo Vite inoltra al backend le chiamate all'API:
+    // il browser parla con un solo indirizzo, anche dal telefono
+    proxy: {
+      '/api': 'http://localhost:8000',
+      '/sanctum': 'http://localhost:8000',
+      '/docs': 'http://localhost:8000',
+    },
+  },
   test: {
     environment: 'jsdom',
     globals: true,
     setupFiles: './src/test/setup.ts',
+    // Nei test non c'è il proxy: l'API simulata da MSW risponde a questo indirizzo
+    env: { VITE_API_URL: 'http://localhost:8000' },
   },
 })

@@ -46,7 +46,6 @@
 
   /* Chi ha disattivato le animazioni nel sistema le vede spente anche qui */
   @media (prefers-reduced-motion: reduce) {
-
     *,
     ::before,
     ::after {
@@ -65,11 +64,17 @@
 
 /* La scena dell'apertura: un riflettore dall'alto e l'ombra dell'auto sul pavimento */
 @utility riflettore {
-  background: radial-gradient(ellipse 70% 50% at 50% 35%,
-      rgb(255 255 255 / 0.08) 0%,
-      rgb(255 255 255 / 0) 70%);
+  background: radial-gradient(
+    ellipse 70% 50% at 50% 35%,
+    rgb(255 255 255 / 0.08) 0%,
+    rgb(255 255 255 / 0) 70%
+  );
 }
 
 @utility ombra-pavimento {
-  background: radial-gradient(ellipse 50% 50% at 50% 50%, rgb(0 0 0 / 0.85) 0%, rgb(0 0 0 / 0) 70%);
+  background: radial-gradient(
+    ellipse 50% 50% at 50% 50%,
+    rgb(0 0 0 / 0.85) 0%,
+    rgb(0 0 0 / 0) 70%
+  );
 }
