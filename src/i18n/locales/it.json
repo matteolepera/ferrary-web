@@ -74,9 +74,20 @@
     "noPhoto": "Foto in arrivo"
   },
   "archive": {
-    "title": "Archivio",
-    "loading": "Caricamento…",
-    "error": "Impossibile caricare l'archivio. Riprova tra qualche istante."
+    "eyebrow": "Archivio",
+    "title": "Tutte le Ferrari",
+    "text": "Sfoglia l'intera collezione: cerca un modello per nome, scegli una famiglia o un periodo, e apri la sua scheda.",
+    "loading": "Caricamento dei modelli…",
+    "count_one": "{{count}} modello",
+    "count_other": "{{count}} modelli",
+    "error": "Impossibile caricare l'archivio.",
+    "retry": "Riprova",
+    "empty": "Nessuna Ferrari corrisponde a questi filtri.",
+    "clear": "Azzera i filtri",
+    "pagination": "Pagine dell'archivio",
+    "previous": "Precedente",
+    "next": "Successiva",
+    "page": "Pagina {{current}} di {{last}}"
   },
   "notFound": {
     "code": "Errore 404",

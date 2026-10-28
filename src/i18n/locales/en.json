@@ -74,9 +74,20 @@
     "noPhoto": "Photo coming soon"
   },
   "archive": {
-    "title": "Archive",
-    "loading": "Loading…",
-    "error": "Unable to load the archive. Please try again in a moment."
+    "eyebrow": "Archive",
+    "title": "Every Ferrari",
+    "text": "Browse the whole collection: search a model by name, pick a family or a period, and open its page.",
+    "loading": "Loading the models…",
+    "count_one": "{{count}} model",
+    "count_other": "{{count}} models",
+    "error": "Unable to load the archive.",
+    "retry": "Try again",
+    "empty": "No Ferrari matches these filters.",
+    "clear": "Clear filters",
+    "pagination": "Archive pages",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {{current}} of {{last}}"
   },
   "notFound": {
     "code": "Error 404",

@@ -27,10 +27,11 @@ function toInteger(value: string | null): number | undefined {
 
   return Number.isInteger(number) ? number : undefined
 }
-
 type SetOptions = {
   /** Sostituisce la voce della cronologia invece di aggiungerne una (es. mentre si digita) */
   replace?: boolean
+  /** Lascia la pagina dov'è; la paginazione la disattiva per tornare in cima */
+  preventScrollReset?: boolean
 }
 
 /**
@@ -54,7 +55,7 @@ export function useArchiveFilters() {
   // Dai filtri all'indirizzo: i valori vuoti spariscono dalla URL
   function setFilters(
     changes: Partial<ModelFilters>,
-    { replace = false }: SetOptions = {},
+    { replace = false, preventScrollReset = true }: SetOptions = {},
   ) {
     setParams(
       (current) => {
@@ -75,7 +76,7 @@ export function useArchiveFilters() {
 
         return next
       },
-      { replace },
+      { replace, preventScrollReset },
     )
   }
 
