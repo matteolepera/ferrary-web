@@ -91,7 +91,33 @@
     "searchLabel": "Search by name",
     "searchPlaceholder": "Search a Ferrari, e.g. F40",
     "family": "Family",
-    "allFamilies": "All"
+    "allFamilies": "All",
+    "filters": {
+      "open": "Filters",
+      "title": "Filters",
+      "close": "Close filters",
+      "show_one": "Show {{count}} result",
+      "show_other": "Show {{count}} results",
+      "powertrain": "Powertrain",
+      "any": "All",
+      "powertrains": {
+        "termico": "Combustion",
+        "ibrido": "Hybrid",
+        "elettrico": "Electric"
+      },
+      "period": "Period",
+      "from": "From",
+      "to": "To",
+      "anyYear": "Any",
+      "decade": "{{full}}s",
+      "sort": "Sort by",
+      "sorts": {
+        "nameAsc": "Name, A to Z",
+        "nameDesc": "Name, Z to A",
+        "newest": "Newest first",
+        "oldest": "Oldest first"
+      }
+    }
   },
   "notFound": {
     "code": "Error 404",

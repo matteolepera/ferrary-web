@@ -1,10 +1,13 @@
+import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ArchiveSearch } from '@/components/archive/ArchiveSearch'
+import { FamilyFilter } from '@/components/archive/FamilyFilter'
+import { FilterControls } from '@/components/archive/FilterControls'
+import { FiltersSheet } from '@/components/archive/FiltersSheet'
 import { ModelCard } from '@/components/catalog/ModelCard'
 import { Button } from '@/components/ui/Button'
 import { useArchiveFilters } from '@/hooks/useArchiveFilters'
 import { useModels } from '@/hooks/useModels'
-import { ArchiveSearch } from '@/components/archive/ArchiveSearch'
-import { FamilyFilter } from '@/components/archive/FamilyFilter'
 
 const gridClass = 'mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3'
 
@@ -20,6 +23,19 @@ export function ArchivePage() {
     ([key, value]) => key !== 'page' && value !== undefined,
   )
 
+  const [sheetOpen, setSheetOpen] = useState(false)
+  // Stabile tra un disegno e l'altro: il pannello non deve rifare il focus a ogni filtro scelto
+  const closeSheet = useCallback(() => setSheetOpen(false), [])
+
+  // I filtri del pannello attivi, per il numero sul pulsante "Filtri"
+  const panelFilters = [
+    filters.powertrain,
+    filters.year_from,
+    filters.year_to,
+    filters.sort,
+  ]
+  const activeCount = panelFilters.filter((value) => value !== undefined).length
+
   const goToPage = (page: number) =>
     setFilters({ page }, { preventScrollReset: false })
 
@@ -34,6 +50,7 @@ export function ArchivePage() {
       <p className="mt-4 text-[0.9375rem] leading-relaxed text-neutral-300 md:max-w-[52ch] md:text-[1.0625rem]">
         {t('archive.text')}
       </p>
+
       <div className="mt-8 flex flex-col gap-4 md:mt-10 lg:flex-row-reverse lg:items-center lg:justify-between">
         <ArchiveSearch
           value={filters.search ?? ''}
@@ -45,13 +62,45 @@ export function ArchivePage() {
           onChange={(category) => setFilters({ category })}
         />
       </div>
-      {/* Il conteggio viene annunciato ai lettori di schermo quando cambia */}
-      <p
-        aria-live="polite"
-        className="border-linea mt-10 border-b pb-4 text-sm text-neutral-400"
+
+      {/* Mobile e tablet: un pulsante apre il pannello */}
+      <Button
+        variant="secondary"
+        aria-expanded={sheetOpen}
+        onClick={() => setSheetOpen(true)}
+        className="mt-4 w-full md:w-auto lg:hidden"
       >
-        {meta ? t('archive.count', { count: meta.total }) : '\u00a0'}
-      </p>
+        {t('archive.filters.open')}
+        {activeCount > 0 && ` (${activeCount})`}
+      </Button>
+
+      {/* Desktop: gli stessi controlli, in linea */}
+      <div className="mt-8 hidden lg:block">
+        <FilterControls filters={filters} onChange={setFilters} />
+      </div>
+
+      {sheetOpen && (
+        <FiltersSheet count={meta?.total} onClose={closeSheet}>
+          <FilterControls filters={filters} onChange={setFilters} />
+        </FiltersSheet>
+      )}
+
+      <div className="border-linea mt-10 flex items-center justify-between gap-4 border-b pb-4">
+        {/* Il conteggio viene annunciato ai lettori di schermo quando cambia */}
+        <p aria-live="polite" className="text-sm text-neutral-400">
+          {meta ? t('archive.count', { count: meta.total }) : '\u00a0'}
+        </p>
+        {/* Senza risultati, "Azzera i filtri" resta solo nel messaggio al centro della pagina */}
+        {hasFilters && data && data.data.length > 0 && (
+          <button
+            type="button"
+            onClick={clearFilters}
+            className="text-[0.6875rem] font-semibold tracking-[0.16em] text-neutral-300 uppercase hover:text-white"
+          >
+            {t('archive.clear')}
+          </button>
+        )}
+      </div>
 
       {isError && (
         <div role="alert" className="py-16 text-center">
