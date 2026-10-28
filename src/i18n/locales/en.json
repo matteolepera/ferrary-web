@@ -66,6 +66,13 @@
       "cta": "Open the archive"
     }
   },
+  "model": {
+    "power": "Power",
+    "acceleration": "0–100 km/h",
+    "topSpeed": "Top speed",
+    "notAvailable": "n/a",
+    "noPhoto": "Photo coming soon"
+  },
   "archive": {
     "title": "Archive",
     "loading": "Loading…",

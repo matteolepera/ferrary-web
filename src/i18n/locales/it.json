@@ -66,6 +66,13 @@
       "cta": "Apri l'archivio"
     }
   },
+  "model": {
+    "power": "Potenza",
+    "acceleration": "0–100 km/h",
+    "topSpeed": "Velocità max",
+    "notAvailable": "n.d.",
+    "noPhoto": "Foto in arrivo"
+  },
   "archive": {
     "title": "Archivio",
     "loading": "Caricamento…",
