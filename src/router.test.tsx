@@ -13,9 +13,7 @@ test('mostra la home dentro il layout pubblico', () => {
       name: "Ogni Ferrari, dalla prima all'ultima.",
     }),
   ).toBeInTheDocument()
-  expect(
-    screen.getByRole('heading', { name: 'Tutte le Ferrari' }),
-  ).toBeInTheDocument()
+  expect(dock().getByRole('link', { name: 'Archivio' })).toBeInTheDocument()
 })
 
 test('mostra il pannello dentro il layout admin', () => {
@@ -31,9 +29,7 @@ test('mostra il "non trovato" del sito con la navigazione pubblica', () => {
   expect(
     screen.getByRole('heading', { name: 'Pagina non trovata' }),
   ).toBeInTheDocument()
-  expect(
-    screen.getByRole('heading', { name: 'Tutte le Ferrari' }),
-  ).toBeInTheDocument()
+  expect(dock().getByRole('link', { name: 'Archivio' })).toBeInTheDocument()
   expect(
     screen.getByRole('link', { name: "Torna all'inizio" }),
   ).toHaveAttribute('href', '/')
@@ -56,7 +52,9 @@ test('naviga tra le pagine con i link', () => {
 
   fireEvent.click(dock().getByRole('link', { name: 'Archivio' }))
 
-  expect(screen.getByRole('heading', { name: 'Archivio' })).toBeInTheDocument()
+  expect(
+    screen.getByRole('heading', { name: 'Tutte le Ferrari' }),
+  ).toBeInTheDocument()
 })
 
 test('il logo riporta alla home', () => {

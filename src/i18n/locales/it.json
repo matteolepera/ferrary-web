@@ -87,7 +87,11 @@
     "pagination": "Pagine dell'archivio",
     "previous": "Precedente",
     "next": "Successiva",
-    "page": "Pagina {{current}} di {{last}}"
+    "page": "Pagina {{current}} di {{last}}",
+    "searchLabel": "Cerca per nome",
+    "searchPlaceholder": "Cerca una Ferrari, ad esempio F40",
+    "family": "Famiglia",
+    "allFamilies": "Tutte"
   },
   "notFound": {
     "code": "Errore 404",

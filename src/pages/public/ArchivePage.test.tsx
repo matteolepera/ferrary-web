@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw'
 import { server } from '@/test/server'
 import { renderRoute } from '@/test/utils'
-import { screen, fireEvent, waitFor } from '@testing-library/react'
+import { screen, fireEvent, waitFor, within } from '@testing-library/react'
 import { i18n } from '@/i18n'
 import { modelsPage } from '@/test/fixtures'
 
@@ -138,5 +138,61 @@ test('senza risultati propone di azzerare i filtri', async () => {
     expect(
       screen.queryByRole('button', { name: 'Azzera i filtri' }),
     ).not.toBeInTheDocument(),
+  )
+})
+
+test('cerca per nome quando si smette di scrivere', async () => {
+  const received = { params: new URLSearchParams() }
+
+  server.use(
+    http.get('http://localhost:8000/api/models', ({ request }) => {
+      received.params = new URL(request.url).searchParams
+
+      return HttpResponse.json(modelsPage)
+    }),
+  )
+
+  renderRoute('/modelli')
+  await screen.findByRole('heading', { name: 'F40' })
+
+  fireEvent.change(screen.getByRole('searchbox', { name: 'Cerca per nome' }), {
+    target: { value: ' F40 ' },
+  })
+
+  // La ricerca parte dopo l'attesa, senza gli spazi
+  await waitFor(() => expect(received.params.get('search')).toBe('F40'))
+})
+
+test('filtra per famiglia con le pillole', async () => {
+  const received = { params: new URLSearchParams() }
+
+  server.use(
+    http.get('http://localhost:8000/api/models', ({ request }) => {
+      received.params = new URL(request.url).searchParams
+
+      return HttpResponse.json(modelsPage)
+    }),
+  )
+
+  renderRoute('/modelli')
+  const families = within(
+    await screen.findByRole('group', { name: 'Famiglia' }),
+  )
+
+  expect(families.getByRole('button', { name: 'Tutte' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  )
+
+  fireEvent.click(families.getByRole('button', { name: 'Hypercar' }))
+
+  await waitFor(() => expect(received.params.get('category')).toBe('hypercar'))
+  expect(families.getByRole('button', { name: 'Hypercar' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  )
+  expect(families.getByRole('button', { name: 'Tutte' })).toHaveAttribute(
+    'aria-pressed',
+    'false',
   )
 })

@@ -78,3 +78,12 @@
     rgb(0 0 0 / 0) 70%
   );
 }
+
+/* Scorre, ma senza mostrare la barra: per le file di pillole su mobile */
+@utility senza-barra {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

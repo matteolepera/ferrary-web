@@ -3,6 +3,8 @@ import { ModelCard } from '@/components/catalog/ModelCard'
 import { Button } from '@/components/ui/Button'
 import { useArchiveFilters } from '@/hooks/useArchiveFilters'
 import { useModels } from '@/hooks/useModels'
+import { ArchiveSearch } from '@/components/archive/ArchiveSearch'
+import { FamilyFilter } from '@/components/archive/FamilyFilter'
 
 const gridClass = 'mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3'
 
@@ -32,7 +34,17 @@ export function ArchivePage() {
       <p className="mt-4 text-[0.9375rem] leading-relaxed text-neutral-300 md:max-w-[52ch] md:text-[1.0625rem]">
         {t('archive.text')}
       </p>
-
+      <div className="mt-8 flex flex-col gap-4 md:mt-10 lg:flex-row-reverse lg:items-center lg:justify-between">
+        <ArchiveSearch
+          value={filters.search ?? ''}
+          // Mentre si digita, l'indirizzo viene sostituito: Indietro non cancella una lettera alla volta
+          onChange={(search) => setFilters({ search }, { replace: true })}
+        />
+        <FamilyFilter
+          value={filters.category}
+          onChange={(category) => setFilters({ category })}
+        />
+      </div>
       {/* Il conteggio viene annunciato ai lettori di schermo quando cambia */}
       <p
         aria-live="polite"
