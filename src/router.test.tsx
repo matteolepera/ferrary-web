@@ -52,7 +52,9 @@ test('naviga tra le pagine con i link', () => {
 
   fireEvent.click(dock().getByRole('link', { name: 'Archivio' }))
 
-  expect(screen.getByRole('heading', { name: 'Archivio' })).toBeInTheDocument()
+  expect(
+    screen.getByRole('heading', { name: 'Tutte le Ferrari' }),
+  ).toBeInTheDocument()
 })
 
 test('il logo riporta alla home', () => {

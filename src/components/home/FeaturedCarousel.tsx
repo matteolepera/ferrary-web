@@ -3,8 +3,8 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { buttonClass } from '@/components/ui/buttonClass'
+import { useHighlights } from '@/hooks/useHighlights'
 import { useModels } from '@/hooks/useModels'
-import { formatNumber } from '@/lib/format'
 
 /** Quanti modelli mostra il carosello: i più recenti dell'archivio */
 const FEATURED_COUNT = 5
@@ -19,7 +19,7 @@ const arrowClass = [
  * Il carosello della home: un'auto alla volta, a tutta larghezza, con le frecce ai lati.
  */
 export function FeaturedCarousel() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const { data, isPending, isError } = useModels({ sort: '-year' })
   const [index, setIndex] = useState(0)
 
@@ -27,19 +27,11 @@ export function FeaturedCarousel() {
   const count = models.length
   // Il modulo protegge dal caso in cui, cambiando lingua, l'elenco arrivi più corto
   const current = count > 0 ? models[index % count] : undefined
+  // Chiamato sempre, anche senza modello: gli hook non possono stare dentro un if
+  const stats = useHighlights(current?.highlights)
 
   const previous = () => setIndex((index - 1 + count) % count)
   const next = () => setIndex((index + 1) % count)
-
-  const na = t('home.featured.notAvailable')
-  const value = (
-    number: number | null | undefined,
-    unit: string,
-    decimals = 0,
-  ) =>
-    number == null
-      ? na
-      : `${formatNumber(number, i18n.language, decimals)} ${unit}`
 
   return (
     <section
@@ -97,7 +89,7 @@ export function FeaturedCarousel() {
                 />
               ) : (
                 <p className="absolute inset-x-0 top-[66%] text-center text-[0.6875rem] font-semibold tracking-[0.2em] text-neutral-500 uppercase md:top-[52%] md:text-xs">
-                  {t('home.featured.noPhoto')}
+                  {t('model.noPhoto')}
                 </p>
               )}
             </div>
@@ -158,30 +150,23 @@ export function FeaturedCarousel() {
 
               <div className="mt-5 md:mt-6 md:flex md:items-end md:justify-between md:gap-6 lg:mt-0 lg:gap-9">
                 <dl className="border-linea grid grid-cols-3 border-y md:flex md:gap-8 md:border-0 lg:gap-11">
-                  <div className="py-3.5 pr-2 md:p-0">
-                    <dt className="text-[0.625rem] font-semibold tracking-[0.2em] text-neutral-400 uppercase">
-                      {t('home.featured.power')}
-                    </dt>
-                    <dd className="font-display mt-1.5 text-xl font-extrabold tracking-[-0.02em] md:text-2xl">
-                      {value(current.highlights?.power_cv, 'cv')}
-                    </dd>
-                  </div>
-                  <div className="border-linea border-l px-2 py-3.5 md:border-0 md:p-0">
-                    <dt className="text-[0.625rem] font-semibold tracking-[0.2em] text-neutral-400 uppercase">
-                      {t('home.featured.acceleration')}
-                    </dt>
-                    <dd className="font-display mt-1.5 text-xl font-extrabold tracking-[-0.02em] md:text-2xl">
-                      {value(current.highlights?.zero_to_100_sec, 's', 2)}
-                    </dd>
-                  </div>
-                  <div className="border-linea border-l py-3.5 pl-2.5 md:border-0 md:p-0">
-                    <dt className="text-[0.625rem] font-semibold tracking-[0.2em] text-neutral-400 uppercase">
-                      {t('home.featured.topSpeed')}
-                    </dt>
-                    <dd className="font-display mt-1.5 text-xl font-extrabold tracking-[-0.02em] md:text-2xl">
-                      {value(current.highlights?.top_speed_kmh, 'km/h')}
-                    </dd>
-                  </div>
+                  {stats.map((stat, position) => (
+                    <div
+                      key={stat.key}
+                      className={
+                        position === 0
+                          ? 'py-3.5 pr-2 md:p-0'
+                          : 'border-linea border-l px-2 py-3.5 md:border-0 md:p-0'
+                      }
+                    >
+                      <dt className="text-[0.625rem] font-semibold tracking-[0.2em] text-neutral-400 uppercase">
+                        {stat.label}
+                      </dt>
+                      <dd className="font-display mt-1.5 text-xl font-extrabold tracking-[-0.02em] md:text-2xl">
+                        {stat.value}
+                      </dd>
+                    </div>
+                  ))}
                 </dl>
 
                 <Link

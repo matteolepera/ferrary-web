@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { fetchModels, type ModelFilters } from '@/api/models'
 
@@ -12,5 +12,7 @@ export function useModels(filters: ModelFilters = {}) {
     // La lingua fa parte della chiave: ogni lingua ha la sua copia dei dati in cache
     queryKey: ['models', i18n.language, filters],
     queryFn: () => fetchModels(filters),
+    // Cambiando filtro o pagina, i risultati vecchi restano finché non arrivano i nuovi
+    placeholderData: keepPreviousData,
   })
 }

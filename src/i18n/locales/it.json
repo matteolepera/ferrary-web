@@ -66,10 +66,58 @@
       "cta": "Apri l'archivio"
     }
   },
+  "model": {
+    "power": "Potenza",
+    "acceleration": "0–100 km/h",
+    "topSpeed": "Velocità max",
+    "notAvailable": "n.d.",
+    "noPhoto": "Foto in arrivo"
+  },
   "archive": {
-    "title": "Archivio",
-    "loading": "Caricamento…",
-    "error": "Impossibile caricare l'archivio. Riprova tra qualche istante."
+    "eyebrow": "Archivio",
+    "title": "Tutte le Ferrari",
+    "text": "Sfoglia l'intera collezione: cerca un modello per nome, scegli una famiglia o un periodo, e apri la sua scheda.",
+    "loading": "Caricamento dei modelli…",
+    "count_one": "{{count}} modello",
+    "count_other": "{{count}} modelli",
+    "error": "Impossibile caricare l'archivio.",
+    "retry": "Riprova",
+    "empty": "Nessuna Ferrari corrisponde a questi filtri.",
+    "clear": "Azzera i filtri",
+    "pagination": "Pagine dell'archivio",
+    "previous": "Precedente",
+    "next": "Successiva",
+    "page": "Pagina {{current}} di {{last}}",
+    "searchLabel": "Cerca per nome",
+    "searchPlaceholder": "Cerca una Ferrari, ad esempio F40",
+    "family": "Famiglia",
+    "allFamilies": "Tutte",
+    "filters": {
+      "open": "Filtri",
+      "title": "Filtri",
+      "close": "Chiudi i filtri",
+      "show_one": "Mostra {{count}} risultato",
+      "show_other": "Mostra {{count}} risultati",
+      "powertrain": "Motorizzazione",
+      "any": "Tutte",
+      "powertrains": {
+        "termico": "Termica",
+        "ibrido": "Ibrida",
+        "elettrico": "Elettrica"
+      },
+      "period": "Periodo",
+      "from": "Dal",
+      "to": "Al",
+      "anyYear": "Qualsiasi",
+      "decade": "Anni {{short}}",
+      "sort": "Ordina per",
+      "sorts": {
+        "nameAsc": "Nome, dalla A alla Z",
+        "nameDesc": "Nome, dalla Z alla A",
+        "newest": "Dalla più recente",
+        "oldest": "Dalla più storica"
+      }
+    }
   },
   "notFound": {
     "code": "Errore 404",
