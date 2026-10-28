@@ -50,7 +50,6 @@ export function Dock() {
   }, [open])
 
   const close = () => setOpen(false)
-
   return (
     <>
       {open && (
@@ -60,6 +59,7 @@ export function Dock() {
           aria-label={t('nav.menu')}
           className="bg-notte/95 fixed inset-0 z-40 flex flex-col px-6 pt-8 pb-32 backdrop-blur-md lg:hidden"
         >
+          {/* Il menu a tendina: voci grandi, senza icone */}
           <nav aria-label={t('nav.menu')} className="flex flex-col">
             <Link
               ref={firstLink}
@@ -69,15 +69,12 @@ export function Dock() {
             >
               {t('nav.archive')}
             </Link>
-            <NavLink
-              to="/storia"
-              className={({ isActive }) =>
-                `${itemClass} ${isActive ? 'text-white' : idle}`
-              }
-            >
-              <History aria-hidden="true" className="size-5 md:size-4" />
+            <Link to="/#famiglie" onClick={close} className={menuLinkClass}>
+              {t('nav.families')}
+            </Link>
+            <Link to="/storia" onClick={close} className={menuLinkClass}>
               {t('nav.story')}
-            </NavLink>
+            </Link>
           </nav>
           <div className="mt-auto">
             <LanguageSwitcher />
@@ -85,6 +82,7 @@ export function Dock() {
         </div>
       )}
 
+      {/* Il dock: icone con etichetta, il monogramma al centro */}
       <nav
         aria-label={t('nav.quick')}
         className={[
@@ -104,9 +102,15 @@ export function Dock() {
           {t('nav.archive')}
         </NavLink>
 
-        <Link to="/#famiglie" onClick={close} className={menuLinkClass}>
-          {t('nav.families')}
-        </Link>
+        <NavLink
+          to="/storia"
+          className={({ isActive }) =>
+            `${itemClass} ${isActive ? 'text-white' : idle}`
+          }
+        >
+          <History aria-hidden="true" className="size-5 md:size-4" />
+          {t('nav.story')}
+        </NavLink>
 
         {/* Il monogramma: sollevato sopra la barra, riporta alla home */}
         <Link
