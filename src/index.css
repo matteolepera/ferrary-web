@@ -1,34 +1,47 @@
 @import 'tailwindcss';
-/* Saira con gli assi del peso e della larghezza */
-@import '@fontsource-variable/saira/wdth.css';
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/sora';
 
 @theme {
-  /* Un'unica famiglia: compatta per i titoli, normale per il testo */
-  --font-sans: 'Saira Variable', ui-sans-serif, system-ui, sans-serif;
+  /* Inter per il testo, Sora per titoli e nomi delle auto */
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Sora Variable', ui-sans-serif, system-ui, sans-serif;
 
-  /* Colori di Ferrary: ognuno ha un compito preciso */
+  /* Il museo al buio: neri e grigi per le superfici, rosso per le azioni */
+  --color-notte: #050505;
+  /* sfondo del sito */
+  --color-ombra: #0e0e0e;
+  /* superfici: card, fasce dei dati */
+  --color-linea: #1f1f1f;
+  /* bordi e separatori */
   --color-rosso: #d40000;
-  /* azioni principali e manettino */
+  /* azioni principali */
   --color-rosso-scuro: #a30000;
-  /* rosso premuto, bordo del manettino */
-  --color-giallo: #ffd100;
-  /* accento raro, per i dettagli */
-  --color-cuoio: #9c5a2b;
-  /* discendenza tra i modelli */
-  --color-errore: #b42318;
-  /* errori: diverso dal rosso del marchio */
-  --color-carbonio: #0a0a0a;
-  /* razza del volante, plance */
-  --color-grafite: #1b1b1d;
-  /* pannelli dei comandi */
+  /* rosso al passaggio del mouse */
+  --color-rosso-acceso: #ff3b30;
+  /* piccoli testi rossi su nero: più leggibili */
+  --color-errore: #f97066;
+  /* errori: distinto dal rosso del marchio */
 
-  /* Lo scatto dei comandi: supera di poco il punto e torna indietro */
-  --ease-scatto: cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* Comparsa di un contenuto nuovo: dissolvenza e leggero movimento verso l'alto */
+  --animate-comparsa: comparsa 0.5s ease-out;
+
+  @keyframes comparsa {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
 }
 
 @layer base {
   html {
-    @apply bg-white text-neutral-900 antialiased;
+    @apply bg-notte text-neutral-100 antialiased;
   }
 
   /* Chi ha disattivato le animazioni nel sistema le vede spente anche qui */
@@ -40,4 +53,20 @@
       transition-duration: 0.01ms !important;
     }
   }
+
+  /* Scorrimento morbido verso le ancore, solo per chi non ha ridotto le animazioni */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+}
+
+/* La scena dell'apertura: un riflettore dall'alto e l'ombra dell'auto sul pavimento */
+@utility riflettore {
+  background: radial-gradient(
+    ellipse 70% 50% at 50% 35%,
+    rgb(255 255 255 / 0.08) 0%,
+    rgb(255 255 255 / 0) 70%
+  );
 }

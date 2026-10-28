@@ -1,12 +1,70 @@
 {
   "nav": {
-    "archive": "Archive"
+    "archive": "Archive",
+    "families": "Families",
+    "story": "History",
+    "main": "Main",
+    "home": "Ferrary, back to home",
+    "search": "Search",
+    "menu": "Menu",
+    "close": "Close",
+    "quick": "Quick navigation"
   },
   "footer": {
-    "tagline": "The Ferrari archive"
+    "tagline": "The digital museum of Ferrari: the story of the Prancing Horse, model by model.",
+    "explore": "Explore",
+    "families": "Families",
+    "project": "The project",
+    "webCode": "Website code",
+    "apiCode": "API code",
+    "apiDocs": "API documentation",
+    "newTab": "(opens in a new tab)",
+    "rights": "© {{year}} Ferrary. Independent archive, not affiliated with Ferrari S.p.A."
   },
   "home": {
-    "title": "The archive of every Ferrari"
+    "hero": {
+      "eyebrow": "The digital museum",
+      "titleStart": "Every Ferrari,",
+      "titleEnd": "from the first to the latest.",
+      "text": "Road cars, racing cars, Formula 1 and concepts: an archive that tells the story of the Prancing Horse, model by model.",
+      "cta": "Explore the archive",
+      "families": "Families",
+      "imageAlt": "Red Ferrari SF90 Stradale"
+    },
+    "manifesto": {
+      "eyebrow": "The project",
+      "titleStart": "Not a catalogue.",
+      "titleEnd": "A museum, lit in the dark.",
+      "text": "From grand tourers built for the road to racing prototypes and the concepts that imagine the future. Every page is a showcase: light, shadow, technical data and story."
+    },
+    "featured": {
+      "label": "Featured models",
+      "eyebrow": "Featured",
+      "title": "Models",
+      "all": "Full archive",
+      "discover": "Discover the model",
+      "previous": "Previous model",
+      "next": "Next model",
+      "power": "Power",
+      "acceleration": "0–100 km/h",
+      "topSpeed": "Top speed",
+      "notAvailable": "n/a",
+      "noPhoto": "Photo coming soon",
+      "error": "Unable to load the featured models."
+    },
+    "families": {
+      "eyebrow": "Families",
+      "title": "Where do you want to start?",
+      "text": "Every Ferrari belongs to a family: pick one, and the archive will show you only those.",
+      "models_one": "{{count}} model",
+      "models_other": "{{count}} models",
+      "error": "Unable to load the families."
+    },
+    "invite": {
+      "titleStart": "The whole archive,",
+      "titleEnd": "in one place.",
+      "cta": "Open the archive"
+    }
   },
   "archive": {
     "title": "Archive",

@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import { i18n } from '@/i18n'
 import en from '@/i18n/locales/en.json'
 import it from '@/i18n/locales/it.json'
@@ -21,9 +21,15 @@ test('mostra il sito in inglese', async () => {
   renderRoute('/')
 
   expect(
-    screen.getByRole('heading', { name: 'The archive of every Ferrari' }),
+    screen.getByRole('heading', {
+      name: 'Every Ferrari, from the first to the latest.',
+    }),
   ).toBeInTheDocument()
-  expect(screen.getByRole('link', { name: 'Archive' })).toBeInTheDocument()
+  expect(
+    within(
+      screen.getByRole('navigation', { name: 'Quick navigation' }),
+    ).getByRole('link', { name: 'Archive' }),
+  ).toBeInTheDocument()
 })
 
 test('ha le stesse chiavi in tutte le lingue', () => {

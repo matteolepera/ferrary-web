@@ -13,7 +13,7 @@ export function NotFoundPage({ backTo = '/' }: NotFoundPageProps) {
   const { t } = useTranslation()
 
   return (
-    <section className="py-16 text-center">
+    <section className="px-5 pt-36 pb-16 text-center">
       <p className="text-sm font-semibold tracking-wide text-neutral-500 uppercase">
         {t('notFound.code')}
       </p>

@@ -1,7 +1,17 @@
-import { useTranslation } from 'react-i18next'
+import { FeaturedCarousel } from '@/components/home/FeaturedCarousel'
+import { HomeHero } from '@/components/home/HomeHero'
+import { HomeManifesto } from '@/components/home/HomeManifesto'
+import { HomeFamilies } from '@/components/home/HomeFamilies'
+import { HomeInvite } from '@/components/home/HomeInvite'
 
 export function HomePage() {
-  const { t } = useTranslation()
-
-  return <h1 className="text-3xl font-bold">{t('home.title')}</h1>
+  return (
+    <>
+      <HomeHero />
+      <HomeManifesto />
+      <FeaturedCarousel />
+      <HomeFamilies />
+      <HomeInvite />
+    </>
+  )
 }

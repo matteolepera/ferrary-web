@@ -7,7 +7,7 @@ export function ArchivePage() {
   const { data, isPending, isError } = useModels()
 
   return (
-    <section>
+    <section className="px-5 pt-28 md:px-10">
       <h1 className="text-3xl font-bold">{t('archive.title')}</h1>
 
       {isPending && (

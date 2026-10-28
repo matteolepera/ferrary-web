@@ -20,6 +20,8 @@ export type Category = {
   id: number
   name: string
   slug: string
+  /** Numero di modelli visibili, solo nell'elenco delle famiglie */
+  models_count?: number
 }
 
 export type Image = {
@@ -173,6 +175,12 @@ export type CarModel = {
   description: string
   category?: Category
   cover?: Image | null
+  /** I tre dati chiave della versione principale, solo negli elenchi */
+  highlights?: {
+    power_cv: number | null
+    zero_to_100_sec: number | null
+    top_speed_kmh: number | null
+  } | null
   predecessor?: CarModel | null
   successors?: CarModel[]
   versions?: Version[]

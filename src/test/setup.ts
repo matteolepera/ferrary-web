@@ -9,3 +9,5 @@ afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
 // Ogni test parte dall'italiano, qualunque sia la lingua del browser simulato
 beforeEach(() => i18n.changeLanguage('it'))
+// Il browser simulato non sa scorrere la pagina: una finta funzione evita gli avvisi
+window.scrollTo = vi.fn() as unknown as typeof window.scrollTo

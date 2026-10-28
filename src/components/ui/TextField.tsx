@@ -31,7 +31,7 @@ export function TextField({
 
   return (
     <div className={`flex flex-col gap-1.5 ${className}`}>
-      <label htmlFor={inputId} className="text-sm font-medium text-neutral-900">
+      <label htmlFor={inputId} className="text-sm font-medium text-neutral-200">
         {label}
       </label>
 
@@ -40,17 +40,17 @@ export function TextField({
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy}
         className={[
-          'rounded-sm border bg-white px-3 py-2.5 text-neutral-900 transition',
-          'placeholder:text-neutral-400 focus:outline-2 focus:outline-offset-0',
+          'bg-ombra border px-3 py-3 text-neutral-100 transition',
+          'placeholder:text-neutral-500 focus:outline-2 focus:outline-offset-0',
           error
             ? 'border-errore focus:outline-errore'
-            : 'border-neutral-300 focus:outline-neutral-900',
+            : 'border-linea focus:outline-neutral-400',
         ].join(' ')}
         {...props}
       />
 
       {hint && !error && (
-        <p id={hintId} className="text-sm text-neutral-500">
+        <p id={hintId} className="text-sm text-neutral-400">
           {hint}
         </p>
       )}

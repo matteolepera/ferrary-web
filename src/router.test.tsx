@@ -1,13 +1,19 @@
-import { fireEvent, screen } from '@testing-library/react'
+import { fireEvent, screen, within } from '@testing-library/react'
 import { renderRoute } from '@/test/utils'
+
+/** Il dock: lì le voci compaiono una volta sola */
+const dock = () =>
+  within(screen.getByRole('navigation', { name: 'Navigazione rapida' }))
 
 test('mostra la home dentro il layout pubblico', () => {
   renderRoute('/')
 
   expect(
-    screen.getByRole('heading', { name: "L'archivio di tutte le Ferrari" }),
+    screen.getByRole('heading', {
+      name: "Ogni Ferrari, dalla prima all'ultima.",
+    }),
   ).toBeInTheDocument()
-  expect(screen.getByRole('link', { name: 'Archivio' })).toBeInTheDocument()
+  expect(dock().getByRole('link', { name: 'Archivio' })).toBeInTheDocument()
 })
 
 test('mostra il pannello dentro il layout admin', () => {
@@ -23,7 +29,7 @@ test('mostra il "non trovato" del sito con la navigazione pubblica', () => {
   expect(
     screen.getByRole('heading', { name: 'Pagina non trovata' }),
   ).toBeInTheDocument()
-  expect(screen.getByRole('link', { name: 'Archivio' })).toBeInTheDocument()
+  expect(dock().getByRole('link', { name: 'Archivio' })).toBeInTheDocument()
   expect(
     screen.getByRole('link', { name: "Torna all'inizio" }),
   ).toHaveAttribute('href', '/')
@@ -44,7 +50,16 @@ test('mostra il "non trovato" del pannello con la sua barra laterale', () => {
 test('naviga tra le pagine con i link', () => {
   renderRoute('/')
 
-  fireEvent.click(screen.getByRole('link', { name: 'Archivio' }))
+  fireEvent.click(dock().getByRole('link', { name: 'Archivio' }))
 
   expect(screen.getByRole('heading', { name: 'Archivio' })).toBeInTheDocument()
+})
+
+test('il logo riporta alla home', () => {
+  renderRoute('/modelli')
+
+  const header = within(screen.getByRole('banner'))
+  expect(
+    header.getByRole('link', { name: 'Ferrary, torna alla home' }),
+  ).toHaveAttribute('href', '/')
 })
