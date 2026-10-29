@@ -4,6 +4,13 @@ import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import tailwindcss from '@tailwindcss/vite'
 
+// Le stesse regole per il server di sviluppo e per l'anteprima del sito finale
+const apiProxy = {
+  '/api': 'http://localhost:8000',
+  '/sanctum': 'http://localhost:8000',
+  '/docs': 'http://localhost:8000',
+}
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
@@ -16,11 +23,10 @@ export default defineConfig({
   server: {
     // In sviluppo Vite inoltra al backend le chiamate all'API:
     // il browser parla con un solo indirizzo, anche dal telefono
-    proxy: {
-      '/api': 'http://localhost:8000',
-      '/sanctum': 'http://localhost:8000',
-      '/docs': 'http://localhost:8000',
-    },
+    proxy: apiProxy,
+  },
+  preview: {
+    proxy: apiProxy,
   },
   test: {
     environment: 'jsdom',

@@ -1,7 +1,5 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
-import heroLarge from '@/assets/images/sf90-stradale-2400.webp'
-import heroSmall from '@/assets/images/sf90-stradale-1200.webp'
 import { buttonClass } from '@/components/ui/buttonClass'
 
 /**
@@ -9,6 +7,9 @@ import { buttonClass } from '@/components/ui/buttonClass'
  */
 export function HomeHero() {
   const { t } = useTranslation()
+  // In public/, con un nome fisso: index.html le precarica con lo stesso indirizzo
+  const heroSmall = '/images/home/sf90-stradale-1200.webp'
+  const heroLarge = '/images/home/sf90-stradale-2400.webp'
 
   return (
     <section className="relative flex flex-col items-center overflow-hidden lg:min-h-[54rem] lg:items-stretch">
