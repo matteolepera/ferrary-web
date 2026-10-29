@@ -1,40 +1,83 @@
 import { createBrowserRouter, type RouteObject } from 'react-router'
+import { PageLoader } from '@/components/layout/PageLoader'
 import { AdminLayout } from '@/layouts/AdminLayout'
 import { PublicLayout } from '@/layouts/PublicLayout'
-import { DashboardPage } from '@/pages/admin/DashboardPage'
-import { ArchivePage } from '@/pages/public/ArchivePage'
-import { HomePage } from '@/pages/public/HomePage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
-import { ModelPage } from '@/pages/public/ModelPage'
-import { DesignerPage } from '@/pages/public/catalogs/DesignerPage'
-import { DesignersPage } from '@/pages/public/catalogs/DesignersPage'
-import { DriverPage } from '@/pages/public/catalogs/DriverPage'
-import { DriversPage } from '@/pages/public/catalogs/DriversPage'
-import { EnginePage } from '@/pages/public/catalogs/EnginePage'
-import { EnginesPage } from '@/pages/public/catalogs/EnginesPage'
-import { HistoryPage } from '@/pages/public/HistoryPage'
+import { HomePage } from '@/pages/public/HomePage'
 import { RouteErrorPage } from '@/pages/RouteErrorPage'
 
 /**
- * Mappa del sito: ogni layout contiene le sue pagine.
- * Esportata a parte per poterla riusare nei test.
+ * Mappa del sito. La home e i layout sono nel file principale;
+ * le altre pagine si scaricano solo quando servono, con lazy.
  */
 export const routes: RouteObject[] = [
   {
     element: <PublicLayout />,
     errorElement: <RouteErrorPage />,
+    // Mostrato solo al primo caricamento, mentre arriva il file della pagina
+    hydrateFallbackElement: <PageLoader />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: 'modelli', element: <ArchivePage /> },
-      { path: 'modelli/:slug', element: <ModelPage /> },
-      { path: 'designer', element: <DesignersPage /> },
-      { path: 'designer/:slug', element: <DesignerPage /> },
-      { path: 'piloti', element: <DriversPage /> },
-      { path: 'piloti/:slug', element: <DriverPage /> },
-      { path: 'motori', element: <EnginesPage /> },
-      { path: 'motori/:id', element: <EnginePage /> },
-      { path: 'storia', element: <HistoryPage /> },
-      // Qualsiasi altro indirizzo del sito pubblico
+      {
+        path: 'modelli',
+        lazy: async () => ({
+          Component: (await import('@/pages/public/ArchivePage')).ArchivePage,
+        }),
+      },
+      {
+        path: 'modelli/:slug',
+        lazy: async () => ({
+          Component: (await import('@/pages/public/ModelPage')).ModelPage,
+        }),
+      },
+      {
+        path: 'storia',
+        lazy: async () => ({
+          Component: (await import('@/pages/public/HistoryPage')).HistoryPage,
+        }),
+      },
+      {
+        path: 'motori',
+        lazy: async () => ({
+          Component: (await import('@/pages/public/catalogs/EnginesPage'))
+            .EnginesPage,
+        }),
+      },
+      {
+        path: 'motori/:id',
+        lazy: async () => ({
+          Component: (await import('@/pages/public/catalogs/EnginePage'))
+            .EnginePage,
+        }),
+      },
+      {
+        path: 'designer',
+        lazy: async () => ({
+          Component: (await import('@/pages/public/catalogs/DesignersPage'))
+            .DesignersPage,
+        }),
+      },
+      {
+        path: 'designer/:slug',
+        lazy: async () => ({
+          Component: (await import('@/pages/public/catalogs/DesignerPage'))
+            .DesignerPage,
+        }),
+      },
+      {
+        path: 'piloti',
+        lazy: async () => ({
+          Component: (await import('@/pages/public/catalogs/DriversPage'))
+            .DriversPage,
+        }),
+      },
+      {
+        path: 'piloti/:slug',
+        lazy: async () => ({
+          Component: (await import('@/pages/public/catalogs/DriverPage'))
+            .DriverPage,
+        }),
+      },
       { path: '*', element: <NotFoundPage /> },
     ],
   },
@@ -42,9 +85,15 @@ export const routes: RouteObject[] = [
     path: 'admin',
     element: <AdminLayout />,
     errorElement: <RouteErrorPage />,
+    hydrateFallbackElement: <PageLoader />,
     children: [
-      { index: true, element: <DashboardPage /> },
-      // Qualsiasi altro indirizzo sotto /admin
+      {
+        index: true,
+        lazy: async () => ({
+          Component: (await import('@/pages/admin/DashboardPage'))
+            .DashboardPage,
+        }),
+      },
       { path: '*', element: <NotFoundPage backTo="/admin" /> },
     ],
   },

@@ -1,4 +1,5 @@
 import { NavLink, Outlet } from 'react-router'
+import { NavigationProgress } from '@/components/layout/NavigationProgress'
 
 /**
  * Cornice dell'area admin: barra laterale con le sezioni e contenuto a destra.
@@ -6,6 +7,7 @@ import { NavLink, Outlet } from 'react-router'
 export function AdminLayout() {
   return (
     <div className="flex min-h-screen bg-neutral-50 text-neutral-900">
+      <NavigationProgress />
       <aside className="w-60 border-r border-neutral-200 bg-white p-4">
         <p className="mb-6 text-lg font-bold">Ferrary Admin</p>
         <nav className="flex flex-col gap-1">

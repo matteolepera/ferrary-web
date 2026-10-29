@@ -1,20 +1,21 @@
 import { screen, within } from '@testing-library/react'
 import { renderRoute } from '@/test/utils'
 
-const footer = () => within(screen.getByRole('contentinfo'))
+/** Il piè di pagina, quando la pagina è arrivata */
+const footer = async () => within(await screen.findByRole('contentinfo'))
 
 test("elenca le famiglie dell'API con i link all'archivio filtrato", async () => {
   renderRoute('/modelli')
 
   expect(
-    await footer().findByRole('link', { name: 'Stradali' }),
+    await (await footer()).findByRole('link', { name: 'Stradali' }),
   ).toHaveAttribute('href', '/modelli?category=stradali')
 })
 
-test('apre i link del progetto in una nuova scheda, in modo sicuro', () => {
+test('apre i link del progetto in una nuova scheda, in modo sicuro', async () => {
   renderRoute('/modelli')
 
-  const code = footer().getByRole('link', { name: /Codice del sito/ })
+  const code = (await footer()).getByRole('link', { name: /Codice del sito/ })
 
   expect(code).toHaveAttribute(
     'href',
@@ -24,11 +25,11 @@ test('apre i link del progetto in una nuova scheda, in modo sicuro', () => {
   expect(code).toHaveAttribute('rel', 'noreferrer')
 })
 
-test('collega i cataloghi', () => {
+test('collega i cataloghi', async () => {
   renderRoute('/modelli')
 
   const catalogs = within(
-    footer().getByRole('navigation', { name: 'Cataloghi' }),
+    (await footer()).getByRole('navigation', { name: 'Cataloghi' }),
   )
 
   expect(catalogs.getByRole('link', { name: 'Motori' })).toHaveAttribute(

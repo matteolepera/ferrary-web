@@ -1,4 +1,4 @@
-import { fireEvent, screen, within } from '@testing-library/react'
+import { fireEvent, screen, within, waitFor } from '@testing-library/react'
 import { renderRoute } from '@/test/utils'
 
 /** Il dock: lì le voci compaiono una volta sola */
@@ -16,10 +16,12 @@ test('mostra la home dentro il layout pubblico', () => {
   expect(dock().getByRole('link', { name: 'Archivio' })).toBeInTheDocument()
 })
 
-test('mostra il pannello dentro il layout admin', () => {
+test('mostra il pannello dentro il layout admin', async () => {
   renderRoute('/admin')
 
-  expect(screen.getByRole('heading', { name: 'Pannello' })).toBeInTheDocument()
+  expect(
+    await screen.findByRole('heading', { name: 'Pannello' }),
+  ).toBeInTheDocument()
   expect(screen.getByText('Ferrary Admin')).toBeInTheDocument()
 })
 
@@ -47,38 +49,39 @@ test('mostra il "non trovato" del pannello con la sua barra laterale', () => {
   ).toHaveAttribute('href', '/admin')
 })
 
-test('naviga tra le pagine con i link', () => {
+test('naviga tra le pagine con i link', async () => {
   renderRoute('/')
 
   fireEvent.click(dock().getByRole('link', { name: 'Archivio' }))
 
   expect(
-    screen.getByRole('heading', { name: 'Tutte le Ferrari' }),
+    await screen.findByRole('heading', { name: 'Tutte le Ferrari' }),
   ).toBeInTheDocument()
 })
 
-test('il logo riporta alla home', () => {
+test('il logo riporta alla home', async () => {
   renderRoute('/modelli')
 
-  const header = within(screen.getByRole('banner'))
+  const header = within(await screen.findByRole('banner'))
   expect(
     header.getByRole('link', { name: 'Ferrary, torna alla home' }),
   ).toHaveAttribute('href', '/')
 })
 
-test('il primo elemento della pagina porta direttamente al contenuto', () => {
+test('il primo elemento della pagina porta direttamente al contenuto', async () => {
   renderRoute('/modelli')
 
   expect(
-    screen.getByRole('link', { name: 'Vai al contenuto' }),
+    await screen.findByRole('link', { name: 'Vai al contenuto' }),
   ).toHaveAttribute('href', '#contenuto')
   expect(screen.getByRole('main')).toHaveAttribute('id', 'contenuto')
 })
 
-test('cambiando pagina il focus passa al contenuto', () => {
+test('cambiando pagina il focus passa al contenuto', async () => {
   renderRoute('/')
 
   fireEvent.click(dock().getByRole('link', { name: 'Archivio' }))
 
-  expect(screen.getByRole('main')).toHaveFocus()
+  // Il focus si sposta quando la pagina nuova è arrivata
+  await waitFor(() => expect(screen.getByRole('main')).toHaveFocus())
 })
