@@ -2,6 +2,7 @@ import { screen, fireEvent, within, waitFor } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
 import { server } from '@/test/server'
 import { renderRoute } from '@/test/utils'
+import { f40, modelsPage, sf90Detail } from '@/test/fixtures'
 
 test('mostra il modello e lo scrive nel titolo della scheda', async () => {
   renderRoute('/modelli/sf90-stradale')
@@ -149,4 +150,63 @@ test('nasconde la galleria se la versione non ha foto', async () => {
   expect(
     screen.queryByRole('region', { name: 'Galleria' }),
   ).not.toBeInTheDocument()
+})
+
+test('mostra la discendenza con i link ai modelli vicini', async () => {
+  server.use(
+    http.get('http://localhost:8000/api/models/:slug', () =>
+      HttpResponse.json({
+        data: { ...sf90Detail, predecessor: f40, successors: [] },
+      }),
+    ),
+  )
+
+  renderRoute('/modelli/sf90-stradale')
+
+  const lineage = within(
+    await screen.findByRole('region', { name: 'Discendenza' }),
+  )
+
+  expect(lineage.getByRole('link', { name: /F40/ })).toHaveAttribute(
+    'href',
+    '/modelli/f40',
+  )
+  expect(lineage.getByText('Questo modello')).toBeInTheDocument()
+})
+
+test('senza predecessori né successori la discendenza non compare', async () => {
+  renderRoute('/modelli/sf90-stradale')
+  await screen.findByRole('heading', { level: 1, name: 'SF90 Stradale' })
+
+  expect(
+    screen.queryByRole('region', { name: 'Discendenza' }),
+  ).not.toBeInTheDocument()
+})
+
+test('propone altri modelli della stessa famiglia', async () => {
+  const received = { params: new URLSearchParams() }
+
+  server.use(
+    http.get('http://localhost:8000/api/models', ({ request }) => {
+      received.params = new URL(request.url).searchParams
+
+      return HttpResponse.json(modelsPage)
+    }),
+  )
+
+  renderRoute('/modelli/sf90-stradale')
+
+  const related = within(
+    await screen.findByRole('region', { name: 'Nella stessa famiglia' }),
+  )
+
+  expect(related.getByRole('link', { name: /F40/ })).toHaveAttribute(
+    'href',
+    '/modelli/f40',
+  )
+  // Il modello che si sta guardando non si propone a sé stesso
+  expect(
+    related.queryByRole('link', { name: /SF90 Stradale/ }),
+  ).not.toBeInTheDocument()
+  expect(received.params.get('category')).toBe('stradali')
 })

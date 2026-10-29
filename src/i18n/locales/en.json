@@ -106,7 +106,12 @@
     "closeGallery": "Close the gallery",
     "previousImage": "Previous photo",
     "nextImage": "Next photo",
-    "counter": "{{current}} of {{total}}"
+    "counter": "{{current}} of {{total}}",
+    "lineage": "Lineage",
+    "predecessor": "Predecessor",
+    "successor": "Successor",
+    "thisModel": "This model",
+    "related": "In the same family"
   },
   "archive": {
     "eyebrow": "Archive",
