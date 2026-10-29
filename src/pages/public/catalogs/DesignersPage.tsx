@@ -4,7 +4,7 @@ import { useDesigners } from '@/hooks/useDesigners'
 
 export function DesignersPage() {
   const { t } = useTranslation()
-  const { data, isPending, isError } = useDesigners()
+  const { data, isPending, isError, refetch } = useDesigners()
 
   const items = data?.map((designer) => ({
     id: designer.id,
@@ -27,6 +27,7 @@ export function DesignersPage() {
       items={items}
       isPending={isPending}
       isError={isError}
+      onRetry={() => refetch()}
     />
   )
 }

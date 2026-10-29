@@ -5,11 +5,12 @@ import { CatalogDetail } from '@/components/catalog/CatalogDetail'
 import { useEngine } from '@/hooks/useEngines'
 import { formatNumber } from '@/lib/format'
 import { NotFoundPage } from '@/pages/NotFoundPage'
+import { ErrorState } from '@/components/ui/ErrorState'
 
 export function EnginePage() {
   const { t, i18n } = useTranslation()
   const { id = '' } = useParams()
-  const { data: engine, isPending, isError, error } = useEngine(id)
+  const { data: engine, isPending, isError, error, refetch } = useEngine(id)
 
   if (isError && isNotFound(error)) {
     return <NotFoundPage />
@@ -17,9 +18,11 @@ export function EnginePage() {
 
   if (isError) {
     return (
-      <p role="alert" className="text-errore px-5 pt-36 pb-16 text-center">
-        {t('catalogs.error')}
-      </p>
+      <ErrorState
+        message={t('catalogs.error')}
+        onRetry={() => refetch()}
+        className="px-5 pt-36 pb-16"
+      />
     )
   }
 

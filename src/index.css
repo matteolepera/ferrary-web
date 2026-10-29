@@ -60,6 +60,12 @@
       scroll-behavior: smooth;
     }
   }
+
+  /* Rete di sicurezza: qualunque elemento raggiunto con la tastiera mostra dove si trova */
+  :focus-visible {
+    outline: 2px solid var(--color-rosso-acceso);
+    outline-offset: 3px;
+  }
 }
 
 /* La scena dell'apertura: un riflettore dall'alto e l'ombra dell'auto sul pavimento */

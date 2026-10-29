@@ -9,6 +9,15 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
+    <!-- La foto dell'apertura parte subito, in parallelo al JavaScript, invece che dopo -->
+    <link
+      rel="preload"
+      as="image"
+      href="/images/home/sf90-stradale-2400.webp"
+      imagesrcset="/images/home/sf90-stradale-1200.webp 1200w, /images/home/sf90-stradale-2400.webp 2400w"
+      imagesizes="(min-width: 1024px) 60vw, 100vw"
+      fetchpriority="high"
+    />
     <title>Ferrary</title>
   </head>
 

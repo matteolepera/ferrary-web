@@ -5,7 +5,7 @@ import { formatNumber } from '@/lib/format'
 
 export function EnginesPage() {
   const { t, i18n } = useTranslation()
-  const { data, isPending, isError } = useEngines()
+  const { data, isPending, isError, refetch } = useEngines()
 
   const items = data?.map((engine) => ({
     id: engine.id,
@@ -31,6 +31,7 @@ export function EnginesPage() {
       items={items}
       isPending={isPending}
       isError={isError}
+      onRetry={() => refetch()}
     />
   )
 }
