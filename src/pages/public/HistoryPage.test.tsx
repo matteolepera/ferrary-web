@@ -1,8 +1,29 @@
-import { fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { fireEvent, screen, waitFor, within, act } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
 import { f40, modelsPage, sf90 } from '@/test/fixtures'
 import { server } from '@/test/server'
 import { renderRoute } from '@/test/utils'
+
+/** Due pagine: prima la F40, poi la SF90 */
+function useTwoPages() {
+  server.use(
+    http.get('http://localhost:8000/api/models', ({ request }) => {
+      const page = Number(new URL(request.url).searchParams.get('page') ?? 1)
+      const meta = {
+        ...modelsPage.meta,
+        current_page: page,
+        last_page: 2,
+        total: 2,
+      }
+
+      return HttpResponse.json({
+        ...modelsPage,
+        data: page === 1 ? [f40] : [sf90],
+        meta,
+      })
+    }),
+  )
+}
 
 test('raggruppa le Ferrari per decennio, in ordine di anno', async () => {
   const received = { params: new URLSearchParams() }
@@ -34,24 +55,7 @@ test('raggruppa le Ferrari per decennio, in ordine di anno', async () => {
 })
 
 test('carica le pagine successive in coda', async () => {
-  server.use(
-    http.get('http://localhost:8000/api/models', ({ request }) => {
-      const page = Number(new URL(request.url).searchParams.get('page') ?? 1)
-      const meta = {
-        ...modelsPage.meta,
-        current_page: page,
-        last_page: 2,
-        total: 2,
-      }
-
-      // Prima pagina la F40, seconda la SF90
-      return HttpResponse.json({
-        ...modelsPage,
-        data: page === 1 ? [f40] : [sf90],
-        meta,
-      })
-    }),
-  )
+  useTwoPages()
 
   renderRoute('/storia')
 
@@ -74,4 +78,43 @@ test('carica le pagine successive in coda', async () => {
       screen.queryByRole('button', { name: 'Carica altre Ferrari' }),
     ).not.toBeInTheDocument(),
   )
+})
+
+test('carica da sola la pagina successiva, arrivando in fondo', async () => {
+  // Un osservatore finto che ci lascia decidere quando la sentinella "diventa visibile"
+  const observer = {
+    notify: undefined as IntersectionObserverCallback | undefined,
+  }
+  vi.stubGlobal(
+    'IntersectionObserver',
+    class {
+      constructor(callback: IntersectionObserverCallback) {
+        observer.notify = callback
+      }
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+      takeRecords() {
+        return []
+      }
+    },
+  )
+  useTwoPages()
+
+  renderRoute('/storia')
+  await screen.findByRole('link', { name: /F40/ })
+
+  // Simuliamo l'arrivo in fondo alla pagina
+  act(() =>
+    observer.notify?.(
+      [{ isIntersecting: true } as IntersectionObserverEntry],
+      {} as IntersectionObserver,
+    ),
+  )
+
+  expect(
+    await screen.findByRole('link', { name: /SF90 Stradale/ }),
+  ).toBeInTheDocument()
+
+  vi.unstubAllGlobals()
 })

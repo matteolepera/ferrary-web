@@ -1,7 +1,9 @@
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { Button } from '@/components/ui/Button'
 import { useModelTimeline } from '@/hooks/useModelTimeline'
+import { useWhenVisible } from '@/hooks/useWhenVisible'
 import type { CarModel } from '@/types/catalog'
 
 type Decade = { key: string; label: string; models: CarModel[] }
@@ -16,6 +18,15 @@ export function HistoryPage() {
     fetchNextPage,
     isFetchingNextPage,
   } = useModelTimeline()
+
+  // Stabile tra un disegno e l'altro, così l'osservatore non viene ricreato a ogni modello aggiunto
+  const loadMore = useCallback(() => {
+    if (!isFetchingNextPage) {
+      void fetchNextPage()
+    }
+  }, [fetchNextPage, isFetchingNextPage])
+
+  const sentinel = useWhenVisible(loadMore, hasNextPage)
 
   // Tutte le pagine caricate finora, in un unico elenco
   const models = data?.pages.flatMap((page) => page.data) ?? []
@@ -80,26 +91,34 @@ export function HistoryPage() {
         <section
           key={decade.key}
           aria-labelledby={`decennio-${decade.key}`}
-          className="mt-14"
+          className="mt-12 md:mt-16"
         >
+          {/* Il decennio resta in vista mentre si scorrono le sue Ferrari */}
           <h2
             id={`decennio-${decade.key}`}
-            className="font-display text-[2rem] leading-none font-extrabold tracking-[-0.035em] md:text-5xl"
+            className="bg-notte/90 font-display sticky top-0 z-10 -mx-5 px-5 py-3 text-[2rem] leading-none font-extrabold tracking-[-0.035em] backdrop-blur-md md:-mx-10 md:px-10 md:text-5xl"
           >
             {decade.label}
           </h2>
-          <ol className="border-linea mt-5 border-t">
+
+          {/* La linea del tempo: il bordo sinistro dell'elenco */}
+          <ol className="border-linea mt-4 ml-1 border-l md:ml-2">
             {decade.models.map((model) => (
               <li key={model.id}>
                 <Link
                   to={`/modelli/${model.slug}`}
-                  className="border-linea hover:bg-ombra focus-visible:outline-rosso-acceso flex items-baseline gap-5 border-b py-4 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 md:px-3"
+                  className="group hover:bg-ombra focus-visible:outline-rosso-acceso relative flex items-center justify-between gap-5 py-4 pr-2 pl-7 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 md:pl-10"
                 >
-                  <span className="font-display text-rosso-acceso w-12 shrink-0 font-extrabold tabular-nums">
-                    {model.first_year}
-                  </span>
+                  {/* Il punto sulla linea: si accende al passaggio */}
+                  <span
+                    aria-hidden="true"
+                    className="ring-notte group-hover:bg-rosso absolute top-1/2 -left-[5px] size-2.5 -translate-y-1/2 rounded-full bg-neutral-600 ring-4 transition-colors"
+                  />
                   <span className="min-w-0">
-                    <span className="font-display block text-2xl leading-tight font-extrabold tracking-[-0.035em]">
+                    <span className="text-rosso-acceso block text-sm font-semibold tabular-nums">
+                      {model.first_year}
+                    </span>
+                    <span className="font-display mt-0.5 block text-2xl leading-tight font-extrabold tracking-[-0.035em] md:text-3xl">
                       {model.name}
                     </span>
                     {model.category && (
@@ -108,12 +127,23 @@ export function HistoryPage() {
                       </span>
                     )}
                   </span>
+                  {model.cover && (
+                    <img
+                      src={model.cover.url}
+                      alt=""
+                      loading="lazy"
+                      className="hidden aspect-[16/10] w-40 shrink-0 object-cover md:block lg:w-48"
+                    />
+                  )}
                 </Link>
               </li>
             ))}
           </ol>
         </section>
       ))}
+
+      {/* La sentinella: quando si avvicina allo schermo, arriva la pagina successiva */}
+      <div ref={sentinel} aria-hidden="true" />
 
       {hasNextPage && (
         <div className="mt-12 text-center">

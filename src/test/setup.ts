@@ -20,3 +20,15 @@ HTMLDialogElement.prototype.close = function (this: HTMLDialogElement) {
   this.open = false
   this.dispatchEvent(new Event('close'))
 }
+// Il browser simulato non sa osservare cosa entra nello schermo: un finto osservatore che non fa niente
+window.IntersectionObserver = class {
+  readonly root = null
+  readonly rootMargin = ''
+  readonly thresholds = []
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+  takeRecords() {
+    return []
+  }
+} as unknown as typeof IntersectionObserver
