@@ -23,3 +23,24 @@ test('apre i link del progetto in una nuova scheda, in modo sicuro', () => {
   expect(code).toHaveAttribute('target', '_blank')
   expect(code).toHaveAttribute('rel', 'noreferrer')
 })
+
+test('collega i cataloghi', () => {
+  renderRoute('/modelli')
+
+  const catalogs = within(
+    footer().getByRole('navigation', { name: 'Cataloghi' }),
+  )
+
+  expect(catalogs.getByRole('link', { name: 'Motori' })).toHaveAttribute(
+    'href',
+    '/motori',
+  )
+  expect(catalogs.getByRole('link', { name: 'Designer' })).toHaveAttribute(
+    'href',
+    '/designer',
+  )
+  expect(catalogs.getByRole('link', { name: 'Piloti' })).toHaveAttribute(
+    'href',
+    '/piloti',
+  )
+})
