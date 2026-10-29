@@ -76,7 +76,31 @@
     "error": "Impossibile caricare questo modello.",
     "versions": "Versioni",
     "since": "Dal {{start}}",
-    "range": "{{start}}–{{end}}"
+    "range": "{{start}}–{{end}}",
+    "specsLabel": "Dati tecnici",
+    "engine": "Motore",
+    "displacement": "Cilindrata",
+    "dryWeight": "Peso a secco",
+    "production": "Produzione",
+    "electric": "Elettrico",
+    "hybrid": "ibrido",
+    "layouts": {
+      "V": "V{{cylinders}}",
+      "piatto": "{{cylinders}} cilindri boxer",
+      "in_linea": "{{cylinders}} cilindri in linea"
+    },
+    "aspirations": {
+      "turbo": "turbo",
+      "compressore": "a compressore"
+    },
+    "productionTypes": {
+      "serie": "Serie",
+      "serie_limitata": "Serie limitata",
+      "one_off": "Esemplare unico"
+    },
+    "units_one": "{{count}} esemplare",
+    "units_other": "{{count}} esemplari",
+    "story": "Il racconto"
   },
   "archive": {
     "eyebrow": "Archivio",

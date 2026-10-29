@@ -1,4 +1,4 @@
-import { screen, fireEvent, within } from '@testing-library/react'
+import { screen, fireEvent, within, waitFor } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
 import { server } from '@/test/server'
 import { renderRoute } from '@/test/utils'
@@ -72,4 +72,43 @@ test('ignora una versione che non esiste e mostra la prima', async () => {
   expect(
     await screen.findByRole('heading', { level: 1, name: 'SF90 Stradale' }),
   ).toBeInTheDocument()
+})
+
+test('mostra i dati chiave della versione scelta', async () => {
+  renderRoute('/modelli/sf90-stradale')
+
+  const specs = within(
+    await screen.findByRole('region', { name: 'Dati tecnici' }),
+  )
+
+  expect(specs.getByText('V8 turbo ibrido')).toBeInTheDocument()
+  expect(specs.getByText('1000 cv')).toBeInTheDocument()
+  expect(specs.getByText('2,5 s')).toBeInTheDocument()
+  expect(specs.getByText('340 km/h')).toBeInTheDocument()
+  expect(specs.getByText('3990 cm³')).toBeInTheDocument()
+  expect(specs.getByText('1570 kg')).toBeInTheDocument()
+  expect(specs.getByText('Serie')).toBeInTheDocument()
+})
+
+test('mostra il racconto solo se la versione ne ha uno', async () => {
+  renderRoute('/modelli/sf90-stradale')
+
+  const story = within(
+    await screen.findByRole('region', { name: 'Il racconto' }),
+  )
+  expect(story.getByText(/novant'anni della Scuderia/)).toBeInTheDocument()
+
+  // La Spider non ha una descrizione: niente racconto
+  fireEvent.click(
+    within(screen.getByRole('group', { name: 'Versioni' })).getByRole(
+      'button',
+      { name: 'SF90 Spider' },
+    ),
+  )
+
+  await waitFor(() =>
+    expect(
+      screen.queryByRole('region', { name: 'Il racconto' }),
+    ).not.toBeInTheDocument(),
+  )
 })

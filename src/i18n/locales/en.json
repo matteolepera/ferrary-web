@@ -76,7 +76,31 @@
     "error": "Unable to load this model.",
     "versions": "Versions",
     "since": "Since {{start}}",
-    "range": "{{start}}–{{end}}"
+    "range": "{{start}}–{{end}}",
+    "specsLabel": "Technical data",
+    "engine": "Engine",
+    "displacement": "Displacement",
+    "dryWeight": "Dry weight",
+    "production": "Production",
+    "electric": "Electric",
+    "hybrid": "hybrid",
+    "layouts": {
+      "V": "V{{cylinders}}",
+      "piatto": "Flat-{{cylinders}}",
+      "in_linea": "Inline-{{cylinders}}"
+    },
+    "aspirations": {
+      "turbo": "turbo",
+      "compressore": "supercharged"
+    },
+    "productionTypes": {
+      "serie": "Series",
+      "serie_limitata": "Limited series",
+      "one_off": "One-off"
+    },
+    "units_one": "{{count}} unit",
+    "units_other": "{{count}} units",
+    "story": "The story"
   },
   "archive": {
     "eyebrow": "Archive",

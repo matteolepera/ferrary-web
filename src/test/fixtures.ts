@@ -1,5 +1,5 @@
 import type { Paginated } from '@/types/api'
-import type { CarModel, Version, Category } from '@/types/catalog'
+import type { CarModel, Version, Category, Engine } from '@/types/catalog'
 
 export const families: Category[] = [
   { id: 2, name: 'Stradali', slug: 'stradali', models_count: 12 },
@@ -44,6 +44,66 @@ export const sf90Stradale: Version = {
   years: { start: 2019, end: null, in_production: false },
   production: { type: 'serie', units: null },
   description: null,
+}
+
+const f154fa: Engine = {
+  id: 1,
+  code: 'F154FA',
+  name: null,
+  architecture: 'V',
+  v_angle_deg: 90,
+  cylinders: 8,
+  displacement_cc: 3990,
+  bore_mm: null,
+  stroke_mm: null,
+  valves_per_cylinder: 4,
+  aspiration: 'turbo',
+  description: null,
+}
+
+/** Il dettaglio della SF90 Stradale, come lo restituisce /api/versions/sf90-stradale */
+export const sf90StradaleDetail: Version = {
+  ...sf90Stradale,
+  description:
+    "Presentata nel 2019, porta nel nome i novant'anni della Scuderia Ferrari.",
+  specs: {
+    dimensions: {
+      length_mm: 4710,
+      width_mm: 1972,
+      height_mm: 1186,
+      wheelbase_mm: 2650,
+    },
+    weight: { dry_kg: 1570, front_distribution_pct: null },
+    chassis: { material: 'misto', brakes: 'carboceramici' },
+    performance: {
+      top_speed_kmh: 340,
+      zero_to_100_sec: 2.5,
+      zero_to_200_sec: 6.7,
+      fiorano_lap_sec: 79,
+    },
+  },
+  powertrain: {
+    type: 'ibrido',
+    engine: f154fa,
+    combustion: {
+      power_cv: 780,
+      torque_nm: 800,
+      max_rpm: 7500,
+      fuel_consumption_l100: null,
+    },
+    electric: {
+      motors_count: 3,
+      power_cv: 220,
+      battery_kwh: 7.9,
+      range_km: 25,
+    },
+    system: { power_cv: 1000, torque_nm: null },
+    transmission: {
+      gearbox_type: 'doppia_frizione',
+      gears: 8,
+      drivetrain: 'integrale',
+    },
+  },
 }
 
 export const sf90Spider: Version = {

@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/Button'
 import { useModel } from '@/hooks/useModel'
 import { useVersion } from '@/hooks/useVersion'
 import { NotFoundPage } from '@/pages/NotFoundPage'
+import { VersionSpecStrip } from '@/components/model/VersionSpecStrip'
+import { VersionStory } from '@/components/model/VersionStory'
 
 export function ModelPage() {
   const { t } = useTranslation()
@@ -60,6 +62,9 @@ export function ModelPage() {
         selectedSlug={selected?.slug}
         onSelect={selectVersion}
       />
+
+      <VersionSpecStrip version={version} />
+      <VersionStory version={version} />
     </>
   )
 }

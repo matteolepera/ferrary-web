@@ -4,7 +4,7 @@ import {
   modelsPage,
   families,
   sf90Detail,
-  sf90Stradale,
+  sf90StradaleDetail,
   sf90Spider,
 } from '@/test/fixtures'
 
@@ -22,7 +22,7 @@ export const server = setupServer(
       : new HttpResponse(null, { status: 404 }),
   ),
   http.get(`${API}/versions/:slug`, ({ params }) => {
-    const version = [sf90Stradale, sf90Spider].find(
+    const version = [sf90StradaleDetail, sf90Spider].find(
       (item) => item.slug === params.slug,
     )
 
