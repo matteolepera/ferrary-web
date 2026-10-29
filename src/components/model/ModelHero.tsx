@@ -45,7 +45,10 @@ export function ModelHero({
       : item.name
 
   return (
-    <section className="relative flex min-h-[34rem] flex-col overflow-hidden md:min-h-[44rem] lg:min-h-[50rem]">
+    <section
+      aria-labelledby="modello-titolo"
+      className="relative flex min-h-[34rem] flex-col overflow-hidden md:min-h-[44rem] lg:min-h-[50rem]"
+    >
       {cover ? (
         <img
           src={cover.url}
@@ -88,6 +91,7 @@ export function ModelHero({
 
         {/* La chiave fa ripartire l'animazione quando cambia la versione */}
         <h1
+          id="modello-titolo"
           key={title}
           className="animate-comparsa font-display mt-3 text-[3.25rem] leading-[0.92] font-extrabold tracking-[-0.035em] md:text-[6rem] lg:text-[clamp(4.5rem,9.4vw,9.25rem)]"
         >

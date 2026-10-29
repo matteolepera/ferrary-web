@@ -11,6 +11,9 @@ import { VersionStory } from '@/components/model/VersionStory'
 import { VersionGallery } from '@/components/model/VersionGallery'
 import { ModelLineage } from '@/components/model/ModelLineage'
 import { RelatedModels } from '@/components/model/RelatedModels'
+import { TechSheet } from '@/components/model/TechSheet'
+import { VersionPeople } from '@/components/model/VersionPeople'
+import { RacingResults } from '@/components/model/RacingResults'
 
 export function ModelPage() {
   const { t } = useTranslation()
@@ -68,6 +71,9 @@ export function ModelPage() {
 
       <VersionSpecStrip version={version} />
       <VersionStory version={version} />
+      <TechSheet version={version} />
+      <VersionPeople version={version} />
+      <RacingResults version={version} />
       <VersionGallery version={version} />
       <ModelLineage model={model} />
       <RelatedModels model={model} />

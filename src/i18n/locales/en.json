@@ -111,7 +111,122 @@
     "predecessor": "Predecessor",
     "successor": "Successor",
     "thisModel": "This model",
-    "related": "In the same family"
+    "related": "In the same family",
+    "sheet": {
+      "title": "Technical sheet",
+      "sections": {
+        "powertrain": "Engine and transmission",
+        "performance": "Performance",
+        "dimensions": "Dimensions and weight",
+        "chassis": "Chassis",
+        "body": "Body and production"
+      },
+      "rows": {
+        "engineCode": "Engine code",
+        "architecture": "Layout",
+        "aspiration": "Aspiration",
+        "boreStroke": "Bore and stroke",
+        "valves": "Valves per cylinder",
+        "icePower": "Combustion engine power",
+        "iceTorque": "Combustion engine torque",
+        "maxRpm": "Maximum revs",
+        "consumption": "Average consumption",
+        "electricMotors": "Electric motors",
+        "electricPower": "Electric power",
+        "battery": "Battery",
+        "electricRange": "Electric range",
+        "systemPower": "System power",
+        "systemTorque": "System torque",
+        "gearbox": "Gearbox",
+        "drivetrain": "Drive",
+        "zeroTo200": "0–200 km/h",
+        "fiorano": "Fiorano lap",
+        "length": "Length",
+        "width": "Width",
+        "height": "Height",
+        "wheelbase": "Wheelbase",
+        "frontDistribution": "Front weight distribution",
+        "chassisMaterial": "Chassis material",
+        "brakes": "Brakes",
+        "vehicleType": "Type",
+        "bodyType": "Body",
+        "seats": "Seats",
+        "projectCode": "Project code",
+        "years": "Production years"
+      },
+      "vAngle": "{{layout}}, {{angle}}°",
+      "rpm": "rpm",
+      "gears_one": "{{count}} gear",
+      "gears_other": "{{count}} gears",
+      "aspirations": {
+        "aspirato": "Naturally aspirated",
+        "turbo": "Turbocharged",
+        "compressore": "Supercharged"
+      },
+      "gearboxes": {
+        "manuale": "Manual",
+        "robotizzato": "Automated manual",
+        "doppia_frizione": "Dual-clutch",
+        "sequenziale": "Sequential",
+        "automatico": "Automatic"
+      },
+      "drivetrains": {
+        "posteriore": "Rear-wheel drive",
+        "integrale": "All-wheel drive"
+      },
+      "chassisMaterials": {
+        "acciaio": "Steel",
+        "alluminio": "Aluminium",
+        "fibra_di_carbonio": "Carbon fibre",
+        "misto": "Mixed"
+      },
+      "brakeTypes": {
+        "tamburo": "Drum",
+        "disco_acciaio": "Steel disc",
+        "carboceramici": "Carbon-ceramic"
+      },
+      "bodyTypes": {
+        "coupe": "Coupé",
+        "spider": "Spider",
+        "targa": "Targa",
+        "barchetta": "Barchetta",
+        "suv": "SUV",
+        "monoposto": "Single-seater"
+      },
+      "vehicleTypes": {
+        "stradale": "Road car",
+        "pista": "Track car",
+        "gt_corsa": "GT racing car",
+        "prototipo": "Prototype",
+        "f1": "Formula 1",
+        "concept": "Concept"
+      }
+    },
+    "people": {
+      "title": "The people",
+      "designers": "Design and coachwork",
+      "drivers": "Drivers",
+      "roles": {
+        "design": "Design",
+        "carrozzeria": "Coachwork"
+      }
+    },
+    "racing": {
+      "title": "Racing results",
+      "caption": "Results by championship and season",
+      "championship": "Championship",
+      "season": "Season",
+      "races": "Races",
+      "wins": "Wins",
+      "poles": "Poles",
+      "podiums": "Podiums",
+      "fastestLaps": "Fastest laps",
+      "driversTitles": "Drivers' titles",
+      "constructorsTitles": "Constructors' titles",
+      "totalWins": "Total wins",
+      "totalPodiums": "Total podiums",
+      "totalTitles": "Titles won"
+    }
   },
   "archive": {
     "eyebrow": "Archive",
