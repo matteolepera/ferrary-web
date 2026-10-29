@@ -12,6 +12,7 @@ import { DriverPage } from '@/pages/public/catalogs/DriverPage'
 import { DriversPage } from '@/pages/public/catalogs/DriversPage'
 import { EnginePage } from '@/pages/public/catalogs/EnginePage'
 import { EnginesPage } from '@/pages/public/catalogs/EnginesPage'
+import { HistoryPage } from '@/pages/public/HistoryPage'
 
 /**
  * Mappa del sito: ogni layout contiene le sue pagine.
@@ -30,6 +31,7 @@ export const routes: RouteObject[] = [
       { path: 'piloti/:slug', element: <DriverPage /> },
       { path: 'motori', element: <EnginesPage /> },
       { path: 'motori/:id', element: <EnginePage /> },
+      { path: 'storia', element: <HistoryPage /> },
       // Qualsiasi altro indirizzo del sito pubblico
       { path: '*', element: <NotFoundPage /> },
     ],

@@ -298,6 +298,17 @@
       "text": "Dal V12 Colombo ai V6 ibridi: architettura, cilindrata e le Ferrari che li hanno montati."
     }
   },
+  "history": {
+    "eyebrow": "La storia",
+    "title": "Dal 1947, una Ferrari dopo l'altra.",
+    "text": "Tutte le Ferrari dell'archivio in ordine cronologico, decennio per decennio.",
+    "count_one": "{{count}} modello in ordine cronologico",
+    "count_other": "{{count}} modelli in ordine cronologico",
+    "loadMore": "Carica altre Ferrari",
+    "loadingMore": "Caricamento…",
+    "error": "Impossibile caricare la storia.",
+    "undated": "Senza data"
+  },
   "notFound": {
     "code": "Errore 404",
     "title": "Pagina non trovata",
