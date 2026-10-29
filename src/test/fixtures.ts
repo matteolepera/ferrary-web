@@ -5,6 +5,7 @@ import type {
   Category,
   Engine,
   Designer,
+  Driver,
 } from '@/types/catalog'
 
 export const families: Category[] = [
@@ -204,4 +205,61 @@ export const designers: Designer[] = [
 export const manzoniDetail: Designer = {
   ...designers[1],
   versions: [{ ...sf90Stradale, model: sf90, designer_role: 'design' }],
+}
+
+const f2004Model: CarModel = {
+  id: 3,
+  name: 'F2004',
+  slug: 'f2004',
+  description: 'La monoposto della stagione 2004.',
+}
+
+const f2004Version: Version = {
+  id: 3,
+  name: 'F2004',
+  slug: 'f2004',
+  vehicle_type: 'f1',
+  body_type: 'monoposto',
+  project_code: null,
+  seats: 1,
+  years: { start: 2004, end: 2004, in_production: false },
+  production: { type: null, units: null },
+  description: null,
+}
+
+export const drivers: Driver[] = [
+  {
+    id: 1,
+    first_name: 'Michael',
+    last_name: 'Schumacher',
+    slug: 'michael-schumacher',
+    nationality: 'Germania',
+    birth_date: '1969-01-03',
+    versions_count: 1,
+  },
+]
+
+export const schumacherDetail: Driver = {
+  ...drivers[0],
+  versions: [
+    {
+      ...f2004Version,
+      model: f2004Model,
+      racing: [
+        {
+          championship: 'Formula 1',
+          season_start: 2004,
+          season_end: null,
+          races: 18,
+          wins: 15,
+          poles: 12,
+          podiums: 29,
+          fastest_laps: 14,
+          drivers_titles: 1,
+          constructors_titles: 1,
+          notes: null,
+        },
+      ],
+    },
+  ],
 }

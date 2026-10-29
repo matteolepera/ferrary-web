@@ -287,6 +287,11 @@
         "studio": "Studio",
         "persona": "Designer"
       }
+    },
+    "drivers": {
+      "title": "Drivers",
+      "text": "The people who raced Ferraris, with the cars they drove and their seasons.",
+      "birthDate": "Date of birth"
     }
   },
   "notFound": {

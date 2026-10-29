@@ -8,6 +8,8 @@ import { NotFoundPage } from '@/pages/NotFoundPage'
 import { ModelPage } from '@/pages/public/ModelPage'
 import { DesignerPage } from '@/pages/public/catalogs/DesignerPage'
 import { DesignersPage } from '@/pages/public/catalogs/DesignersPage'
+import { DriverPage } from '@/pages/public/catalogs/DriverPage'
+import { DriversPage } from '@/pages/public/catalogs/DriversPage'
 
 /**
  * Mappa del sito: ogni layout contiene le sue pagine.
@@ -22,6 +24,8 @@ export const routes: RouteObject[] = [
       { path: 'modelli/:slug', element: <ModelPage /> },
       { path: 'designer', element: <DesignersPage /> },
       { path: 'designer/:slug', element: <DesignerPage /> },
+      { path: 'piloti', element: <DriversPage /> },
+      { path: 'piloti/:slug', element: <DriverPage /> },
       // Qualsiasi altro indirizzo del sito pubblico
       { path: '*', element: <NotFoundPage /> },
     ],

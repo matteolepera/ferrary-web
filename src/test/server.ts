@@ -8,6 +8,8 @@ import {
   sf90Spider,
   designers,
   manzoniDetail,
+  drivers,
+  schumacherDetail,
 } from '@/test/fixtures'
 
 const API = 'http://localhost:8000/api'
@@ -36,6 +38,12 @@ export const server = setupServer(
   http.get(`${API}/designers/:slug`, ({ params }) =>
     params.slug === manzoniDetail.slug
       ? HttpResponse.json({ data: manzoniDetail })
+      : new HttpResponse(null, { status: 404 }),
+  ),
+  http.get(`${API}/drivers`, () => HttpResponse.json({ data: drivers })),
+  http.get(`${API}/drivers/:slug`, ({ params }) =>
+    params.slug === schumacherDetail.slug
+      ? HttpResponse.json({ data: schumacherDetail })
       : new HttpResponse(null, { status: 404 }),
   ),
 )

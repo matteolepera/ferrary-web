@@ -287,6 +287,11 @@
         "studio": "Studio",
         "persona": "Designer"
       }
+    },
+    "drivers": {
+      "title": "Piloti",
+      "text": "Chi ha portato in gara le Ferrari, con le auto guidate e le loro stagioni.",
+      "birthDate": "Data di nascita"
     }
   },
   "notFound": {
