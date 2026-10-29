@@ -46,6 +46,14 @@ export const sf90Stradale: Version = {
   description: null,
 }
 
+/** Il dettaglio di un modello: come nell'elenco, più versioni e discendenza */
+export const sf90Detail: CarModel = {
+  ...sf90,
+  versions: [sf90Stradale],
+  predecessor: null,
+  successors: [],
+}
+
 export const modelsPage: Paginated<CarModel> = {
   data: [f40, sf90],
   links: { first: null, last: null, prev: null, next: null },

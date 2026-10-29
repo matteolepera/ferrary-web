@@ -71,7 +71,9 @@
     "acceleration": "0–100 km/h",
     "topSpeed": "Velocità max",
     "notAvailable": "n.d.",
-    "noPhoto": "Foto in arrivo"
+    "noPhoto": "Foto in arrivo",
+    "loading": "Caricamento del modello…",
+    "error": "Impossibile caricare questo modello."
   },
   "archive": {
     "eyebrow": "Archivio",

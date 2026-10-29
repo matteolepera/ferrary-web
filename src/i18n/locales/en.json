@@ -71,7 +71,9 @@
     "acceleration": "0–100 km/h",
     "topSpeed": "Top speed",
     "notAvailable": "n/a",
-    "noPhoto": "Photo coming soon"
+    "noPhoto": "Photo coming soon",
+    "loading": "Loading the model…",
+    "error": "Unable to load this model."
   },
   "archive": {
     "eyebrow": "Archive",
