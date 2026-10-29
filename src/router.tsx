@@ -5,6 +5,7 @@ import { DashboardPage } from '@/pages/admin/DashboardPage'
 import { ArchivePage } from '@/pages/public/ArchivePage'
 import { HomePage } from '@/pages/public/HomePage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
+import { ModelPage } from '@/pages/public/ModelPage'
 
 /**
  * Mappa del sito: ogni layout contiene le sue pagine.
@@ -16,6 +17,7 @@ export const routes: RouteObject[] = [
     children: [
       { index: true, element: <HomePage /> },
       { path: 'modelli', element: <ArchivePage /> },
+      { path: 'modelli/:slug', element: <ModelPage /> },
       // Qualsiasi altro indirizzo del sito pubblico
       { path: '*', element: <NotFoundPage /> },
     ],

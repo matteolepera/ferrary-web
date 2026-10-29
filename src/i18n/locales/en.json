@@ -71,7 +71,47 @@
     "acceleration": "0–100 km/h",
     "topSpeed": "Top speed",
     "notAvailable": "n/a",
-    "noPhoto": "Photo coming soon"
+    "noPhoto": "Photo coming soon",
+    "loading": "Loading the model…",
+    "error": "Unable to load this model.",
+    "versions": "Versions",
+    "since": "Since {{start}}",
+    "range": "{{start}}–{{end}}",
+    "specsLabel": "Technical data",
+    "engine": "Engine",
+    "displacement": "Displacement",
+    "dryWeight": "Dry weight",
+    "production": "Production",
+    "electric": "Electric",
+    "hybrid": "hybrid",
+    "layouts": {
+      "V": "V{{cylinders}}",
+      "piatto": "Flat-{{cylinders}}",
+      "in_linea": "Inline-{{cylinders}}"
+    },
+    "aspirations": {
+      "turbo": "turbo",
+      "compressore": "supercharged"
+    },
+    "productionTypes": {
+      "serie": "Series",
+      "serie_limitata": "Limited series",
+      "one_off": "One-off"
+    },
+    "units_one": "{{count}} unit",
+    "units_other": "{{count}} units",
+    "story": "The story",
+    "gallery": "Gallery",
+    "enlarge": "Enlarge photo: {{alt}}",
+    "closeGallery": "Close the gallery",
+    "previousImage": "Previous photo",
+    "nextImage": "Next photo",
+    "counter": "{{current}} of {{total}}",
+    "lineage": "Lineage",
+    "predecessor": "Predecessor",
+    "successor": "Successor",
+    "thisModel": "This model",
+    "related": "In the same family"
   },
   "archive": {
     "eyebrow": "Archive",
