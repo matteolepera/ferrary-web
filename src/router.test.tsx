@@ -65,3 +65,20 @@ test('il logo riporta alla home', () => {
     header.getByRole('link', { name: 'Ferrary, torna alla home' }),
   ).toHaveAttribute('href', '/')
 })
+
+test('il primo elemento della pagina porta direttamente al contenuto', () => {
+  renderRoute('/modelli')
+
+  expect(
+    screen.getByRole('link', { name: 'Vai al contenuto' }),
+  ).toHaveAttribute('href', '#contenuto')
+  expect(screen.getByRole('main')).toHaveAttribute('id', 'contenuto')
+})
+
+test('cambiando pagina il focus passa al contenuto', () => {
+  renderRoute('/')
+
+  fireEvent.click(dock().getByRole('link', { name: 'Archivio' }))
+
+  expect(screen.getByRole('main')).toHaveFocus()
+})
