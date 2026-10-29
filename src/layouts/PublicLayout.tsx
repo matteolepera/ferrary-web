@@ -11,6 +11,7 @@ import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { Logo } from '@/components/Logo'
 import { Dock } from '@/components/layout/Dock'
 import { SiteFooter } from '@/components/layout/SiteFooter'
+import { NavigationProgress } from '@/components/layout/NavigationProgress'
 
 /**
  * Cornice del sito pubblico. L'intestazione è trasparente e sta sopra l'apertura di ogni pagina.
@@ -41,6 +42,7 @@ export function PublicLayout() {
 
   return (
     <div className="flex min-h-screen flex-col">
+      <NavigationProgress />
       {/* Invisibile finché non lo si raggiunge con Tab: salta menu e intestazione */}
       <a
         href="#contenuto"

@@ -4,11 +4,14 @@ import { renderRoute } from '@/test/utils'
 const dock = () =>
   within(screen.getByRole('navigation', { name: 'Navigazione rapida' }))
 
-test('il monogramma riporta alla home', () => {
+test('il monogramma riporta alla home', async () => {
   renderRoute('/modelli')
 
+  const quick = within(
+    await screen.findByRole('navigation', { name: 'Navigazione rapida' }),
+  )
   expect(
-    dock().getByRole('link', { name: 'Ferrary, torna alla home' }),
+    quick.getByRole('link', { name: 'Ferrary, torna alla home' }),
   ).toHaveAttribute('href', '/')
 })
 
