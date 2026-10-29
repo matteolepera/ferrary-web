@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
+import { ErrorState } from '../ui/ErrorState'
 
 export type CatalogItem = {
   id: number
@@ -8,15 +9,15 @@ export type CatalogItem = {
   /** I dettagli sotto il nome, già pronti: "Studio · Italia · 12 Ferrari" */
   meta: string
 }
-
 type CatalogIndexProps = {
   title: string
   text: string
   items: CatalogItem[] | undefined
   isPending: boolean
   isError: boolean
+  /** Riprova a caricare l'elenco */
+  onRetry?: () => void
 }
-
 /**
  * L'elenco di un catalogo: designer, piloti o motori.
  */
@@ -26,6 +27,7 @@ export function CatalogIndex({
   items,
   isPending,
   isError,
+  onRetry,
 }: CatalogIndexProps) {
   const { t } = useTranslation()
 
@@ -44,9 +46,7 @@ export function CatalogIndex({
       </p>
 
       {isError && (
-        <p role="alert" className="text-errore mt-10">
-          {t('catalogs.error')}
-        </p>
+        <ErrorState message={t('catalogs.error')} onRetry={onRetry} />
       )}
 
       <ul aria-busy={isPending} className="border-linea mt-10 border-t">

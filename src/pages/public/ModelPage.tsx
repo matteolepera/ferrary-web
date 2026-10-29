@@ -2,7 +2,6 @@ import { useTranslation } from 'react-i18next'
 import { useParams, useSearchParams } from 'react-router'
 import { isNotFound } from '@/api/errors'
 import { ModelHero } from '@/components/model/ModelHero'
-import { Button } from '@/components/ui/Button'
 import { useModel } from '@/hooks/useModel'
 import { useVersion } from '@/hooks/useVersion'
 import { NotFoundPage } from '@/pages/NotFoundPage'
@@ -14,6 +13,7 @@ import { RelatedModels } from '@/components/model/RelatedModels'
 import { TechSheet } from '@/components/model/TechSheet'
 import { VersionPeople } from '@/components/model/VersionPeople'
 import { RacingResults } from '@/components/model/RacingResults'
+import { ErrorState } from '@/components/ui/ErrorState'
 
 export function ModelPage() {
   const { t } = useTranslation()
@@ -40,12 +40,11 @@ export function ModelPage() {
 
   if (isError) {
     return (
-      <div role="alert" className="px-5 pt-36 pb-16 text-center">
-        <p className="text-errore">{t('model.error')}</p>
-        <Button variant="secondary" onClick={() => refetch()} className="mt-6">
-          {t('archive.retry')}
-        </Button>
-      </div>
+      <ErrorState
+        message={t('model.error')}
+        onRetry={() => refetch()}
+        className="px-5 pt-36 pb-16"
+      />
     )
   }
 

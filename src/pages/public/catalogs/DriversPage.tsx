@@ -4,7 +4,7 @@ import { useDrivers } from '@/hooks/useDrivers'
 
 export function DriversPage() {
   const { t } = useTranslation()
-  const { data, isPending, isError } = useDrivers()
+  const { data, isPending, isError, refetch } = useDrivers()
 
   const items = data?.map((driver) => ({
     id: driver.id,
@@ -26,6 +26,7 @@ export function DriversPage() {
       items={items}
       isPending={isPending}
       isError={isError}
+      onRetry={() => refetch()}
     />
   )
 }

@@ -13,6 +13,7 @@ import { DriversPage } from '@/pages/public/catalogs/DriversPage'
 import { EnginePage } from '@/pages/public/catalogs/EnginePage'
 import { EnginesPage } from '@/pages/public/catalogs/EnginesPage'
 import { HistoryPage } from '@/pages/public/HistoryPage'
+import { RouteErrorPage } from '@/pages/RouteErrorPage'
 
 /**
  * Mappa del sito: ogni layout contiene le sue pagine.
@@ -21,6 +22,7 @@ import { HistoryPage } from '@/pages/public/HistoryPage'
 export const routes: RouteObject[] = [
   {
     element: <PublicLayout />,
+    errorElement: <RouteErrorPage />,
     children: [
       { index: true, element: <HomePage /> },
       { path: 'modelli', element: <ArchivePage /> },
@@ -39,6 +41,7 @@ export const routes: RouteObject[] = [
   {
     path: 'admin',
     element: <AdminLayout />,
+    errorElement: <RouteErrorPage />,
     children: [
       { index: true, element: <DashboardPage /> },
       // Qualsiasi altro indirizzo sotto /admin

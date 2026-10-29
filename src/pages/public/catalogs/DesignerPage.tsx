@@ -4,11 +4,18 @@ import { isNotFound } from '@/api/errors'
 import { CatalogDetail } from '@/components/catalog/CatalogDetail'
 import { useDesigner } from '@/hooks/useDesigners'
 import { NotFoundPage } from '@/pages/NotFoundPage'
+import { ErrorState } from '@/components/ui/ErrorState'
 
 export function DesignerPage() {
   const { t } = useTranslation()
   const { slug = '' } = useParams()
-  const { data: designer, isPending, isError, error } = useDesigner(slug)
+  const {
+    data: designer,
+    isPending,
+    isError,
+    error,
+    refetch,
+  } = useDesigner(slug)
 
   if (isError && isNotFound(error)) {
     return <NotFoundPage />
@@ -16,9 +23,11 @@ export function DesignerPage() {
 
   if (isError) {
     return (
-      <p role="alert" className="text-errore px-5 pt-36 pb-16 text-center">
-        {t('catalogs.error')}
-      </p>
+      <ErrorState
+        message={t('catalogs.error')}
+        onRetry={() => refetch()}
+        className="px-5 pt-36 pb-16"
+      />
     )
   }
 

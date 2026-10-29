@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button'
 import { useModelTimeline } from '@/hooks/useModelTimeline'
 import { useWhenVisible } from '@/hooks/useWhenVisible'
 import type { CarModel } from '@/types/catalog'
+import { ErrorState } from '@/components/ui/ErrorState'
 
 type Decade = { key: string; label: string; models: CarModel[] }
 
@@ -17,6 +18,7 @@ export function HistoryPage() {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
+    refetch,
   } = useModelTimeline()
 
   // Stabile tra un disegno e l'altro, così l'osservatore non viene ricreato a ogni modello aggiunto
@@ -75,9 +77,7 @@ export function HistoryPage() {
       </p>
 
       {isError && (
-        <p role="alert" className="text-errore mt-10">
-          {t('history.error')}
-        </p>
+        <ErrorState message={t('history.error')} onRetry={() => refetch()} />
       )}
 
       {isPending && (

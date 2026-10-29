@@ -236,7 +236,6 @@
     "count_one": "{{count}} model",
     "count_other": "{{count}} models",
     "error": "Unable to load the archive.",
-    "retry": "Try again",
     "empty": "No Ferrari matches these filters.",
     "clear": "Clear filters",
     "pagination": "Archive pages",
@@ -308,6 +307,18 @@
     "loadingMore": "Loading…",
     "error": "Unable to load the history.",
     "undated": "Undated"
+  },
+  "common": {
+    "retry": "Try again"
+  },
+  "errors": {
+    "unexpected": {
+      "eyebrow": "Unexpected error",
+      "title": "Something went wrong.",
+      "text": "This page ran into a problem. Reload it, or go back to the start.",
+      "reload": "Reload the page",
+      "home": "Back to the start"
+    }
   },
   "notFound": {
     "code": "Error 404",

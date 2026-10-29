@@ -236,7 +236,6 @@
     "count_one": "{{count}} modello",
     "count_other": "{{count}} modelli",
     "error": "Impossibile caricare l'archivio.",
-    "retry": "Riprova",
     "empty": "Nessuna Ferrari corrisponde a questi filtri.",
     "clear": "Azzera i filtri",
     "pagination": "Pagine dell'archivio",
@@ -308,6 +307,18 @@
     "loadingMore": "Caricamento…",
     "error": "Impossibile caricare la storia.",
     "undated": "Senza data"
+  },
+  "common": {
+    "retry": "Riprova"
+  },
+  "errors": {
+    "unexpected": {
+      "eyebrow": "Errore imprevisto",
+      "title": "Qualcosa si è inceppato.",
+      "text": "La pagina ha incontrato un problema. Ricaricala, oppure torna all'inizio.",
+      "reload": "Ricarica la pagina",
+      "home": "Torna all'inizio"
+    }
   },
   "notFound": {
     "code": "Errore 404",

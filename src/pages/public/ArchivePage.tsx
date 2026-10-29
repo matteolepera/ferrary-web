@@ -8,6 +8,7 @@ import { ModelCard } from '@/components/catalog/ModelCard'
 import { Button } from '@/components/ui/Button'
 import { useArchiveFilters } from '@/hooks/useArchiveFilters'
 import { useModels } from '@/hooks/useModels'
+import { ErrorState } from '@/components/ui/ErrorState'
 
 const gridClass = 'mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3'
 
@@ -103,16 +104,7 @@ export function ArchivePage() {
       </div>
 
       {isError && (
-        <div role="alert" className="py-16 text-center">
-          <p className="text-errore">{t('archive.error')}</p>
-          <Button
-            variant="secondary"
-            onClick={() => refetch()}
-            className="mt-6"
-          >
-            {t('archive.retry')}
-          </Button>
-        </div>
+        <ErrorState message={t('archive.error')} onRetry={() => refetch()} />
       )}
 
       {isPending && (
