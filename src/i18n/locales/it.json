@@ -111,7 +111,97 @@
     "predecessor": "Predecessore",
     "successor": "Successore",
     "thisModel": "Questo modello",
-    "related": "Nella stessa famiglia"
+    "related": "Nella stessa famiglia",
+    "sheet": {
+      "title": "Scheda tecnica",
+      "sections": {
+        "powertrain": "Motore e trasmissione",
+        "performance": "Prestazioni",
+        "dimensions": "Dimensioni e peso",
+        "chassis": "Telaio",
+        "body": "Carrozzeria e produzione"
+      },
+      "rows": {
+        "engineCode": "Codice motore",
+        "architecture": "Architettura",
+        "aspiration": "Alimentazione",
+        "boreStroke": "Alesaggio e corsa",
+        "valves": "Valvole per cilindro",
+        "icePower": "Potenza del motore termico",
+        "iceTorque": "Coppia del motore termico",
+        "maxRpm": "Regime massimo",
+        "consumption": "Consumo medio",
+        "electricMotors": "Motori elettrici",
+        "electricPower": "Potenza elettrica",
+        "battery": "Batteria",
+        "electricRange": "Autonomia elettrica",
+        "systemPower": "Potenza di sistema",
+        "systemTorque": "Coppia di sistema",
+        "gearbox": "Cambio",
+        "drivetrain": "Trazione",
+        "zeroTo200": "0–200 km/h",
+        "fiorano": "Giro di Fiorano",
+        "length": "Lunghezza",
+        "width": "Larghezza",
+        "height": "Altezza",
+        "wheelbase": "Passo",
+        "frontDistribution": "Peso sull'anteriore",
+        "chassisMaterial": "Materiale del telaio",
+        "brakes": "Freni",
+        "vehicleType": "Tipo",
+        "bodyType": "Carrozzeria",
+        "seats": "Posti",
+        "projectCode": "Codice di progetto",
+        "years": "Anni di produzione"
+      },
+      "vAngle": "{{layout}} a {{angle}}°",
+      "rpm": "giri/min",
+      "gears_one": "{{count}} marcia",
+      "gears_other": "{{count}} marce",
+      "aspirations": {
+        "aspirato": "Aspirato",
+        "turbo": "Sovralimentato con turbo",
+        "compressore": "Sovralimentato con compressore"
+      },
+      "gearboxes": {
+        "manuale": "Manuale",
+        "robotizzato": "Robotizzato",
+        "doppia_frizione": "Doppia frizione",
+        "sequenziale": "Sequenziale",
+        "automatico": "Automatico"
+      },
+      "drivetrains": {
+        "posteriore": "Posteriore",
+        "integrale": "Integrale"
+      },
+      "chassisMaterials": {
+        "acciaio": "Acciaio",
+        "alluminio": "Alluminio",
+        "fibra_di_carbonio": "Fibra di carbonio",
+        "misto": "Misto"
+      },
+      "brakeTypes": {
+        "tamburo": "A tamburo",
+        "disco_acciaio": "A disco in acciaio",
+        "carboceramici": "Carboceramici"
+      },
+      "bodyTypes": {
+        "coupe": "Coupé",
+        "spider": "Spider",
+        "targa": "Targa",
+        "barchetta": "Barchetta",
+        "suv": "SUV",
+        "monoposto": "Monoposto"
+      },
+      "vehicleTypes": {
+        "stradale": "Stradale",
+        "pista": "Da pista",
+        "gt_corsa": "GT da corsa",
+        "prototipo": "Prototipo",
+        "f1": "Formula 1",
+        "concept": "Concept"
+      }
+    }
   },
   "archive": {
     "eyebrow": "Archivio",

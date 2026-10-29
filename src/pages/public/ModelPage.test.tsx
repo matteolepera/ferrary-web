@@ -55,8 +55,9 @@ test("mostra la prima versione e permette di sceglierne un'altra", async () => {
   expect(
     await screen.findByRole('heading', { level: 1, name: 'SF90 Spider' }),
   ).toBeInTheDocument()
-  // La Spider è ancora in produzione
-  expect(screen.getByText('Dal 2020')).toBeInTheDocument()
+  // La Spider è ancora in produzione: lo dice l'apertura, accanto alla famiglia
+  const hero = within(screen.getByRole('region', { name: 'SF90 Spider' }))
+  expect(hero.getByText('Dal 2020')).toBeInTheDocument()
 })
 
 test("apre direttamente la versione scritta nell'indirizzo", async () => {
@@ -209,4 +210,39 @@ test('propone altri modelli della stessa famiglia', async () => {
     related.queryByRole('link', { name: /SF90 Stradale/ }),
   ).not.toBeInTheDocument()
   expect(received.params.get('category')).toBe('stradali')
+})
+
+test('mostra la scheda tecnica con i valori leggibili', async () => {
+  renderRoute('/modelli/sf90-stradale')
+
+  const sheet = within(
+    await screen.findByRole('region', { name: 'Scheda tecnica' }),
+  )
+
+  expect(sheet.getByText('F154FA')).toBeInTheDocument()
+  expect(sheet.getByText('V8 a 90°')).toBeInTheDocument()
+  expect(sheet.getByText('Doppia frizione, 8 marce')).toBeInTheDocument()
+  expect(sheet.getByText('Integrale')).toBeInTheDocument()
+  expect(sheet.getByText('1:19')).toBeInTheDocument()
+  expect(sheet.getByText('4710 mm')).toBeInTheDocument()
+  expect(sheet.getByText('Carboceramici')).toBeInTheDocument()
+  // Il dato manca: la riga non compare
+  expect(sheet.queryByText("Peso sull'anteriore")).not.toBeInTheDocument()
+})
+
+test('nasconde le sezioni senza dati', async () => {
+  renderRoute('/modelli/sf90-stradale?versione=sf90-spider')
+
+  const sheet = within(
+    await screen.findByRole('region', { name: 'Scheda tecnica' }),
+  )
+
+  // La Spider di esempio non ha dati tecnici, ma ha quelli di carrozzeria e produzione
+  expect(
+    sheet.getByRole('heading', { name: 'Carrozzeria e produzione' }),
+  ).toBeInTheDocument()
+  expect(sheet.getByText('Spider')).toBeInTheDocument()
+  expect(
+    sheet.queryByRole('heading', { name: 'Prestazioni' }),
+  ).not.toBeInTheDocument()
 })
