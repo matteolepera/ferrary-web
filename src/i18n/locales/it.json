@@ -201,6 +201,15 @@
         "f1": "Formula 1",
         "concept": "Concept"
       }
+    },
+    "people": {
+      "title": "Le persone",
+      "designers": "Design e carrozzeria",
+      "drivers": "Piloti",
+      "roles": {
+        "design": "Design",
+        "carrozzeria": "Carrozzeria"
+      }
     }
   },
   "archive": {

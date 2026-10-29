@@ -201,6 +201,15 @@
         "f1": "Formula 1",
         "concept": "Concept"
       }
+    },
+    "people": {
+      "title": "The people",
+      "designers": "Design and coachwork",
+      "drivers": "Drivers",
+      "roles": {
+        "design": "Design",
+        "carrozzeria": "Coachwork"
+      }
     }
   },
   "archive": {

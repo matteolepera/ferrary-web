@@ -60,6 +60,25 @@ export const sf90Stradale: Version = {
       sort_order: 2,
     },
   ],
+  designers: [
+    {
+      id: 1,
+      name: 'Centro Stile Ferrari',
+      slug: 'centro-stile-ferrari',
+      type: 'studio',
+      country: 'Italia',
+      role: 'design',
+    },
+    {
+      id: 2,
+      name: 'Flavio Manzoni',
+      slug: 'flavio-manzoni',
+      type: 'persona',
+      country: 'Italia',
+      role: 'design',
+    },
+  ],
+  drivers: [],
 }
 
 const f154fa: Engine = {

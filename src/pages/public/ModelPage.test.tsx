@@ -2,7 +2,12 @@ import { screen, fireEvent, within, waitFor } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
 import { server } from '@/test/server'
 import { renderRoute } from '@/test/utils'
-import { f40, modelsPage, sf90Detail } from '@/test/fixtures'
+import {
+  f40,
+  modelsPage,
+  sf90Detail,
+  sf90StradaleDetail,
+} from '@/test/fixtures'
 
 test('mostra il modello e lo scrive nel titolo della scheda', async () => {
   renderRoute('/modelli/sf90-stradale')
@@ -244,5 +249,64 @@ test('nasconde le sezioni senza dati', async () => {
   expect(sheet.getByText('Spider')).toBeInTheDocument()
   expect(
     sheet.queryByRole('heading', { name: 'Prestazioni' }),
+  ).not.toBeInTheDocument()
+})
+
+test('mostra i designer con il loro ruolo e il link alla loro pagina', async () => {
+  renderRoute('/modelli/sf90-stradale')
+
+  const people = within(
+    await screen.findByRole('region', { name: 'Le persone' }),
+  )
+
+  expect(people.getByRole('link', { name: /Flavio Manzoni/ })).toHaveAttribute(
+    'href',
+    '/designer/flavio-manzoni',
+  )
+  expect(people.getAllByText('Design')).toHaveLength(2)
+  // Un'auto da strada senza piloti: il gruppo non compare
+  expect(
+    people.queryByRole('heading', { name: 'Piloti' }),
+  ).not.toBeInTheDocument()
+})
+
+test('mostra i piloti di una versione da corsa', async () => {
+  server.use(
+    http.get('http://localhost:8000/api/versions/:slug', () =>
+      HttpResponse.json({
+        data: {
+          ...sf90StradaleDetail,
+          drivers: [
+            {
+              id: 1,
+              first_name: 'Michael',
+              last_name: 'Schumacher',
+              slug: 'michael-schumacher',
+              nationality: 'Germania',
+              birth_date: '1969-01-03',
+            },
+          ],
+        },
+      }),
+    ),
+  )
+
+  renderRoute('/modelli/sf90-stradale')
+
+  const people = within(
+    await screen.findByRole('region', { name: 'Le persone' }),
+  )
+
+  expect(
+    people.getByRole('link', { name: /Michael Schumacher/ }),
+  ).toHaveAttribute('href', '/piloti/michael-schumacher')
+})
+
+test('senza persone collegate la sezione non compare', async () => {
+  renderRoute('/modelli/sf90-stradale?versione=sf90-spider')
+  await screen.findByRole('region', { name: 'Scheda tecnica' })
+
+  expect(
+    screen.queryByRole('region', { name: 'Le persone' }),
   ).not.toBeInTheDocument()
 })
