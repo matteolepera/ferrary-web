@@ -46,10 +46,23 @@ export const sf90Stradale: Version = {
   description: null,
 }
 
+export const sf90Spider: Version = {
+  id: 2,
+  name: 'SF90 Spider',
+  slug: 'sf90-spider',
+  vehicle_type: 'stradale',
+  body_type: 'spider',
+  project_code: 'F173',
+  seats: 2,
+  years: { start: 2020, end: null, in_production: true },
+  production: { type: 'serie', units: null },
+  description: null,
+}
+
 /** Il dettaglio di un modello: come nell'elenco, più versioni e discendenza */
 export const sf90Detail: CarModel = {
   ...sf90,
-  versions: [sf90Stradale],
+  versions: [sf90Stradale, sf90Spider],
   predecessor: null,
   successors: [],
 }

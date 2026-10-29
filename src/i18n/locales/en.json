@@ -73,7 +73,10 @@
     "notAvailable": "n/a",
     "noPhoto": "Photo coming soon",
     "loading": "Loading the model…",
-    "error": "Unable to load this model."
+    "error": "Unable to load this model.",
+    "versions": "Versions",
+    "since": "Since {{start}}",
+    "range": "{{start}}–{{end}}"
   },
   "archive": {
     "eyebrow": "Archive",

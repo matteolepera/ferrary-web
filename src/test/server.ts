@@ -1,6 +1,12 @@
 import { http, HttpResponse } from 'msw'
 import { setupServer } from 'msw/node'
-import { modelsPage, families, sf90Detail } from '@/test/fixtures'
+import {
+  modelsPage,
+  families,
+  sf90Detail,
+  sf90Stradale,
+  sf90Spider,
+} from '@/test/fixtures'
 
 const API = 'http://localhost:8000/api'
 
@@ -15,4 +21,13 @@ export const server = setupServer(
       ? HttpResponse.json({ data: sf90Detail })
       : new HttpResponse(null, { status: 404 }),
   ),
+  http.get(`${API}/versions/:slug`, ({ params }) => {
+    const version = [sf90Stradale, sf90Spider].find(
+      (item) => item.slug === params.slug,
+    )
+
+    return version
+      ? HttpResponse.json({ data: version })
+      : new HttpResponse(null, { status: 404 })
+  }),
 )

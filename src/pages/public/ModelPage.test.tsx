@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react'
+import { screen, fireEvent, within } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
 import { server } from '@/test/server'
 import { renderRoute } from '@/test/utils'
@@ -35,4 +35,41 @@ test('un errore del server permette di riprovare', async () => {
     await screen.findByRole('alert', {}, { timeout: 3000 }),
   ).toHaveTextContent('Impossibile caricare questo modello.')
   expect(screen.getByRole('button', { name: 'Riprova' })).toBeInTheDocument()
+})
+
+test("mostra la prima versione e permette di sceglierne un'altra", async () => {
+  renderRoute('/modelli/sf90-stradale')
+
+  expect(
+    await screen.findByRole('heading', { level: 1, name: 'SF90 Stradale' }),
+  ).toBeInTheDocument()
+
+  const versions = within(screen.getByRole('group', { name: 'Versioni' }))
+  expect(
+    versions.getByRole('button', { name: 'SF90 Stradale' }),
+  ).toHaveAttribute('aria-pressed', 'true')
+
+  fireEvent.click(versions.getByRole('button', { name: 'SF90 Spider' }))
+
+  expect(
+    await screen.findByRole('heading', { level: 1, name: 'SF90 Spider' }),
+  ).toBeInTheDocument()
+  // La Spider è ancora in produzione
+  expect(screen.getByText('Dal 2020')).toBeInTheDocument()
+})
+
+test("apre direttamente la versione scritta nell'indirizzo", async () => {
+  renderRoute('/modelli/sf90-stradale?versione=sf90-spider')
+
+  expect(
+    await screen.findByRole('heading', { level: 1, name: 'SF90 Spider' }),
+  ).toBeInTheDocument()
+})
+
+test('ignora una versione che non esiste e mostra la prima', async () => {
+  renderRoute('/modelli/sf90-stradale?versione=inventata')
+
+  expect(
+    await screen.findByRole('heading', { level: 1, name: 'SF90 Stradale' }),
+  ).toBeInTheDocument()
 })

@@ -1,14 +1,29 @@
 import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router'
+import { useParams, useSearchParams } from 'react-router'
 import { isNotFound } from '@/api/errors'
+import { ModelHero } from '@/components/model/ModelHero'
 import { Button } from '@/components/ui/Button'
 import { useModel } from '@/hooks/useModel'
+import { useVersion } from '@/hooks/useVersion'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 
 export function ModelPage() {
   const { t } = useTranslation()
   const { slug = '' } = useParams()
   const { data: model, isPending, isError, error, refetch } = useModel(slug)
+
+  const [params, setParams] = useSearchParams()
+
+  // La versione dell'indirizzo, se esiste; altrimenti la prima del modello
+  const versions = model?.versions ?? []
+  const selected =
+    versions.find((version) => version.slug === params.get('versione')) ??
+    versions[0]
+  const { data: version } = useVersion(selected?.slug)
+
+  // Le versioni sono schede della stessa pagina: l'indirizzo viene sostituito, non accumulato
+  const selectVersion = (slug: string) =>
+    setParams({ versione: slug }, { replace: true, preventScrollReset: true })
 
   // Un indirizzo sbagliato o un modello ritirato: la stessa pagina degli indirizzi inesistenti
   if (isError && isNotFound(error)) {
@@ -37,13 +52,14 @@ export function ModelPage() {
   return (
     <>
       {/* React 19 sposta da solo il titolo nella <head> della pagina */}
-      <title>{`${model.name} – Ferrary`}</title>
+      <title>{`${selected?.name ?? model.name} – Ferrary`}</title>
 
-      <section className="mx-auto max-w-[1360px] px-5 pt-28 md:px-10 md:pt-36">
-        <h1 className="font-display text-[3.25rem] leading-none font-extrabold tracking-[-0.035em] md:text-7xl">
-          {model.name}
-        </h1>
-      </section>
+      <ModelHero
+        model={model}
+        version={version}
+        selectedSlug={selected?.slug}
+        onSelect={selectVersion}
+      />
     </>
   )
 }

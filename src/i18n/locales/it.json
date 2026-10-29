@@ -73,7 +73,10 @@
     "notAvailable": "n.d.",
     "noPhoto": "Foto in arrivo",
     "loading": "Caricamento del modello…",
-    "error": "Impossibile caricare questo modello."
+    "error": "Impossibile caricare questo modello.",
+    "versions": "Versioni",
+    "since": "Dal {{start}}",
+    "range": "{{start}}–{{end}}"
   },
   "archive": {
     "eyebrow": "Archivio",
