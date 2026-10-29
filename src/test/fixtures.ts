@@ -44,6 +44,22 @@ export const sf90Stradale: Version = {
   years: { start: 2019, end: null, in_production: false },
   production: { type: 'serie', units: null },
   description: null,
+  images: [
+    {
+      id: 1,
+      url: '/foto/sf90-tre-quarti.webp',
+      alt_text: 'SF90 Stradale di tre quarti',
+      is_cover: true,
+      sort_order: 1,
+    },
+    {
+      id: 2,
+      url: '/foto/sf90-posteriore.webp',
+      alt_text: 'SF90 Stradale vista da dietro',
+      is_cover: false,
+      sort_order: 2,
+    },
+  ],
 }
 
 const f154fa: Engine = {

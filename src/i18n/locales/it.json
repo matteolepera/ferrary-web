@@ -100,7 +100,13 @@
     },
     "units_one": "{{count}} esemplare",
     "units_other": "{{count}} esemplari",
-    "story": "Il racconto"
+    "story": "Il racconto",
+    "gallery": "Galleria",
+    "enlarge": "Ingrandisci la foto: {{alt}}",
+    "closeGallery": "Chiudi la galleria",
+    "previousImage": "Foto precedente",
+    "nextImage": "Foto successiva",
+    "counter": "{{current}} di {{total}}"
   },
   "archive": {
     "eyebrow": "Archivio",

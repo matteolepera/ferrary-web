@@ -100,7 +100,13 @@
     },
     "units_one": "{{count}} unit",
     "units_other": "{{count}} units",
-    "story": "The story"
+    "story": "The story",
+    "gallery": "Gallery",
+    "enlarge": "Enlarge photo: {{alt}}",
+    "closeGallery": "Close the gallery",
+    "previousImage": "Previous photo",
+    "nextImage": "Next photo",
+    "counter": "{{current}} of {{total}}"
   },
   "archive": {
     "eyebrow": "Archive",

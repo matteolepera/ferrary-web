@@ -11,3 +11,12 @@ afterAll(() => server.close())
 beforeEach(() => i18n.changeLanguage('it'))
 // Il browser simulato non sa scorrere la pagina: una finta funzione evita gli avvisi
 window.scrollTo = vi.fn() as unknown as typeof window.scrollTo
+
+// Il browser simulato non sa aprire le finestre di dialogo native: imitiamo apertura e chiusura
+HTMLDialogElement.prototype.showModal = function (this: HTMLDialogElement) {
+  this.open = true
+}
+HTMLDialogElement.prototype.close = function (this: HTMLDialogElement) {
+  this.open = false
+  this.dispatchEvent(new Event('close'))
+}

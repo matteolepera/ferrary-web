@@ -8,6 +8,7 @@ import { useVersion } from '@/hooks/useVersion'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { VersionSpecStrip } from '@/components/model/VersionSpecStrip'
 import { VersionStory } from '@/components/model/VersionStory'
+import { VersionGallery } from '@/components/model/VersionGallery'
 
 export function ModelPage() {
   const { t } = useTranslation()
@@ -65,6 +66,7 @@ export function ModelPage() {
 
       <VersionSpecStrip version={version} />
       <VersionStory version={version} />
+      <VersionGallery version={version} />
     </>
   )
 }

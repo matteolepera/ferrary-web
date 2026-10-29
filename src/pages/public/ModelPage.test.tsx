@@ -112,3 +112,41 @@ test('mostra il racconto solo se la versione ne ha uno', async () => {
     ).not.toBeInTheDocument(),
   )
 })
+
+test('apre le foto della galleria a schermo intero e le scorre', async () => {
+  renderRoute('/modelli/sf90-stradale')
+
+  const gallery = within(
+    await screen.findByRole('region', { name: 'Galleria' }),
+  )
+  fireEvent.click(
+    gallery.getByRole('button', {
+      name: 'Ingrandisci la foto: SF90 Stradale di tre quarti',
+    }),
+  )
+
+  const viewer = within(screen.getByRole('dialog', { name: 'Galleria' }))
+  expect(viewer.getByText('1 di 2')).toBeInTheDocument()
+
+  fireEvent.click(viewer.getByRole('button', { name: 'Foto successiva' }))
+
+  expect(
+    viewer.getByRole('img', { name: 'SF90 Stradale vista da dietro' }),
+  ).toBeInTheDocument()
+  expect(viewer.getByText('2 di 2')).toBeInTheDocument()
+
+  fireEvent.click(viewer.getByRole('button', { name: 'Chiudi la galleria' }))
+
+  expect(document.querySelector('dialog')).not.toHaveAttribute('open')
+})
+
+test('nasconde la galleria se la versione non ha foto', async () => {
+  renderRoute('/modelli/sf90-stradale?versione=sf90-spider')
+
+  // Quando compaiono i dati tecnici, il dettaglio della Spider è arrivato
+  await screen.findByRole('region', { name: 'Dati tecnici' })
+
+  expect(
+    screen.queryByRole('region', { name: 'Galleria' }),
+  ).not.toBeInTheDocument()
+})
