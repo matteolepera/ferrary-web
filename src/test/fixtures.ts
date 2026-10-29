@@ -1,5 +1,11 @@
 import type { Paginated } from '@/types/api'
-import type { CarModel, Version, Category, Engine } from '@/types/catalog'
+import type {
+  CarModel,
+  Version,
+  Category,
+  Engine,
+  Designer,
+} from '@/types/catalog'
 
 export const families: Category[] = [
   { id: 2, name: 'Stradali', slug: 'stradali', models_count: 12 },
@@ -173,4 +179,29 @@ export const modelsPage: Paginated<CarModel> = {
     from: 1,
     to: 2,
   },
+}
+
+export const designers: Designer[] = [
+  {
+    id: 1,
+    name: 'Centro Stile Ferrari',
+    slug: 'centro-stile-ferrari',
+    type: 'studio',
+    country: 'Italia',
+    versions_count: 3,
+  },
+  {
+    id: 2,
+    name: 'Flavio Manzoni',
+    slug: 'flavio-manzoni',
+    type: 'persona',
+    country: 'Italia',
+    versions_count: 1,
+  },
+]
+
+/** Il dettaglio di un designer: le versioni arrivano con il loro modello */
+export const manzoniDetail: Designer = {
+  ...designers[1],
+  versions: [{ ...sf90Stradale, model: sf90, designer_role: 'design' }],
 }

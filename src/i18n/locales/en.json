@@ -274,6 +274,21 @@
       }
     }
   },
+  "catalogs": {
+    "eyebrow": "Catalogues",
+    "count_one": "{{count}} Ferrari",
+    "count_other": "{{count}} Ferraris",
+    "works": "The Ferraris",
+    "error": "Unable to load this catalogue.",
+    "designers": {
+      "title": "Designers",
+      "text": "The studios and people who designed and built the bodies of Ferrari cars.",
+      "types": {
+        "studio": "Studio",
+        "persona": "Designer"
+      }
+    }
+  },
   "notFound": {
     "code": "Error 404",
     "title": "Page not found",

@@ -6,6 +6,8 @@ import {
   sf90Detail,
   sf90StradaleDetail,
   sf90Spider,
+  designers,
+  manzoniDetail,
 } from '@/test/fixtures'
 
 const API = 'http://localhost:8000/api'
@@ -30,4 +32,10 @@ export const server = setupServer(
       ? HttpResponse.json({ data: version })
       : new HttpResponse(null, { status: 404 })
   }),
+  http.get(`${API}/designers`, () => HttpResponse.json({ data: designers })),
+  http.get(`${API}/designers/:slug`, ({ params }) =>
+    params.slug === manzoniDetail.slug
+      ? HttpResponse.json({ data: manzoniDetail })
+      : new HttpResponse(null, { status: 404 }),
+  ),
 )

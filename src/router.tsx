@@ -6,6 +6,8 @@ import { ArchivePage } from '@/pages/public/ArchivePage'
 import { HomePage } from '@/pages/public/HomePage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { ModelPage } from '@/pages/public/ModelPage'
+import { DesignerPage } from '@/pages/public/catalogs/DesignerPage'
+import { DesignersPage } from '@/pages/public/catalogs/DesignersPage'
 
 /**
  * Mappa del sito: ogni layout contiene le sue pagine.
@@ -18,6 +20,8 @@ export const routes: RouteObject[] = [
       { index: true, element: <HomePage /> },
       { path: 'modelli', element: <ArchivePage /> },
       { path: 'modelli/:slug', element: <ModelPage /> },
+      { path: 'designer', element: <DesignersPage /> },
+      { path: 'designer/:slug', element: <DesignerPage /> },
       // Qualsiasi altro indirizzo del sito pubblico
       { path: '*', element: <NotFoundPage /> },
     ],
