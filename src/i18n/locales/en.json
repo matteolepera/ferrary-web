@@ -298,6 +298,17 @@
       "text": "From the Colombo V12 to the hybrid V6s: layout, displacement and the Ferraris that used them."
     }
   },
+  "history": {
+    "eyebrow": "History",
+    "title": "Since 1947, one Ferrari after another.",
+    "text": "Every Ferrari in the archive in chronological order, decade by decade.",
+    "count_one": "{{count}} model in chronological order",
+    "count_other": "{{count}} models in chronological order",
+    "loadMore": "Load more Ferraris",
+    "loadingMore": "Loading…",
+    "error": "Unable to load the history.",
+    "undated": "Undated"
+  },
   "notFound": {
     "code": "Error 404",
     "title": "Page not found",
