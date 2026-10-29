@@ -10,6 +10,8 @@ import {
   manzoniDetail,
   drivers,
   schumacherDetail,
+  engines,
+  f154faDetail,
 } from '@/test/fixtures'
 
 const API = 'http://localhost:8000/api'
@@ -44,6 +46,12 @@ export const server = setupServer(
   http.get(`${API}/drivers/:slug`, ({ params }) =>
     params.slug === schumacherDetail.slug
       ? HttpResponse.json({ data: schumacherDetail })
+      : new HttpResponse(null, { status: 404 }),
+  ),
+  http.get(`${API}/engines`, () => HttpResponse.json({ data: engines })),
+  http.get(`${API}/engines/:id`, ({ params }) =>
+    params.id === String(f154faDetail.id)
+      ? HttpResponse.json({ data: f154faDetail })
       : new HttpResponse(null, { status: 404 }),
   ),
 )

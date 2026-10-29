@@ -88,7 +88,7 @@ export const sf90Stradale: Version = {
   drivers: [],
 }
 
-const f154fa: Engine = {
+export const f154fa: Engine = {
   id: 1,
   code: 'F154FA',
   name: null,
@@ -101,6 +101,13 @@ const f154fa: Engine = {
   valves_per_cylinder: 4,
   aspiration: 'turbo',
   description: null,
+}
+
+export const engines: Engine[] = [{ ...f154fa, versions_count: 1 }]
+
+export const f154faDetail: Engine = {
+  ...f154fa,
+  versions: [{ ...sf90Stradale, model: sf90 }],
 }
 
 /** Il dettaglio della SF90 Stradale, come lo restituisce /api/versions/sf90-stradale */

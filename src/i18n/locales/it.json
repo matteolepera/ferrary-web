@@ -292,6 +292,10 @@
       "title": "Piloti",
       "text": "Chi ha portato in gara le Ferrari, con le auto guidate e le loro stagioni.",
       "birthDate": "Data di nascita"
+    },
+    "engines": {
+      "title": "Motori",
+      "text": "Dal V12 Colombo ai V6 ibridi: architettura, cilindrata e le Ferrari che li hanno montati."
     }
   },
   "notFound": {

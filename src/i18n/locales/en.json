@@ -292,6 +292,10 @@
       "title": "Drivers",
       "text": "The people who raced Ferraris, with the cars they drove and their seasons.",
       "birthDate": "Date of birth"
+    },
+    "engines": {
+      "title": "Engines",
+      "text": "From the Colombo V12 to the hybrid V6s: layout, displacement and the Ferraris that used them."
     }
   },
   "notFound": {
