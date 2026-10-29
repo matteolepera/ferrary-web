@@ -310,3 +310,55 @@ test('senza persone collegate la sezione non compare', async () => {
     screen.queryByRole('region', { name: 'Le persone' }),
   ).not.toBeInTheDocument()
 })
+
+test('mostra i risultati sportivi con i totali e la tabella', async () => {
+  server.use(
+    http.get('http://localhost:8000/api/versions/:slug', () =>
+      HttpResponse.json({
+        data: {
+          ...sf90StradaleDetail,
+          racing: [
+            {
+              championship: 'Formula 1',
+              season_start: 2004,
+              season_end: null,
+              races: 18,
+              wins: 15,
+              poles: 12,
+              podiums: 29,
+              fastest_laps: 14,
+              drivers_titles: 1,
+              constructors_titles: 1,
+              notes: null,
+            },
+          ],
+        },
+      }),
+    ),
+  )
+
+  renderRoute('/modelli/sf90-stradale')
+
+  const racing = within(
+    await screen.findByRole('region', { name: 'Risultati sportivi' }),
+  )
+
+  // I totali: un titolo piloti più uno costruttori
+  expect(
+    racing.getByText('Titoli conquistati').nextElementSibling,
+  ).toHaveTextContent('2')
+
+  // La riga della tabella, letta come la leggerebbe un lettore di schermo
+  const row = within(racing.getByRole('row', { name: /Formula 1/ }))
+  expect(row.getByRole('cell', { name: '2004' })).toBeInTheDocument()
+  expect(row.getByRole('cell', { name: '15' })).toBeInTheDocument()
+})
+
+test('senza risultati la sezione non compare', async () => {
+  renderRoute('/modelli/sf90-stradale')
+  await screen.findByRole('region', { name: 'Scheda tecnica' })
+
+  expect(
+    screen.queryByRole('region', { name: 'Risultati sportivi' }),
+  ).not.toBeInTheDocument()
+})

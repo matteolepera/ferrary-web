@@ -210,6 +210,22 @@
         "design": "Design",
         "carrozzeria": "Coachwork"
       }
+    },
+    "racing": {
+      "title": "Racing results",
+      "caption": "Results by championship and season",
+      "championship": "Championship",
+      "season": "Season",
+      "races": "Races",
+      "wins": "Wins",
+      "poles": "Poles",
+      "podiums": "Podiums",
+      "fastestLaps": "Fastest laps",
+      "driversTitles": "Drivers' titles",
+      "constructorsTitles": "Constructors' titles",
+      "totalWins": "Total wins",
+      "totalPodiums": "Total podiums",
+      "totalTitles": "Titles won"
     }
   },
   "archive": {

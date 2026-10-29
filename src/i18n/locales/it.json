@@ -210,6 +210,22 @@
         "design": "Design",
         "carrozzeria": "Carrozzeria"
       }
+    },
+    "racing": {
+      "title": "Risultati sportivi",
+      "caption": "Risultati per campionato e stagione",
+      "championship": "Campionato",
+      "season": "Stagione",
+      "races": "Gare",
+      "wins": "Vittorie",
+      "poles": "Pole",
+      "podiums": "Podi",
+      "fastestLaps": "Giri veloci",
+      "driversTitles": "Titoli piloti",
+      "constructorsTitles": "Titoli costruttori",
+      "totalWins": "Vittorie in totale",
+      "totalPodiums": "Podi in totale",
+      "totalTitles": "Titoli conquistati"
     }
   },
   "archive": {
