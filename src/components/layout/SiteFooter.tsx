@@ -30,7 +30,7 @@ export function SiteFooter() {
     <footer className="border-linea border-t">
       {/* In fondo, su mobile e tablet, lo spazio per il dock */}
       <div className="mx-auto max-w-[1360px] px-5 pt-12 pb-32 md:px-10 md:pt-16 lg:pb-10">
-        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.4fr_repeat(3,1fr)] lg:gap-12">
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.4fr_repeat(4,1fr)] lg:gap-12">
           <div className="md:col-span-2 lg:col-span-1">
             <Logo className="h-7 w-auto" />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-neutral-400">
@@ -76,6 +76,27 @@ export function SiteFooter() {
               </ul>
             </nav>
           )}
+
+          <nav aria-label={t('catalogs.eyebrow')}>
+            <h2 className={headingClass}>{t('catalogs.eyebrow')}</h2>
+            <ul className="mt-4 flex flex-col gap-2.5">
+              <li>
+                <Link to="/motori" className={linkClass}>
+                  {t('catalogs.engines.title')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/designer" className={linkClass}>
+                  {t('catalogs.designers.title')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/piloti" className={linkClass}>
+                  {t('catalogs.drivers.title')}
+                </Link>
+              </li>
+            </ul>
+          </nav>
 
           <nav aria-label={t('footer.project')}>
             <h2 className={headingClass}>{t('footer.project')}</h2>

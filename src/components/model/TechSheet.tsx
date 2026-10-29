@@ -1,12 +1,19 @@
 import { useTranslation } from 'react-i18next'
 import { formatLap, formatNumber } from '@/lib/format'
 import type { Version } from '@/types/catalog'
+import { Link } from 'react-router'
 
 type TechSheetProps = {
   version: Version | undefined
 }
 
-type Row = { key: string; label: string; value: string | null }
+type Row = {
+  key: string
+  label: string
+  value: string | null
+  /** Se presente, il valore porta a un'altra pagina */
+  to?: string
+}
 
 /**
  * La scheda tecnica completa della versione, divisa in sezioni.
@@ -74,6 +81,7 @@ export function TechSheet({ version }: TechSheetProps) {
           key: 'engineCode',
           label: t('model.sheet.rows.engineCode'),
           value: engine?.code ?? null,
+          to: engine ? `/motori/${engine.id}` : undefined,
         },
         {
           key: 'architecture',
@@ -326,7 +334,16 @@ export function TechSheet({ version }: TechSheetProps) {
                   >
                     <dt className="text-sm text-neutral-400">{row.label}</dt>
                     <dd className="text-right text-sm font-medium text-neutral-100 tabular-nums">
-                      {row.value}
+                      {row.to ? (
+                        <Link
+                          to={row.to}
+                          className="hover:decoration-rosso-acceso underline decoration-neutral-600 underline-offset-4 hover:text-white"
+                        >
+                          {row.value}
+                        </Link>
+                      ) : (
+                        row.value
+                      )}
                     </dd>
                   </div>
                 ))}

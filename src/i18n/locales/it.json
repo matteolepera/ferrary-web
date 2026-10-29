@@ -274,6 +274,30 @@
       }
     }
   },
+  "catalogs": {
+    "eyebrow": "Cataloghi",
+    "count_one": "{{count}} Ferrari",
+    "count_other": "{{count}} Ferrari",
+    "works": "Le Ferrari",
+    "error": "Impossibile caricare questo catalogo.",
+    "designers": {
+      "title": "Designer",
+      "text": "Gli studi e le persone che hanno disegnato e carrozzato le Ferrari.",
+      "types": {
+        "studio": "Studio",
+        "persona": "Designer"
+      }
+    },
+    "drivers": {
+      "title": "Piloti",
+      "text": "Chi ha portato in gara le Ferrari, con le auto guidate e le loro stagioni.",
+      "birthDate": "Data di nascita"
+    },
+    "engines": {
+      "title": "Motori",
+      "text": "Dal V12 Colombo ai V6 ibridi: architettura, cilindrata e le Ferrari che li hanno montati."
+    }
+  },
   "notFound": {
     "code": "Errore 404",
     "title": "Pagina non trovata",

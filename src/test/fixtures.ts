@@ -1,5 +1,12 @@
 import type { Paginated } from '@/types/api'
-import type { CarModel, Version, Category, Engine } from '@/types/catalog'
+import type {
+  CarModel,
+  Version,
+  Category,
+  Engine,
+  Designer,
+  Driver,
+} from '@/types/catalog'
 
 export const families: Category[] = [
   { id: 2, name: 'Stradali', slug: 'stradali', models_count: 12 },
@@ -81,7 +88,7 @@ export const sf90Stradale: Version = {
   drivers: [],
 }
 
-const f154fa: Engine = {
+export const f154fa: Engine = {
   id: 1,
   code: 'F154FA',
   name: null,
@@ -94,6 +101,13 @@ const f154fa: Engine = {
   valves_per_cylinder: 4,
   aspiration: 'turbo',
   description: null,
+}
+
+export const engines: Engine[] = [{ ...f154fa, versions_count: 1 }]
+
+export const f154faDetail: Engine = {
+  ...f154fa,
+  versions: [{ ...sf90Stradale, model: sf90 }],
 }
 
 /** Il dettaglio della SF90 Stradale, come lo restituisce /api/versions/sf90-stradale */
@@ -173,4 +187,86 @@ export const modelsPage: Paginated<CarModel> = {
     from: 1,
     to: 2,
   },
+}
+
+export const designers: Designer[] = [
+  {
+    id: 1,
+    name: 'Centro Stile Ferrari',
+    slug: 'centro-stile-ferrari',
+    type: 'studio',
+    country: 'Italia',
+    versions_count: 3,
+  },
+  {
+    id: 2,
+    name: 'Flavio Manzoni',
+    slug: 'flavio-manzoni',
+    type: 'persona',
+    country: 'Italia',
+    versions_count: 1,
+  },
+]
+
+/** Il dettaglio di un designer: le versioni arrivano con il loro modello */
+export const manzoniDetail: Designer = {
+  ...designers[1],
+  versions: [{ ...sf90Stradale, model: sf90, designer_role: 'design' }],
+}
+
+const f2004Model: CarModel = {
+  id: 3,
+  name: 'F2004',
+  slug: 'f2004',
+  description: 'La monoposto della stagione 2004.',
+}
+
+const f2004Version: Version = {
+  id: 3,
+  name: 'F2004',
+  slug: 'f2004',
+  vehicle_type: 'f1',
+  body_type: 'monoposto',
+  project_code: null,
+  seats: 1,
+  years: { start: 2004, end: 2004, in_production: false },
+  production: { type: null, units: null },
+  description: null,
+}
+
+export const drivers: Driver[] = [
+  {
+    id: 1,
+    first_name: 'Michael',
+    last_name: 'Schumacher',
+    slug: 'michael-schumacher',
+    nationality: 'Germania',
+    birth_date: '1969-01-03',
+    versions_count: 1,
+  },
+]
+
+export const schumacherDetail: Driver = {
+  ...drivers[0],
+  versions: [
+    {
+      ...f2004Version,
+      model: f2004Model,
+      racing: [
+        {
+          championship: 'Formula 1',
+          season_start: 2004,
+          season_end: null,
+          races: 18,
+          wins: 15,
+          poles: 12,
+          podiums: 29,
+          fastest_laps: 14,
+          drivers_titles: 1,
+          constructors_titles: 1,
+          notes: null,
+        },
+      ],
+    },
+  ],
 }
