@@ -5,6 +5,7 @@ import { PublicLayout } from '@/layouts/PublicLayout'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { HomePage } from '@/pages/public/HomePage'
 import { RouteErrorPage } from '@/pages/RouteErrorPage'
+import { RequireStaff } from './components/admin/RequireStaff'
 
 /**
  * Mappa del sito. La home e i layout sono nel file principale;
@@ -82,8 +83,20 @@ export const routes: RouteObject[] = [
     ],
   },
   {
+    // Fuori dal layout dell'admin: chi non è collegato non deve vederne la struttura
+    path: 'admin/login',
+    hydrateFallbackElement: <PageLoader />,
+    lazy: async () => ({
+      Component: (await import('@/pages/admin/LoginPage')).LoginPage,
+    }),
+  },
+  {
     path: 'admin',
-    element: <AdminLayout />,
+    element: (
+      <RequireStaff>
+        <AdminLayout />
+      </RequireStaff>
+    ),
     errorElement: <RouteErrorPage />,
     hydrateFallbackElement: <PageLoader />,
     children: [

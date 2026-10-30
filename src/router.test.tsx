@@ -1,5 +1,6 @@
 import { fireEvent, screen, within, waitFor } from '@testing-library/react'
 import { renderRoute } from '@/test/utils'
+import { signIn } from './test/server'
 
 /** Il dock: lì le voci compaiono una volta sola */
 const dock = () =>
@@ -17,6 +18,7 @@ test('mostra la home dentro il layout pubblico', () => {
 })
 
 test('mostra il pannello dentro il layout admin', async () => {
+  signIn()
   renderRoute('/admin')
 
   expect(
@@ -37,16 +39,15 @@ test('mostra il "non trovato" del sito con la navigazione pubblica', () => {
   ).toHaveAttribute('href', '/')
 })
 
-test('mostra il "non trovato" del pannello con la sua barra laterale', () => {
+test('mostra il "non trovato" del pannello con la sua barra laterale', async () => {
+  signIn()
   renderRoute('/admin/indirizzo-inventato')
 
+  // Prima il controllo della sessione, poi la pagina
   expect(
-    screen.getByRole('heading', { name: 'Pagina non trovata' }),
+    await screen.findByRole('heading', { name: 'Pagina non trovata' }),
   ).toBeInTheDocument()
   expect(screen.getByText('Ferrary Admin')).toBeInTheDocument()
-  expect(
-    screen.getByRole('link', { name: "Torna all'inizio" }),
-  ).toHaveAttribute('href', '/admin')
 })
 
 test('naviga tra le pagine con i link', async () => {

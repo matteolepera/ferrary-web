@@ -27,7 +27,10 @@ export function initCsrf() {
 
 // Ogni richiesta chiede i contenuti nella lingua scelta dal visitatore
 api.interceptors.request.use((config) => {
-  config.headers['Accept-Language'] = i18n.language
+  // La lingua del sito, a meno che la richiesta non ne chieda una sua (come fa l'area admin)
+  if (!config.headers.has('Accept-Language')) {
+    config.headers.set('Accept-Language', i18n.language)
+  }
 
   return config
 })

@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from 'react-router'
 import { NavigationProgress } from '@/components/layout/NavigationProgress'
+import { LogoutButton } from '@/components/admin/LogoutButton'
 
 /**
  * Cornice dell'area admin: barra laterale con le sezioni e contenuto a destra.
@@ -21,6 +22,7 @@ export function AdminLayout() {
             Pannello
           </NavLink>
         </nav>
+        <LogoutButton />
       </aside>
 
       <main className="flex-1 p-8">
