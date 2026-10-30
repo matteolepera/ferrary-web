@@ -13,6 +13,7 @@ import {
   engines,
   f154faDetail,
   dashboard,
+  staffMembers,
 } from '@/test/fixtures'
 
 import { staffUser, STAFF_PASSWORD } from '@/test/fixtures'
@@ -83,6 +84,9 @@ export const server = setupServer(
   http.post(`${API}/logout`, () => new HttpResponse(null, { status: 204 })),
   http.get(`${API}/admin/dashboard`, () =>
     HttpResponse.json({ data: dashboard }),
+  ),
+  http.get(`${API}/admin/staff`, () =>
+    HttpResponse.json({ data: staffMembers }),
   ),
 )
 

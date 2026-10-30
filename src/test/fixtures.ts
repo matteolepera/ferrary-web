@@ -342,3 +342,14 @@ export const dashboard: Dashboard = {
     },
   ],
 }
+
+export const staffMembers: User[] = [
+  staffUser,
+  { id: 2, name: 'Giulia Rossi', email: 'giulia@ferrary.test', role: 'admin' },
+  {
+    id: 3,
+    name: 'Andrea Bianchi',
+    email: 'andrea@ferrary.test',
+    role: 'moderator',
+  },
+]

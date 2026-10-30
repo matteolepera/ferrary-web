@@ -1,6 +1,6 @@
 import { screen, within } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
-import { dashboard } from '@/test/fixtures'
+import { dashboard, staffUser } from '@/test/fixtures'
 import { server, signIn } from '@/test/server'
 import { renderRoute } from '@/test/utils'
 
@@ -64,4 +64,37 @@ test('se il server non risponde, propone di riprovare', async () => {
     'Impossibile caricare il pannello',
   )
   expect(screen.getByRole('button', { name: 'Riprova' })).toBeInTheDocument()
+})
+
+test('mostra lo staff a chi lo gestisce', async () => {
+  signIn()
+  renderRoute('/admin')
+
+  const staff = within(await screen.findByRole('region', { name: 'Staff' }))
+  expect(await staff.findByText('Giulia')).toBeInTheDocument()
+  expect(staff.getByText('Moderatore')).toBeInTheDocument()
+  expect(staff.getByRole('link', { name: 'Gestisci' })).toHaveAttribute(
+    'href',
+    '/admin/staff',
+  )
+})
+
+test('ai moderatori non mostra lo staff, e non lo chiede nemmeno', async () => {
+  let requested = false
+  server.use(
+    http.get('http://localhost:8000/api/admin/staff', () => {
+      requested = true
+      return new HttpResponse(null, { status: 403 })
+    }),
+  )
+  signIn({ ...staffUser, role: 'moderator' })
+  renderRoute('/admin')
+
+  expect(
+    await screen.findByRole('region', { name: 'Pubblicati' }),
+  ).toBeInTheDocument()
+  expect(
+    screen.queryByRole('region', { name: 'Staff' }),
+  ).not.toBeInTheDocument()
+  expect(requested).toBe(false)
 })

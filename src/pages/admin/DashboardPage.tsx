@@ -10,6 +10,7 @@ import type { DashboardCounts } from '@/types/dashboard'
 import { ScheduleCard } from '@/components/admin/dashboard/ScheduleCard'
 import { ToCompleteCard } from '@/components/admin/dashboard/ToCompleteCard'
 import { ActivityCard } from '@/components/admin/dashboard/ActivityCard'
+import { StaffCard } from '@/components/admin/dashboard/StaffCard'
 
 /** La frase del banner: cosa aspetta lo staff, al singolare o al plurale */
 function summary({ drafts, scheduled }: DashboardCounts) {
@@ -45,6 +46,9 @@ export function DashboardPage() {
   const { data, isPending, isError, refetch } = useDashboard()
 
   const firstName = user?.name.split(' ')[0]
+
+  // Solo Master e Admin gestiscono le persone; per gli altri i numeri occupano tutta la riga
+  const canSeeStaff = user?.role !== 'moderator'
 
   return (
     <>
@@ -147,7 +151,10 @@ export function DashboardPage() {
                   key={stat.key}
                   aria-labelledby={`pannello-${stat.key}`}
                   delay={160 + index * 40}
-                  className="col-span-3 p-5.5 lg:col-span-2"
+                  className={[
+                    'col-span-3 p-5.5',
+                    canSeeStaff ? 'lg:col-span-2' : 'lg:col-span-3',
+                  ].join(' ')}
                 >
                   <h2
                     id={`pannello-${stat.key}`}
@@ -161,6 +168,14 @@ export function DashboardPage() {
                   <p className="mt-2.5 text-xs text-neutral-400">{stat.note}</p>
                 </AdminCard>
               ))}
+
+              {canSeeStaff && (
+                <StaffCard
+                  currentUserId={user?.id}
+                  delay={320}
+                  className="col-span-6 lg:col-span-4"
+                />
+              )}
 
               <ToCompleteCard
                 items={data.to_complete}
