@@ -1,0 +1,32 @@
+import { fireEvent, render, screen } from '@testing-library/react'
+import { AdminField } from './AdminField'
+import { PasswordField } from './PasswordField'
+
+test("collega l'etichetta e l'errore al campo", () => {
+  render(<AdminField label="Email" error="Email o password non corrette." />)
+
+  const field = screen.getByLabelText('Email')
+  expect(field).toHaveAttribute('aria-invalid', 'true')
+  expect(field).toHaveAccessibleDescription('Email o password non corrette.')
+})
+
+test('senza errore il campo è valido', () => {
+  render(<AdminField label="Email" />)
+
+  expect(screen.getByLabelText('Email')).not.toHaveAttribute('aria-invalid')
+})
+
+test("l'occhio mostra e nasconde la password", () => {
+  render(<PasswordField label="Password" />)
+
+  const field = screen.getByLabelText('Password')
+  const toggle = screen.getByRole('button', { name: 'Mostra la password' })
+  expect(field).toHaveAttribute('type', 'password')
+
+  fireEvent.click(toggle)
+  expect(field).toHaveAttribute('type', 'text')
+  expect(toggle).toHaveAttribute('aria-pressed', 'true')
+
+  fireEvent.click(toggle)
+  expect(field).toHaveAttribute('type', 'password')
+})
