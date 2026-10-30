@@ -8,6 +8,7 @@ import { useDashboard } from '@/hooks/useDashboard'
 import { formatNumber } from '@/lib/format'
 import type { DashboardCounts } from '@/types/dashboard'
 import { ScheduleCard } from '@/components/admin/dashboard/ScheduleCard'
+import { ToCompleteCard } from '@/components/admin/dashboard/ToCompleteCard'
 
 /** La frase del banner: cosa aspetta lo staff, al singolare o al plurale */
 function summary({ drafts, scheduled }: DashboardCounts) {
@@ -159,6 +160,12 @@ export function DashboardPage() {
                   <p className="mt-2.5 text-xs text-neutral-400">{stat.note}</p>
                 </AdminCard>
               ))}
+
+              <ToCompleteCard
+                items={data.to_complete}
+                delay={320}
+                className="col-span-6 lg:col-span-8"
+              />
             </>
           )}
         </div>
