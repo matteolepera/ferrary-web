@@ -81,3 +81,10 @@ export const server = setupServer(
   http.get(`${API}/me`, () => new HttpResponse(null, { status: 401 })),
   http.post(`${API}/logout`, () => new HttpResponse(null, { status: 204 })),
 )
+
+/**
+ * Simula una sessione attiva: /me risponde con l'utente invece del 401.
+ */
+export function signIn(user = staffUser) {
+  server.use(http.get(`${API}/me`, () => HttpResponse.json({ data: user })))
+}
