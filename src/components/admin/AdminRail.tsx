@@ -4,6 +4,7 @@ import { LogoutButton } from '@/components/admin/LogoutButton'
 import { Icon } from '@/components/admin/ui/Icon'
 import { logoutIcon, navFor, roleLabels } from '@/components/admin/adminNav'
 import { useCurrentUser } from '@/hooks/useAuth'
+import { initials } from '@/lib/initials'
 
 /** Il cerchio di ogni voce: bianco quando è la pagina attuale, come nella bozza */
 function itemClass(active = false) {
@@ -31,16 +32,6 @@ function Tooltip({ children }: { children: string }) {
     </span>
   )
 }
-
-/** Le iniziali del nome, per l'avatar: "Matteo Le Pera" diventa "ML" */
-function initials(name: string) {
-  return name
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((word) => word.charAt(0).toUpperCase())
-    .join('')
-}
-
 /**
  * La barra a pillola dell'area admin, dal desktop: la sorella verticale del dock del sito.
  */

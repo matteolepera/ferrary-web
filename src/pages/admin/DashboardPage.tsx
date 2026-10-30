@@ -9,6 +9,7 @@ import { formatNumber } from '@/lib/format'
 import type { DashboardCounts } from '@/types/dashboard'
 import { ScheduleCard } from '@/components/admin/dashboard/ScheduleCard'
 import { ToCompleteCard } from '@/components/admin/dashboard/ToCompleteCard'
+import { ActivityCard } from '@/components/admin/dashboard/ActivityCard'
 
 /** La frase del banner: cosa aspetta lo staff, al singolare o al plurale */
 function summary({ drafts, scheduled }: DashboardCounts) {
@@ -165,6 +166,13 @@ export function DashboardPage() {
                 items={data.to_complete}
                 delay={320}
                 className="col-span-6 lg:col-span-8"
+              />
+              <ActivityCard
+                items={data.activity}
+                showTabs={user?.role !== 'moderator'}
+                currentUserName={user?.name}
+                delay={360}
+                className="col-span-6 lg:col-span-4"
               />
             </>
           )}
