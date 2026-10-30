@@ -1,5 +1,5 @@
 import { Link, NavLink } from 'react-router'
-import monogram from '@/assets/brand/ferrary-y-rosso.svg'
+import { Monogram } from './Monogram'
 import { LogoutButton } from '@/components/admin/LogoutButton'
 import { Icon } from '@/components/admin/ui/Icon'
 import { logoutIcon, navFor, roleLabels } from '@/components/admin/adminNav'
@@ -54,15 +54,15 @@ export function AdminRail() {
   return (
     <nav
       aria-label="Area staff"
-      className="sticky top-0 hidden h-dvh shrink-0 p-4 lg:block"
+      className="sticky top-0 hidden h-dvh shrink-0 p-4 min-[700px]:block"
     >
       <div className="border-linea bg-ombra flex h-full w-[4.5rem] flex-col items-center rounded-[2.5rem] border py-[1.125rem]">
         <Link
           to="/"
           aria-label="Ferrary, vai al sito"
-          className="border-rosso mb-[1.125rem] flex size-12 shrink-0 items-center justify-center rounded-full border shadow-[0_0_22px_rgb(212_0_0/0.35)] [@media(max-height:800px)]:mb-3"
+          className="mb-[1.125rem] shrink-0 rounded-full [@media(max-height:800px)]:mb-3"
         >
-          <img src={monogram} alt="" className="h-5 w-auto" />
+          <Monogram />
         </Link>
 
         <ul className="senza-barra flex min-h-0 flex-col gap-1.5 overflow-y-auto [@media(max-height:800px)]:gap-1">
