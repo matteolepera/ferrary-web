@@ -24,7 +24,9 @@ test('mostra il pannello dentro il layout admin', async () => {
   expect(
     await screen.findByRole('heading', { name: 'Pannello' }),
   ).toBeInTheDocument()
-  expect(screen.getByText('Ferrary Admin')).toBeInTheDocument()
+  expect(
+    screen.getByRole('navigation', { name: 'Area staff' }),
+  ).toBeInTheDocument()
 })
 
 test('mostra il "non trovato" del sito con la navigazione pubblica', () => {
@@ -47,7 +49,9 @@ test('mostra il "non trovato" del pannello con la sua barra laterale', async () 
   expect(
     await screen.findByRole('heading', { name: 'Pagina non trovata' }),
   ).toBeInTheDocument()
-  expect(screen.getByText('Ferrary Admin')).toBeInTheDocument()
+  expect(
+    screen.getByRole('navigation', { name: 'Area staff' }),
+  ).toBeInTheDocument()
 })
 
 test('naviga tra le pagine con i link', async () => {
