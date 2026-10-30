@@ -7,6 +7,7 @@ import type {
   Designer,
   Driver,
 } from '@/types/catalog'
+import type { User } from '@/types/auth'
 
 export const families: Category[] = [
   { id: 2, name: 'Stradali', slug: 'stradali', models_count: 12 },
@@ -270,3 +271,13 @@ export const schumacherDetail: Driver = {
     },
   ],
 }
+
+export const staffUser: User = {
+  id: 1,
+  name: 'Matteo',
+  email: 'matteo@ferrary.test',
+  role: 'master',
+}
+
+/** La password che le risposte simulate accettano */
+export const STAFF_PASSWORD = 'password-di-prova'

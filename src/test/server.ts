@@ -14,6 +14,9 @@ import {
   f154faDetail,
 } from '@/test/fixtures'
 
+import { staffUser, STAFF_PASSWORD } from '@/test/fixtures'
+
+const BACKEND = 'http://localhost:8000'
 const API = 'http://localhost:8000/api'
 
 /**
@@ -54,4 +57,27 @@ export const server = setupServer(
       ? HttpResponse.json({ data: f154faDetail })
       : new HttpResponse(null, { status: 404 }),
   ),
+  http.get(
+    `${BACKEND}/sanctum/csrf-cookie`,
+    () => new HttpResponse(null, { status: 204 }),
+  ),
+  http.post(`${API}/login`, async ({ request }) => {
+    const credentials = (await request.json()) as {
+      email: string
+      password: string
+    }
+
+    return credentials.password === STAFF_PASSWORD
+      ? HttpResponse.json({ data: staffUser })
+      : HttpResponse.json(
+          {
+            message: 'Email o password non corrette.',
+            errors: { email: ['Email o password non corrette.'] },
+          },
+          { status: 422 },
+        )
+  }),
+  // Di base nessuno è collegato: i test che vogliono un utente sovrascrivono questa risposta
+  http.get(`${API}/me`, () => new HttpResponse(null, { status: 401 })),
+  http.post(`${API}/logout`, () => new HttpResponse(null, { status: 204 })),
 )
