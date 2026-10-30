@@ -7,6 +7,7 @@ import { useCurrentUser } from '@/hooks/useAuth'
 import { useDashboard } from '@/hooks/useDashboard'
 import { formatNumber } from '@/lib/format'
 import type { DashboardCounts } from '@/types/dashboard'
+import { ScheduleCard } from '@/components/admin/dashboard/ScheduleCard'
 
 /** La frase del banner: cosa aspetta lo staff, al singolare o al plurale */
 function summary({ drafts, scheduled }: DashboardCounts) {
@@ -133,8 +134,11 @@ export function DashboardPage() {
                 />
               </AdminCard>
 
-              {/* Il posto del calendario, che arriva nel prossimo commit */}
-              <div className="col-span-6 lg:col-span-4" />
+              <ScheduleCard
+                items={data.scheduled}
+                delay={80}
+                className="col-span-6 lg:col-span-4"
+              />
 
               {stats.map((stat, index) => (
                 <AdminCard
