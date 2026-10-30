@@ -82,6 +82,14 @@ export const routes: RouteObject[] = [
     ],
   },
   {
+    // Fuori dal layout dell'admin: chi non è collegato non deve vederne la struttura
+    path: 'admin/login',
+    hydrateFallbackElement: <PageLoader />,
+    lazy: async () => ({
+      Component: (await import('@/pages/admin/LoginPage')).LoginPage,
+    }),
+  },
+  {
     path: 'admin',
     element: <AdminLayout />,
     errorElement: <RouteErrorPage />,

@@ -27,3 +27,10 @@ export function validationErrors(
 
   return null
 }
+
+/**
+ * Vero se l'API ha risposto 429: troppi tentativi in poco tempo.
+ */
+export function isTooManyRequests(error: unknown): boolean {
+  return isAxiosError(error) && error.response?.status === 429
+}

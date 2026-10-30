@@ -8,7 +8,10 @@ import type { Credentials, User } from '@/types/auth'
  */
 export async function login(credentials: Credentials): Promise<User> {
   await initCsrf()
-  const response = await api.post<ApiResource<User>>('/login', credentials)
+  const response = await api.post<ApiResource<User>>('/login', credentials, {
+    // L'area admin è solo in italiano, anche i messaggi del backend
+    headers: { 'Accept-Language': 'it' },
+  })
 
   return response.data.data
 }
