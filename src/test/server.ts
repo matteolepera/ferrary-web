@@ -12,6 +12,7 @@ import {
   schumacherDetail,
   engines,
   f154faDetail,
+  dashboard,
 } from '@/test/fixtures'
 
 import { staffUser, STAFF_PASSWORD } from '@/test/fixtures'
@@ -80,6 +81,9 @@ export const server = setupServer(
   // Di base nessuno è collegato: i test che vogliono un utente sovrascrivono questa risposta
   http.get(`${API}/me`, () => new HttpResponse(null, { status: 401 })),
   http.post(`${API}/logout`, () => new HttpResponse(null, { status: 204 })),
+  http.get(`${API}/admin/dashboard`, () =>
+    HttpResponse.json({ data: dashboard }),
+  ),
 )
 
 /**
