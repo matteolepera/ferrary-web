@@ -14,6 +14,8 @@ import {
   f154faDetail,
   dashboard,
   staffMembers,
+  adminModels,
+  adminCategories,
 } from '@/test/fixtures'
 
 import { staffUser, STAFF_PASSWORD } from '@/test/fixtures'
@@ -87,6 +89,21 @@ export const server = setupServer(
   ),
   http.get(`${API}/admin/staff`, () =>
     HttpResponse.json({ data: staffMembers }),
+  ),
+  http.get(`${API}/admin/models`, ({ request }) => {
+    const status = new URL(request.url).searchParams.get('status')
+    const data = status
+      ? adminModels.filter((model) => model.status === status)
+      : adminModels
+
+    return HttpResponse.json({
+      data,
+      meta: { current_page: 1, last_page: 1, per_page: 20, total: data.length },
+      links: {},
+    })
+  }),
+  http.get(`${API}/admin/categories`, () =>
+    HttpResponse.json({ data: adminCategories }),
   ),
 )
 

@@ -9,6 +9,7 @@ import type {
 } from '@/types/catalog'
 import type { User } from '@/types/auth'
 import type { Dashboard } from '@/types/dashboard'
+import type { AdminCarModel, AdminCategory } from '@/types/admin'
 
 export const families: Category[] = [
   { id: 2, name: 'Stradali', slug: 'stradali', models_count: 12 },
@@ -351,5 +352,53 @@ export const staffMembers: User[] = [
     name: 'Andrea Bianchi',
     email: 'andrea@ferrary.test',
     role: 'moderator',
+  },
+]
+
+export const adminCategories: AdminCategory[] = [
+  {
+    id: 1,
+    name: { it: 'Sportive', en: 'Sports cars' },
+    slug: 'sportive',
+    sort_order: 1,
+    car_models_count: 2,
+  },
+  {
+    id: 3,
+    name: { it: 'Hypercar', en: 'Hypercars' },
+    slug: 'hypercar',
+    sort_order: 3,
+    car_models_count: 1,
+  },
+]
+
+export const adminModels: AdminCarModel[] = [
+  {
+    id: 2,
+    name: 'SF90 Stradale',
+    slug: 'sf90-stradale',
+    description: { it: 'Ibrida plug-in.', en: 'Plug-in hybrid.' },
+    category_id: 1,
+    category: adminCategories[0],
+    predecessor_id: null,
+    versions_count: 2,
+    status: 'published',
+    published_at: '2026-09-01T10:00:00+00:00',
+    created_at: '2026-08-20T10:00:00+00:00',
+    updated_at: '2026-10-29T15:00:00+00:00',
+  },
+  {
+    id: 9,
+    name: 'F80',
+    slug: 'f80',
+    description: { it: 'La nuova hypercar.' },
+    category_id: 3,
+    category: adminCategories[1],
+    predecessor_id: null,
+    versions_count: 1,
+    status: 'scheduled',
+    published_at: '2026-11-01T18:00:00+00:00',
+    created_at: '2026-10-20T10:00:00+00:00',
+    updated_at: '2026-10-28T10:00:00+00:00',
   },
 ]
