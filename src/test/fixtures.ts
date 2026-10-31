@@ -8,6 +8,7 @@ import type {
   Driver,
 } from '@/types/catalog'
 import type { User } from '@/types/auth'
+import type { Dashboard } from '@/types/dashboard'
 
 export const families: Category[] = [
   { id: 2, name: 'Stradali', slug: 'stradali', models_count: 12 },
@@ -281,3 +282,74 @@ export const staffUser: User = {
 
 /** La password che le risposte simulate accettano */
 export const STAFF_PASSWORD = 'password-di-prova'
+
+export const dashboard: Dashboard = {
+  counts: { published: 24, drafts: 3, scheduled: 2, trashed: 1 },
+  scheduled: [
+    {
+      type: 'version',
+      id: 7,
+      name: '812 GTS',
+      model: '812',
+      published_at: '2026-10-30T09:00:00+00:00',
+    },
+    {
+      type: 'model',
+      id: 9,
+      name: 'F80',
+      model: null,
+      published_at: '2026-11-01T18:00:00+00:00',
+    },
+  ],
+  to_complete: [
+    {
+      id: 11,
+      name: 'SF90 Spider',
+      model: 'SF90',
+      model_id: 2,
+      cover: null,
+      issues: ['draft', 'no_photos'],
+      updated_at: '2026-10-29T15:00:00+00:00',
+    },
+    {
+      id: 12,
+      name: '296 GTB',
+      model: '296',
+      model_id: 4,
+      cover: null,
+      issues: ['no_specs'],
+      updated_at: '2026-10-28T10:00:00+00:00',
+    },
+  ],
+  activity: [
+    {
+      id: 41,
+      log: 'catalogo',
+      action: 'scheduled',
+      causer: 'Matteo',
+      subject_type: 'version',
+      subject_name: '812 GTS',
+      created_at: '2026-10-29T14:48:00+00:00',
+    },
+    {
+      id: 40,
+      log: 'staff',
+      action: 'role_changed',
+      causer: 'Matteo',
+      subject_type: 'user',
+      subject_name: 'Giulia',
+      created_at: '2026-10-28T18:00:00+00:00',
+    },
+  ],
+}
+
+export const staffMembers: User[] = [
+  staffUser,
+  { id: 2, name: 'Giulia Rossi', email: 'giulia@ferrary.test', role: 'admin' },
+  {
+    id: 3,
+    name: 'Andrea Bianchi',
+    email: 'andrea@ferrary.test',
+    role: 'moderator',
+  },
+]

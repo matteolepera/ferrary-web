@@ -1,33 +1,37 @@
-import { NavLink, Outlet } from 'react-router'
+import { Outlet } from 'react-router'
+import { AdminRail } from '@/components/admin/AdminRail'
 import { NavigationProgress } from '@/components/layout/NavigationProgress'
-import { LogoutButton } from '@/components/admin/LogoutButton'
+import { SmallScreenNotice } from '@/components/admin/SmallScreenNotice'
 
 /**
- * Cornice dell'area admin: barra laterale con le sezioni e contenuto a destra.
+ * La cornice dell'area admin, solo in italiano: la barra a pillola e il contenuto.
  */
 export function AdminLayout() {
   return (
-    <div className="flex min-h-screen bg-neutral-50 text-neutral-900">
-      <NavigationProgress />
-      <aside className="w-60 border-r border-neutral-200 bg-white p-4">
-        <p className="mb-6 text-lg font-bold">Ferrary Admin</p>
-        <nav className="flex flex-col gap-1">
-          <NavLink
-            to="/admin"
-            end
-            className={({ isActive }) =>
-              `rounded px-3 py-2 ${isActive ? 'bg-neutral-900 text-white' : 'hover:bg-neutral-100'}`
-            }
-          >
-            Pannello
-          </NavLink>
-        </nav>
-        <LogoutButton />
-      </aside>
+    <div lang="it">
+      <SmallScreenNotice />
 
-      <main className="flex-1 p-8">
-        <Outlet />
-      </main>
+      {/* L'area vera: nascosta sul telefono, dai 700 pixel in su */}
+      <div className="bg-notte hidden min-h-dvh text-neutral-100 min-[700px]:flex">
+        <NavigationProgress />
+
+        <a
+          href="#contenuto"
+          className="focus:text-notte sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[90] focus:rounded-full focus:bg-white focus:px-5 focus:py-3 focus:text-sm focus:font-semibold"
+        >
+          Vai al contenuto
+        </a>
+
+        <AdminRail />
+
+        <main
+          id="contenuto"
+          tabIndex={-1}
+          className="min-w-0 flex-1 py-6 pr-6 pl-2 outline-none lg:py-7 lg:pr-8"
+        >
+          <Outlet />
+        </main>
+      </div>
     </div>
   )
 }
