@@ -26,8 +26,9 @@ test('crea un modello, e porta alla sua pagina in bozza', async () => {
   expect(
     await screen.findByRole('heading', { name: 'Testarossa' }),
   ).toBeInTheDocument()
-  expect(screen.getByRole('status')).toHaveTextContent(
-    'Modello creato: è una bozza.',
+  expect(screen.getByText('Modello creato: è una bozza.')).toHaveAttribute(
+    'role',
+    'status',
   )
 })
 

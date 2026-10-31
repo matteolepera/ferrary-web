@@ -24,6 +24,8 @@ export type AdminCarModel = {
   category_id: number
   category?: AdminCategory
   predecessor_id: number | null
+  /** Presente quando il backend lo carica, come nella pagina del singolo modello */
+  predecessor?: AdminCarModel | null
   versions_count?: number
   status: PublicationStatus
   published_at: string | null

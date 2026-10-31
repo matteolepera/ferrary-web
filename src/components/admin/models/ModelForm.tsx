@@ -1,6 +1,10 @@
 import { useState, type FormEvent } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router'
 import { validationErrors } from '@/api/errors'
+import {
+  PredecessorPicker,
+  type ModelOption,
+} from '@/components/admin/models/PredecessorPicker'
 import { AdminCard } from '@/components/admin/ui/AdminCard'
 import { AdminField } from '@/components/admin/ui/AdminField'
 import { AdminSelect } from '@/components/admin/ui/AdminSelect'
@@ -21,6 +25,16 @@ const dateFormat = new Intl.DateTimeFormat('it', {
 /** I titoli dei blocchi, come nel pannello */
 const cardTitle = 'font-display text-xl font-extrabold tracking-[-0.03em]'
 
+/** I valori dei campi, come li tiene il form: i numeri come testo, perché i campi lavorano con il testo */
+type FormValues = {
+  name: string
+  slug: string
+  category_id: string
+  predecessor: ModelOption | null
+  description_it: string
+  description_en: string
+}
+
 /**
  * Il form del modello: senza model ne crea uno nuovo, con model lo modifica.
  * I valori iniziali vengono dal modello: la pagina lo monta solo quando è arrivato.
@@ -31,10 +45,13 @@ export function ModelForm({ model }: { model?: AdminCarModel }) {
   const { data: categories } = useAdminCategories()
   const save = useSaveModel(model?.id)
 
-  const [values, setValues] = useState({
+  const [values, setValues] = useState<FormValues>({
     name: model?.name ?? '',
     slug: model?.slug ?? '',
     category_id: model ? String(model.category_id) : '',
+    predecessor: model?.predecessor
+      ? { id: model.predecessor.id, name: model.predecessor.name }
+      : null,
     description_it: model?.description.it ?? '',
     description_en: model?.description.en ?? '',
   })
@@ -47,7 +64,7 @@ export function ModelForm({ model }: { model?: AdminCarModel }) {
   const errors = validationErrors(save.error)
   const slugPreview = values.slug || slugify(values.name)
 
-  function update(field: keyof typeof values, value: string) {
+  function update<K extends keyof FormValues>(field: K, value: FormValues[K]) {
     setValues((current) => ({ ...current, [field]: value }))
     setSaved(false)
   }
@@ -61,8 +78,7 @@ export function ModelForm({ model }: { model?: AdminCarModel }) {
         // Vuoto: in creazione il backend lo genera dal nome, in modifica resta quello di prima
         slug: values.slug.trim() || undefined,
         category_id: values.category_id ? Number(values.category_id) : null,
-        // Il predecessore arriva nel prossimo commit: per ora resta quello che c'era
-        predecessor_id: model?.predecessor_id ?? null,
+        predecessor_id: values.predecessor?.id ?? null,
         description: { it: values.description_it, en: values.description_en },
       },
       {
@@ -173,6 +189,12 @@ export function ModelForm({ model }: { model?: AdminCarModel }) {
                 </option>
               ))}
             </AdminSelect>
+            <PredecessorPicker
+              value={values.predecessor}
+              onChange={(predecessor) => update('predecessor', predecessor)}
+              excludeId={model?.id}
+              error={errors?.predecessor_id?.[0]}
+            />
           </div>
         </AdminCard>
 

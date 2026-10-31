@@ -6,11 +6,15 @@ import type { AdminModelFilters } from '@/types/admin'
  * I modelli dell'admin, con i filtri. Cambiando filtro o pagina,
  * la tabella resta visibile finché arrivano i nuovi risultati.
  */
-export function useAdminModels(filters: AdminModelFilters) {
+export function useAdminModels(
+  filters: AdminModelFilters,
+  { enabled = true } = {},
+) {
   return useQuery({
     queryKey: ['admin', 'models', filters],
     queryFn: () => fetchAdminModels(filters),
     placeholderData: keepPreviousData,
+    enabled,
   })
 }
 
