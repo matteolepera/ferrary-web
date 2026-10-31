@@ -43,7 +43,7 @@ export type ModelPayload = {
   name: string
   /** Vuoto: il backend lo genera dal nome */
   slug?: string
-  category_id: number
+  category_id: number | null
   predecessor_id: number | null
   description: Translations
 }
