@@ -1,4 +1,6 @@
-import { useId, type ComponentProps, type ReactNode } from 'react'
+import { type ComponentProps, type ReactNode } from 'react'
+import { FieldMessages } from './FieldMessages'
+import { useFieldA11y } from './useFieldA11y'
 
 type AdminFieldProps = ComponentProps<'input'> & {
   label: string
@@ -26,18 +28,16 @@ export function AdminField({
   className = '',
   ...props
 }: AdminFieldProps) {
-  const generatedId = useId()
-  const inputId = id ?? generatedId
-  const hintId = `${inputId}-suggerimento`
-  const errorId = `${inputId}-errore`
-  // I testi che il lettore di schermo legge insieme al campo
-  const describedBy =
-    [hint && hintId, error && errorId].filter(Boolean).join(' ') || undefined
+  const { fieldId, hintId, errorId, describedBy, invalid } = useFieldA11y(
+    id,
+    hint,
+    error,
+  )
 
   return (
     <div className={className}>
       <label
-        htmlFor={inputId}
+        htmlFor={fieldId}
         className="mb-2 block text-[0.6875rem] font-semibold tracking-[0.18em] text-neutral-400 uppercase"
       >
         {label}
@@ -57,8 +57,8 @@ export function AdminField({
           </span>
         )}
         <input
-          id={inputId}
-          aria-invalid={error ? true : undefined}
+          id={fieldId}
+          aria-invalid={invalid}
           aria-describedby={describedBy}
           className="h-full min-w-0 flex-1 bg-transparent text-[0.9375rem] text-neutral-100 outline-none placeholder:text-neutral-600"
           {...props}
@@ -66,16 +66,12 @@ export function AdminField({
         {trailing}
       </div>
 
-      {hint && (
-        <p id={hintId} className="mt-2 text-[0.8125rem] text-neutral-500">
-          {hint}
-        </p>
-      )}
-      {error && (
-        <p id={errorId} className="text-errore mt-2 text-[0.8125rem]">
-          {error}
-        </p>
-      )}
+      <FieldMessages
+        hint={hint}
+        error={error}
+        hintId={hintId}
+        errorId={errorId}
+      />
     </div>
   )
 }
