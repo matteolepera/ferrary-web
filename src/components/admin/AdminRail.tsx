@@ -49,8 +49,8 @@ export function AdminRail() {
     >
       <div className="border-linea bg-ombra flex h-full w-[4.5rem] flex-col items-center rounded-[2.5rem] border py-[1.125rem]">
         <Link
-          to="/"
-          aria-label="Ferrary, vai al sito"
+          to="/admin"
+          aria-label="Ferrary, ritorna alla dashboard"
           className="mb-[1.125rem] shrink-0 rounded-full [@media(max-height:800px)]:mb-3"
         >
           <Monogram />
