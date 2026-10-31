@@ -7,6 +7,7 @@ import type {
   AdminCarModel,
   AdminCategory,
   AdminModelFilters,
+  ModelPayload,
 } from '@/types/admin'
 
 /**
@@ -49,6 +50,64 @@ export async function fetchAdminModels(
 export async function fetchAdminCategories(): Promise<AdminCategory[]> {
   const response = await api.get<ApiResource<AdminCategory[]>>(
     '/admin/categories',
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function fetchAdminModel(id: number): Promise<AdminCarModel> {
+  const response = await api.get<ApiResource<AdminCarModel>>(
+    `/admin/models/${id}`,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function createModel(
+  payload: ModelPayload,
+): Promise<AdminCarModel> {
+  const response = await api.post<ApiResource<AdminCarModel>>(
+    '/admin/models',
+    payload,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function updateModel(
+  id: number,
+  payload: ModelPayload,
+): Promise<AdminCarModel> {
+  const response = await api.patch<ApiResource<AdminCarModel>>(
+    `/admin/models/${id}`,
+    payload,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+/** Pubblica subito, oppure alla data indicata: senza data decide l'orologio del server */
+export async function publishModel(
+  id: number,
+  publishedAt?: string,
+): Promise<AdminCarModel> {
+  const response = await api.post<ApiResource<AdminCarModel>>(
+    `/admin/models/${id}/publish`,
+    publishedAt ? { published_at: publishedAt } : {},
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function unpublishModel(id: number): Promise<AdminCarModel> {
+  const response = await api.post<ApiResource<AdminCarModel>>(
+    `/admin/models/${id}/unpublish`,
+    {},
     adminRequest,
   )
 

@@ -113,6 +113,20 @@ export const routes: RouteObject[] = [
           Component: (await import('@/pages/admin/ModelsPage')).ModelsPage,
         }),
       },
+      {
+        path: 'modelli/nuovo',
+        lazy: async () => ({
+          Component: (await import('@/pages/admin/ModelFormPage'))
+            .ModelFormPage,
+        }),
+      },
+      {
+        path: 'modelli/:id',
+        lazy: async () => ({
+          Component: (await import('@/pages/admin/ModelFormPage'))
+            .ModelFormPage,
+        }),
+      },
       { path: '*', element: <NotFoundPage backTo="/admin" /> },
     ],
   },

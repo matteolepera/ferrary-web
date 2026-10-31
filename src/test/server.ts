@@ -17,8 +17,8 @@ import {
   adminModels,
   adminCategories,
 } from '@/test/fixtures'
-
 import { staffUser, STAFF_PASSWORD } from '@/test/fixtures'
+import type { ModelPayload } from '@/types/admin'
 
 const BACKEND = 'http://localhost:8000'
 const API = 'http://localhost:8000/api'
@@ -90,18 +90,6 @@ export const server = setupServer(
   http.get(`${API}/admin/staff`, () =>
     HttpResponse.json({ data: staffMembers }),
   ),
-  http.get(`${API}/admin/models`, ({ request }) => {
-    const status = new URL(request.url).searchParams.get('status')
-    const data = status
-      ? adminModels.filter((model) => model.status === status)
-      : adminModels
-
-    return HttpResponse.json({
-      data,
-      meta: { current_page: 1, last_page: 1, per_page: 20, total: data.length },
-      links: {},
-    })
-  }),
   http.get(`${API}/admin/categories`, () =>
     HttpResponse.json({ data: adminCategories }),
   ),
@@ -123,6 +111,84 @@ export const server = setupServer(
       meta: { current_page: 1, last_page: 1, per_page: 20, total: data.length },
       links: {},
     })
+  }),
+  http.get(`${API}/admin/models/:id`, ({ params }) => {
+    const model = adminModels.find((item) => item.id === Number(params.id))
+
+    return model
+      ? HttpResponse.json({ data: model })
+      : new HttpResponse(null, { status: 404 })
+  }),
+  http.post(`${API}/admin/models`, async ({ request }) => {
+    const payload = (await request.json()) as ModelPayload
+    const slug = payload.slug || payload.name.toLowerCase().replaceAll(' ', '-')
+
+    if (adminModels.some((model) => model.slug === slug)) {
+      return HttpResponse.json(
+        {
+          message: 'Questo slug è già in uso.',
+          errors: { slug: ['Questo slug è già in uso.'] },
+        },
+        { status: 422 },
+      )
+    }
+
+    return HttpResponse.json(
+      {
+        data: {
+          ...adminModels[0],
+          ...payload,
+          id: 99,
+          slug,
+          status: 'draft',
+          published_at: null,
+        },
+      },
+      { status: 201 },
+    )
+  }),
+  http.patch(`${API}/admin/models/:id`, async ({ params, request }) => {
+    const model = adminModels.find((item) => item.id === Number(params.id))
+    const payload = (await request.json()) as ModelPayload
+
+    return model
+      ? HttpResponse.json({ data: { ...model, ...payload } })
+      : new HttpResponse(null, { status: 404 })
+  }),
+  http.post(`${API}/admin/models/:id/publish`, async ({ params, request }) => {
+    const model = adminModels.find((item) => item.id === Number(params.id))
+    const body = (await request.json()) as { published_at?: string }
+    const publishedAt = body.published_at ?? new Date().toISOString()
+    const status =
+      new Date(publishedAt) > new Date() ? 'scheduled' : 'published'
+
+    // Come il backend vero: la risposta non ha la famiglia né le versioni
+    return model
+      ? HttpResponse.json({
+          data: {
+            ...model,
+            category: undefined,
+            versions_count: undefined,
+            published_at: publishedAt,
+            status,
+          },
+        })
+      : new HttpResponse(null, { status: 404 })
+  }),
+  http.post(`${API}/admin/models/:id/unpublish`, ({ params }) => {
+    const model = adminModels.find((item) => item.id === Number(params.id))
+
+    return model
+      ? HttpResponse.json({
+          data: {
+            ...model,
+            category: undefined,
+            versions_count: undefined,
+            published_at: null,
+            status: 'draft',
+          },
+        })
+      : new HttpResponse(null, { status: 404 })
   }),
 )
 
