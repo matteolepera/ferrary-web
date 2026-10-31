@@ -8,15 +8,29 @@ import { useAdminModelFilters } from '@/hooks/useAdminModelFilters'
 import { useAdminModels } from '@/hooks/useAdminModels'
 import { formatNumber } from '@/lib/format'
 import { timeAgo } from '@/lib/timeAgo'
+import { AdminPagination } from '@/components/admin/ui/AdminPagination'
+import { AdminSearch } from '@/components/admin/ui/AdminSearch'
+import { useAdminCategories } from '@/hooks/useAdminModels'
+import type { PublicationStatus } from '@/types/admin'
 
 /** Le colonne, nell'ordine della tabella */
 const columns = ['Modello', 'Famiglia', 'Versioni', 'Stato', 'Ultima modifica']
+
+/** Le pillole degli stati: undefined vuol dire "tutti" */
+const statusFilters: { value: PublicationStatus | undefined; label: string }[] =
+  [
+    { value: undefined, label: 'Tutti' },
+    { value: 'published', label: 'Pubblicati' },
+    { value: 'scheduled', label: 'Programmati' },
+    { value: 'draft', label: 'Bozze' },
+  ]
 
 /**
  * L'elenco dei modelli dell'admin: tutti, bozze e programmati compresi.
  */
 export function ModelsPage() {
-  const { filters } = useAdminModelFilters()
+  const { filters, setFilters } = useAdminModelFilters()
+  const { data: categories } = useAdminCategories()
   const { data, isPending, isError, isPlaceholderData, refetch } =
     useAdminModels(filters)
 
@@ -52,7 +66,81 @@ export function ModelsPage() {
         </Link>
       </header>
 
-      {/* Il posto dei filtri, che arrivano nel prossimo commit */}
+      <div className="mt-7 flex flex-wrap items-center gap-3">
+        <AdminSearch
+          label="Cerca un modello"
+          placeholder="Cerca un modello"
+          value={filters.search ?? ''}
+          // replace: ogni lettera non deve diventare un passo della cronologia
+          onSearch={(search) => setFilters({ search }, { replace: true })}
+        />
+
+        <div
+          role="group"
+          aria-label="Filtra per stato"
+          className="flex flex-wrap gap-1.5"
+        >
+          {statusFilters.map(({ value, label }) => {
+            const active = filters.status === value
+
+            return (
+              <button
+                key={label}
+                type="button"
+                aria-pressed={active}
+                onClick={() => setFilters({ status: value })}
+                className={[
+                  'rounded-full border px-3.5 py-2 text-xs font-semibold transition-colors',
+                  active
+                    ? 'text-notte border-white bg-white'
+                    : 'border-linea text-neutral-300 hover:border-neutral-600 hover:text-white',
+                ].join(' ')}
+              >
+                {label}
+              </button>
+            )
+          })}
+        </div>
+
+        <label className="sr-only" htmlFor="filtro-famiglia">
+          Famiglia
+        </label>
+        <select
+          id="filtro-famiglia"
+          value={filters.category_id ?? ''}
+          onChange={(event) =>
+            setFilters({
+              category_id: event.target.value
+                ? Number(event.target.value)
+                : undefined,
+            })
+          }
+          className="bg-ombra h-11 rounded-full border border-white/10 px-4 text-sm text-neutral-100 transition-colors focus:border-neutral-300"
+        >
+          <option value="">Tutte le famiglie</option>
+          {categories?.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.name.it}
+            </option>
+          ))}
+        </select>
+
+        {hasFilters && (
+          <button
+            type="button"
+            onClick={() =>
+              setFilters({
+                search: undefined,
+                status: undefined,
+                category_id: undefined,
+              })
+            }
+            className="text-xs font-semibold text-neutral-400 underline-offset-4 transition-colors hover:text-white hover:underline"
+          >
+            Azzera filtri
+          </button>
+        )}
+      </div>
 
       <AdminCard className="mt-7 overflow-hidden">
         {isError ? (
@@ -148,6 +236,14 @@ export function ModelsPage() {
               </p>
             )}
           </div>
+        )}
+
+        {data && (
+          <AdminPagination
+            page={data.meta.current_page}
+            lastPage={data.meta.last_page}
+            onChange={(page) => setFilters({ page })}
+          />
         )}
       </AdminCard>
     </>

@@ -105,6 +105,25 @@ export const server = setupServer(
   http.get(`${API}/admin/categories`, () =>
     HttpResponse.json({ data: adminCategories }),
   ),
+  http.get(`${API}/admin/models`, ({ request }) => {
+    const params = new URL(request.url).searchParams
+    const status = params.get('status')
+    const categoryId = params.get('category_id')
+    const search = params.get('search')?.toLowerCase()
+
+    const data = adminModels.filter(
+      (model) =>
+        (!status || model.status === status) &&
+        (!categoryId || model.category_id === Number(categoryId)) &&
+        (!search || model.name.toLowerCase().includes(search)),
+    )
+
+    return HttpResponse.json({
+      data,
+      meta: { current_page: 1, last_page: 1, per_page: 20, total: data.length },
+      links: {},
+    })
+  }),
 )
 
 /**
