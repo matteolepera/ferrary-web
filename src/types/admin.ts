@@ -37,3 +37,13 @@ export type AdminModelFilters = {
   category_id?: number
   page?: number
 }
+
+/** I campi che il form manda al backend, per creare o modificare un modello */
+export type ModelPayload = {
+  name: string
+  /** Vuoto: il backend lo genera dal nome */
+  slug?: string
+  category_id: number
+  predecessor_id: number | null
+  description: Translations
+}
