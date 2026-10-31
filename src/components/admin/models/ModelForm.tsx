@@ -5,6 +5,7 @@ import {
   PredecessorPicker,
   type ModelOption,
 } from '@/components/admin/models/PredecessorPicker'
+import { PublicationCard } from '@/components/admin/models/PublicationCard'
 import { AdminCard } from '@/components/admin/ui/AdminCard'
 import { AdminField } from '@/components/admin/ui/AdminField'
 import { AdminSelect } from '@/components/admin/ui/AdminSelect'
@@ -13,6 +14,7 @@ import { StatusBadge } from '@/components/admin/ui/StatusBadge'
 import { adminButtonClass } from '@/components/admin/ui/adminButtonClass'
 import { useAdminCategories } from '@/hooks/useAdminModels'
 import { useSaveModel } from '@/hooks/useAdminModel'
+import { useCurrentUser } from '@/hooks/useAuth'
 import { slugify } from '@/lib/slugify'
 import type { AdminCarModel } from '@/types/admin'
 
@@ -42,6 +44,7 @@ type FormValues = {
 export function ModelForm({ model }: { model?: AdminCarModel }) {
   const navigate = useNavigate()
   const location = useLocation()
+  const { data: user } = useCurrentUser()
   const { data: categories } = useAdminCategories()
   const save = useSaveModel(model?.id)
 
@@ -56,6 +59,8 @@ export function ModelForm({ model }: { model?: AdminCarModel }) {
     description_en: model?.description.en ?? '',
   })
   const [saved, setSaved] = useState(false)
+  // Ci sono modifiche nei campi non ancora salvate: la pubblicazione deve dirlo
+  const [dirty, setDirty] = useState(false)
 
   // Arrivati qui subito dopo la creazione: la pagina precedente ce lo dice nello stato della navigazione
   const justCreated =
@@ -67,6 +72,7 @@ export function ModelForm({ model }: { model?: AdminCarModel }) {
   function update<K extends keyof FormValues>(field: K, value: FormValues[K]) {
     setValues((current) => ({ ...current, [field]: value }))
     setSaved(false)
+    setDirty(true)
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -85,6 +91,7 @@ export function ModelForm({ model }: { model?: AdminCarModel }) {
         onSuccess: (result) => {
           if (model) {
             setSaved(true)
+            setDirty(false)
           } else {
             navigate(`/admin/modelli/${result.id}`, {
               replace: true,
@@ -95,6 +102,40 @@ export function ModelForm({ model }: { model?: AdminCarModel }) {
       },
     )
   }
+
+  /** Il riepilogo: per un modello nuovo sta accanto ai dati, per uno esistente accanto alla descrizione */
+  const summary = (
+    <AdminCard
+      aria-labelledby="modello-riepilogo"
+      delay={180}
+      className="col-span-6 p-6 lg:col-span-4"
+    >
+      <h2 id="modello-riepilogo" className={cardTitle}>
+        Riepilogo
+      </h2>
+      {model ? (
+        <dl className="mt-5 grid grid-cols-2 gap-x-4 gap-y-4 text-sm">
+          <dt className="text-neutral-400">Versioni</dt>
+          <dd className="text-right font-semibold tabular-nums">
+            {model.versions_count ?? 0}
+          </dd>
+          <dt className="text-neutral-400">Creato il</dt>
+          <dd className="text-right">
+            {dateFormat.format(new Date(model.created_at))}
+          </dd>
+          <dt className="text-neutral-400">Ultima modifica</dt>
+          <dd className="text-right">
+            {dateFormat.format(new Date(model.updated_at))}
+          </dd>
+        </dl>
+      ) : (
+        <p className="mt-4 text-sm leading-relaxed text-neutral-400">
+          Il modello nasce come bozza: non comparirà sul sito finché non verrà
+          pubblicato.
+        </p>
+      )}
+    </AdminCard>
+  )
 
   return (
     <form onSubmit={handleSubmit} noValidate>
@@ -198,36 +239,18 @@ export function ModelForm({ model }: { model?: AdminCarModel }) {
           </div>
         </AdminCard>
 
-        <AdminCard
-          aria-labelledby="modello-riepilogo"
-          delay={60}
-          className="col-span-6 p-6 lg:col-span-4"
-        >
-          <h2 id="modello-riepilogo" className={cardTitle}>
-            Riepilogo
-          </h2>
-          {model ? (
-            <dl className="mt-5 grid grid-cols-2 gap-x-4 gap-y-4 text-sm">
-              <dt className="text-neutral-400">Versioni</dt>
-              <dd className="text-right font-semibold tabular-nums">
-                {model.versions_count ?? 0}
-              </dd>
-              <dt className="text-neutral-400">Creato il</dt>
-              <dd className="text-right">
-                {dateFormat.format(new Date(model.created_at))}
-              </dd>
-              <dt className="text-neutral-400">Ultima modifica</dt>
-              <dd className="text-right">
-                {dateFormat.format(new Date(model.updated_at))}
-              </dd>
-            </dl>
-          ) : (
-            <p className="mt-4 text-sm leading-relaxed text-neutral-400">
-              Il modello nasce come bozza: non comparirà sul sito finché non
-              verrà pubblicato.
-            </p>
-          )}
-        </AdminCard>
+        {/* Accanto ai dati: la pubblicazione per un modello esistente, il riepilogo per uno nuovo */}
+        {model ? (
+          <PublicationCard
+            model={model}
+            canPublish={user?.role !== 'moderator'}
+            hasUnsavedChanges={dirty}
+            delay={60}
+            className="col-span-6 lg:col-span-4"
+          />
+        ) : (
+          summary
+        )}
 
         <AdminCard
           aria-labelledby="modello-descrizione"
@@ -253,6 +276,9 @@ export function ModelForm({ model }: { model?: AdminCarModel }) {
             />
           </div>
         </AdminCard>
+
+        {/* Per un modello esistente, il riepilogo scende accanto alla descrizione */}
+        {model && summary}
       </div>
     </form>
   )

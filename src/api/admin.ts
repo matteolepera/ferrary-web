@@ -89,3 +89,27 @@ export async function updateModel(
 
   return response.data.data
 }
+
+/** Pubblica subito, oppure alla data indicata: senza data decide l'orologio del server */
+export async function publishModel(
+  id: number,
+  publishedAt?: string,
+): Promise<AdminCarModel> {
+  const response = await api.post<ApiResource<AdminCarModel>>(
+    `/admin/models/${id}/publish`,
+    publishedAt ? { published_at: publishedAt } : {},
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function unpublishModel(id: number): Promise<AdminCarModel> {
+  const response = await api.post<ApiResource<AdminCarModel>>(
+    `/admin/models/${id}/unpublish`,
+    {},
+    adminRequest,
+  )
+
+  return response.data.data
+}

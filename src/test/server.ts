@@ -155,6 +155,41 @@ export const server = setupServer(
       ? HttpResponse.json({ data: { ...model, ...payload } })
       : new HttpResponse(null, { status: 404 })
   }),
+  http.post(`${API}/admin/models/:id/publish`, async ({ params, request }) => {
+    const model = adminModels.find((item) => item.id === Number(params.id))
+    const body = (await request.json()) as { published_at?: string }
+    const publishedAt = body.published_at ?? new Date().toISOString()
+    const status =
+      new Date(publishedAt) > new Date() ? 'scheduled' : 'published'
+
+    // Come il backend vero: la risposta non ha la famiglia né le versioni
+    return model
+      ? HttpResponse.json({
+          data: {
+            ...model,
+            category: undefined,
+            versions_count: undefined,
+            published_at: publishedAt,
+            status,
+          },
+        })
+      : new HttpResponse(null, { status: 404 })
+  }),
+  http.post(`${API}/admin/models/:id/unpublish`, ({ params }) => {
+    const model = adminModels.find((item) => item.id === Number(params.id))
+
+    return model
+      ? HttpResponse.json({
+          data: {
+            ...model,
+            category: undefined,
+            versions_count: undefined,
+            published_at: null,
+            status: 'draft',
+          },
+        })
+      : new HttpResponse(null, { status: 404 })
+  }),
 )
 
 /**
