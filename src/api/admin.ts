@@ -2,7 +2,7 @@ import type { AxiosRequestConfig } from 'axios'
 import { api } from '@/api/client'
 import type { ApiResource, Paginated } from '@/types/api'
 import type { Dashboard } from '@/types/dashboard'
-import type { User } from '@/types/auth'
+import type { User, UserRole } from '@/types/auth'
 import type {
   AdminCarModel,
   AdminCategory,
@@ -519,4 +519,63 @@ export async function updateRacing(
 
 export async function deleteRacing(id: number): Promise<void> {
   await api.delete(`/admin/racing/${id}`, adminRequest)
+}
+
+/* ---------- Staff ---------- */
+
+export type StaffPayload = {
+  name: string
+  email: string
+  password: string
+  role: UserRole | null
+}
+
+export async function createStaff(payload: StaffPayload): Promise<User> {
+  const response = await api.post<ApiResource<User>>(
+    '/admin/staff',
+    payload,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function updateStaff(
+  id: number,
+  changes: Partial<Omit<StaffPayload, 'role'>>,
+): Promise<User> {
+  const response = await api.patch<ApiResource<User>>(
+    `/admin/staff/${id}`,
+    changes,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function changeStaffRole(
+  id: number,
+  role: UserRole,
+): Promise<User> {
+  const response = await api.patch<ApiResource<User>>(
+    `/admin/staff/${id}/role`,
+    { role },
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function deleteStaff(id: number): Promise<void> {
+  await api.delete(`/admin/staff/${id}`, adminRequest)
+}
+
+export async function transferMaster(id: number): Promise<User> {
+  const response = await api.post<ApiResource<User>>(
+    `/admin/staff/${id}/transfer-master`,
+    {},
+    adminRequest,
+  )
+
+  return response.data.data
 }

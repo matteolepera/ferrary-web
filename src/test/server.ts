@@ -463,6 +463,25 @@ export const server = setupServer(
     `${API}/admin/racing/:id`,
     () => new HttpResponse(null, { status: 204 }),
   ),
+  http.post(`${API}/admin/staff`, async ({ request }) => {
+    const payload = (await request.json()) as {
+      name: string
+      email: string
+      role: string
+    }
+
+    return HttpResponse.json(
+      {
+        data: {
+          id: 40,
+          name: payload.name,
+          email: payload.email,
+          role: payload.role,
+        },
+      },
+      { status: 201 },
+    )
+  }),
 )
 
 /**
