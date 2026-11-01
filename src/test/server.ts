@@ -21,6 +21,7 @@ import {
   adminEngines,
   adminDesigners,
   adminDrivers,
+  adminRacing,
 } from '@/test/fixtures'
 import { staffUser, STAFF_PASSWORD } from '@/test/fixtures'
 import type {
@@ -31,6 +32,7 @@ import type {
   EnginePayload,
   AdminDesigner,
   AdminDriver,
+  RacingPayload,
 } from '@/types/admin'
 
 const BACKEND = 'http://localhost:8000'
@@ -440,6 +442,26 @@ export const server = setupServer(
   ),
   http.put(`${API}/admin/versions/:id/drivers`, () =>
     HttpResponse.json({ data: [] }),
+  ),
+  http.get(`${API}/admin/versions/:id/racing`, ({ params }) =>
+    HttpResponse.json({ data: Number(params.id) === 21 ? adminRacing : [] }),
+  ),
+  http.post(`${API}/admin/versions/:id/racing`, async ({ request }) => {
+    const payload = (await request.json()) as RacingPayload
+
+    return HttpResponse.json(
+      { data: { ...adminRacing[0], ...payload, id: 92 } },
+      { status: 201 },
+    )
+  }),
+  http.patch(`${API}/admin/racing/:id`, async ({ request }) => {
+    const payload = (await request.json()) as RacingPayload
+
+    return HttpResponse.json({ data: { ...adminRacing[0], ...payload } })
+  }),
+  http.delete(
+    `${API}/admin/racing/:id`,
+    () => new HttpResponse(null, { status: 204 }),
   ),
 )
 

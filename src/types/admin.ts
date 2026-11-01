@@ -249,3 +249,23 @@ export type DesignerCredit = { id: number; name: string; role: DesignerRole }
 
 /** Un pilota collegato a una versione */
 export type DriverCredit = { id: number; name: string }
+
+/** I risultati di una versione in un campionato */
+export type AdminRacingRecord = {
+  id: number
+  championship: string
+  season_start: number
+  season_end: number | null
+  races: number | null
+  wins: number | null
+  poles: number | null
+  podiums: number | null
+  fastest_laps: number | null
+  drivers_titles: number | null
+  constructors_titles: number | null
+  notes: Partial<Translations> | null
+}
+
+export type RacingPayload = Omit<AdminRacingRecord, 'id' | 'season_start'> & {
+  season_start: number | null
+}

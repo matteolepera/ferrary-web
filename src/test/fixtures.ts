@@ -17,6 +17,7 @@ import type {
   AdminEngine,
   AdminDesigner,
   AdminDriver,
+  AdminRacingRecord,
 } from '@/types/admin'
 
 export const families: Category[] = [
@@ -581,5 +582,22 @@ export const adminDrivers: AdminDriver[] = [
     nationality: 'MC',
     birth_date: '1997-10-16',
     versions_count: 3,
+  },
+]
+
+export const adminRacing: AdminRacingRecord[] = [
+  {
+    id: 91,
+    championship: 'Formula 1',
+    season_start: 2004,
+    season_end: null,
+    races: 18,
+    wins: 15,
+    poles: 12,
+    podiums: 29,
+    fastest_laps: 14,
+    drivers_titles: 1,
+    constructors_titles: 1,
+    notes: { it: 'Il record di vittorie in una stagione per la Ferrari.' },
   },
 ]

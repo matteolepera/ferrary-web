@@ -18,6 +18,8 @@ import type {
   AdminDriver,
   DriverPayload,
   DesignerRole,
+  AdminRacingRecord,
+  RacingPayload,
 } from '@/types/admin'
 
 /**
@@ -474,4 +476,47 @@ export async function saveDriverCredits(versionId: number, ids: number[]) {
     { drivers: ids },
     adminRequest,
   )
+}
+
+/* ---------- Risultati sportivi ---------- */
+
+export async function fetchVersionRacing(
+  versionId: number,
+): Promise<AdminRacingRecord[]> {
+  const response = await api.get<ApiResource<AdminRacingRecord[]>>(
+    `/admin/versions/${versionId}/racing`,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function createRacing(
+  versionId: number,
+  payload: RacingPayload,
+): Promise<AdminRacingRecord> {
+  const response = await api.post<ApiResource<AdminRacingRecord>>(
+    `/admin/versions/${versionId}/racing`,
+    payload,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function updateRacing(
+  id: number,
+  payload: RacingPayload,
+): Promise<AdminRacingRecord> {
+  const response = await api.patch<ApiResource<AdminRacingRecord>>(
+    `/admin/racing/${id}`,
+    payload,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function deleteRacing(id: number): Promise<void> {
+  await api.delete(`/admin/racing/${id}`, adminRequest)
 }
