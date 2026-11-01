@@ -49,3 +49,102 @@ export type ModelPayload = {
   predecessor_id: number | null
   description: Translations
 }
+
+/* ---------- Versioni ---------- */
+
+export type VehicleType =
+  'stradale' | 'pista' | 'gt_corsa' | 'prototipo' | 'f1' | 'concept'
+export type BodyType =
+  'coupe' | 'spider' | 'targa' | 'barchetta' | 'suv' | 'monoposto'
+export type ProductionType = 'serie' | 'serie_limitata' | 'one_off'
+export type ChassisMaterial =
+  'acciaio' | 'alluminio' | 'fibra_di_carbonio' | 'misto'
+export type BrakeType = 'tamburo' | 'disco_acciaio' | 'carboceramici'
+export type GearboxType =
+  'manuale' | 'automatico' | 'doppia_frizione' | 'robotizzato' | 'sequenziale'
+export type Drivetrain = 'posteriore' | 'integrale'
+
+/** La scheda tecnica: ogni campo può mancare */
+export type VersionSpecs = {
+  length_mm: number | null
+  width_mm: number | null
+  height_mm: number | null
+  wheelbase_mm: number | null
+  dry_weight_kg: number | null
+  weight_front_pct: number | null
+  chassis_material: ChassisMaterial | null
+  brakes: BrakeType | null
+  top_speed_kmh: number | null
+  zero_to_100_sec: number | null
+  zero_to_200_sec: number | null
+  fiorano_lap_sec: number | null
+}
+
+/** La motorizzazione: termica, elettrica o entrambe */
+export type VersionPowertrain = {
+  engine_id: number | null
+  ice_power_cv: number | null
+  ice_torque_nm: number | null
+  ice_max_rpm: number | null
+  fuel_consumption_l100: number | null
+  electric_power_cv: number | null
+  electric_motors_count: number | null
+  battery_kwh: number | null
+  electric_range_km: number | null
+  system_power_cv: number | null
+  system_torque_nm: number | null
+  gearbox_type: GearboxType | null
+  gears: number | null
+  drivetrain: Drivetrain | null
+  /** Calcolato dal database: termico, ibrido o elettrico. Solo da leggere */
+  powertrain_type?: 'termico' | 'ibrido' | 'elettrico'
+}
+
+export type AdminVersion = {
+  id: number
+  car_model_id: number
+  name: string
+  slug: string
+  vehicle_type: VehicleType
+  body_type: BodyType | null
+  project_code: string | null
+  seats: number | null
+  year_start: number
+  year_end: number | null
+  in_production: boolean
+  production_type: ProductionType | null
+  units_produced: number | null
+  description: Partial<Translations>
+  sort_order: number
+  status: PublicationStatus
+  published_at: string | null
+  created_at: string
+  updated_at: string
+  specs?: VersionSpecs | null
+  powertrain?: VersionPowertrain | null
+}
+
+/** Quello che il form manda: i dati della versione con le sue due sezioni */
+export type VersionPayload = Omit<
+  AdminVersion,
+  | 'id'
+  | 'car_model_id'
+  | 'slug'
+  | 'status'
+  | 'published_at'
+  | 'created_at'
+  | 'updated_at'
+  | 'specs'
+  | 'powertrain'
+> & {
+  slug?: string
+  specs?: Partial<VersionSpecs> | null
+  powertrain?: Partial<Omit<VersionPowertrain, 'powertrain_type'>> | null
+}
+
+/** Un motore del catalogo, per la scelta nella motorizzazione */
+export type AdminEngine = {
+  id: number
+  code: string
+  name: string | null
+}

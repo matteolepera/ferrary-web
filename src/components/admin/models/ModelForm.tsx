@@ -5,7 +5,7 @@ import {
   PredecessorPicker,
   type ModelOption,
 } from '@/components/admin/models/PredecessorPicker'
-import { PublicationCard } from '@/components/admin/models/PublicationCard'
+import { ModelPublication } from '@/components/admin/models/ModelPublication'
 import { AdminCard } from '@/components/admin/ui/AdminCard'
 import { AdminField } from '@/components/admin/ui/AdminField'
 import { AdminSelect } from '@/components/admin/ui/AdminSelect'
@@ -17,6 +17,7 @@ import { useSaveModel } from '@/hooks/useAdminModel'
 import { useCurrentUser } from '@/hooks/useAuth'
 import { slugify } from '@/lib/slugify'
 import type { AdminCarModel } from '@/types/admin'
+import { VersionsCard } from '@/components/admin/versions/VersionsCard'
 
 const dateFormat = new Intl.DateTimeFormat('it', {
   day: 'numeric',
@@ -241,7 +242,7 @@ export function ModelForm({ model }: { model?: AdminCarModel }) {
 
         {/* Accanto ai dati: la pubblicazione per un modello esistente, il riepilogo per uno nuovo */}
         {model ? (
-          <PublicationCard
+          <ModelPublication
             model={model}
             canPublish={user?.role !== 'moderator'}
             hasUnsavedChanges={dirty}
@@ -279,6 +280,14 @@ export function ModelForm({ model }: { model?: AdminCarModel }) {
 
         {/* Per un modello esistente, il riepilogo scende accanto alla descrizione */}
         {model && summary}
+
+        {model && (
+          <VersionsCard
+            model={model}
+            delay={240}
+            className="col-span-6 lg:col-span-12"
+          />
+        )}
       </div>
     </form>
   )

@@ -3,11 +3,8 @@ import { AdminButton } from '@/components/admin/ui/AdminButton'
 import { AdminCard } from '@/components/admin/ui/AdminCard'
 import { AdminField } from '@/components/admin/ui/AdminField'
 import { StatusBadge } from '@/components/admin/ui/StatusBadge'
-import {
-  useModelPublication,
-  type PublicationChange,
-} from '@/hooks/useAdminModel'
-import type { AdminCarModel } from '@/types/admin'
+import type { PublicationChange } from '@/hooks/useAdminModel'
+import type { PublicationStatus } from '@/types/admin'
 
 const longDate = new Intl.DateTimeFormat('it', {
   day: 'numeric',
@@ -28,36 +25,45 @@ function toLocalInput(date: Date) {
 }
 
 /** Cosa vuol dire lo stato, in una frase */
-function describe(model: AdminCarModel) {
-  if (model.status === 'published' && model.published_at) {
-    return `Online dal ${longDate.format(new Date(model.published_at))}.`
-  }
-  if (model.status === 'scheduled' && model.published_at) {
-    return `Uscirà il ${longDateTime.format(new Date(model.published_at))}.`
-  }
+function describe(status: PublicationStatus, publishedAt: string | null) {
+  if (status === 'published' && publishedAt)
+    return `Online dal ${longDate.format(new Date(publishedAt))}.`
+  if (status === 'scheduled' && publishedAt)
+    return `Uscirà il ${longDateTime.format(new Date(publishedAt))}.`
   return 'Non è visibile sul sito.'
 }
 
 type PublicationCardProps = {
-  model: AdminCarModel
+  status: PublicationStatus
+  publishedAt: string | null
+  /** Il soggetto delle frasi: "Il modello" o "La versione" */
+  subject: string
   canPublish: boolean
-  /** Il form ha modifiche non ancora salvate */
   hasUnsavedChanges: boolean
+  isPending: boolean
+  isError: boolean
+  /** Esegue il cambiamento, e chiama done quando è andato a buon fine */
+  onChange: (change: PublicationChange, done: () => void) => void
   delay?: number
   className?: string
 }
 
 /**
- * Lo stato di pubblicazione del modello, con le azioni possibili da quello stato.
+ * Lo stato di pubblicazione, con le azioni possibili da quello stato.
+ * Solo disegno: chi lo usa decide cosa pubblicare, un modello o una versione.
  */
 export function PublicationCard({
-  model,
+  status,
+  publishedAt,
+  subject,
   canPublish,
   hasUnsavedChanges,
+  isPending,
+  isError,
+  onChange,
   delay,
   className = '',
 }: PublicationCardProps) {
-  const publication = useModelPublication(model.id)
   // Il passaggio aperto: niente, la scelta della data, o la conferma del ritiro
   const [step, setStep] = useState<'idle' | 'schedule' | 'confirm'>('idle')
   const [date, setDate] = useState(() =>
@@ -65,27 +71,27 @@ export function PublicationCard({
   )
 
   function run(change: PublicationChange) {
-    publication.mutate(change, { onSuccess: () => setStep('idle') })
+    onChange(change, () => setStep('idle'))
   }
 
   return (
     <AdminCard
-      aria-labelledby="modello-pubblicazione"
+      aria-labelledby="pubblicazione-titolo"
       delay={delay}
       className={`p-6 ${className}`}
     >
       <h2
-        id="modello-pubblicazione"
+        id="pubblicazione-titolo"
         className="font-display text-xl font-extrabold tracking-[-0.03em]"
       >
         Pubblicazione
       </h2>
 
       <div className="mt-4">
-        <StatusBadge status={model.status} publishedAt={model.published_at} />
+        <StatusBadge status={status} publishedAt={publishedAt} />
       </div>
       <p className="mt-2.5 text-sm leading-relaxed text-neutral-400">
-        {describe(model)}
+        {describe(status, publishedAt)}
       </p>
 
       {!canPublish ? (
@@ -103,29 +109,29 @@ export function PublicationCard({
 
           {step === 'idle' && (
             <div className="flex flex-wrap gap-2.5">
-              {model.status !== 'published' && (
+              {status !== 'published' && (
                 <AdminButton
-                  disabled={publication.isPending}
+                  disabled={isPending}
                   onClick={() => run({ action: 'publish' })}
                 >
                   Pubblica ora
                 </AdminButton>
               )}
-              {model.status !== 'published' && (
+              {status !== 'published' && (
                 <AdminButton
                   variant="outline"
                   onClick={() => setStep('schedule')}
                 >
-                  {model.status === 'scheduled' ? 'Cambia data' : 'Programma'}
+                  {status === 'scheduled' ? 'Cambia data' : 'Programma'}
                 </AdminButton>
               )}
-              {model.status !== 'draft' && (
+              {status !== 'draft' && (
                 <AdminButton
                   variant="outline"
-                  disabled={publication.isPending}
-                  // Un modello online sparisce dal sito: prima si chiede conferma
+                  disabled={isPending}
+                  // Un record online sparisce dal sito: prima si chiede conferma
                   onClick={() =>
-                    model.status === 'published'
+                    status === 'published'
                       ? setStep('confirm')
                       : run({ action: 'unpublish' })
                   }
@@ -147,7 +153,7 @@ export function PublicationCard({
               />
               <div className="flex flex-wrap gap-2.5">
                 <AdminButton
-                  disabled={!date || publication.isPending}
+                  disabled={!date || isPending}
                   // Il campo è nel fuso di chi guarda: toISOString lo converte per il server
                   onClick={() =>
                     run({
@@ -175,11 +181,11 @@ export function PublicationCard({
                 id="ritiro-domanda"
                 className="text-sm leading-relaxed text-neutral-200"
               >
-                Il modello sparirà dal sito. Confermi?
+                {subject} sparirà dal sito. Confermi?
               </p>
               <div className="flex flex-wrap gap-2.5">
                 <AdminButton
-                  disabled={publication.isPending}
+                  disabled={isPending}
                   onClick={() => run({ action: 'unpublish' })}
                 >
                   Sì, riporta in bozza
@@ -191,7 +197,7 @@ export function PublicationCard({
             </div>
           )}
 
-          {publication.isError && (
+          {isError && (
             <p role="alert" className="text-errore mt-4 text-[0.8125rem]">
               Impossibile cambiare la pubblicazione in questo momento. Riprova.
             </p>

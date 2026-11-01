@@ -8,6 +8,9 @@ import type {
   AdminCategory,
   AdminModelFilters,
   ModelPayload,
+  AdminVersion,
+  VersionPayload,
+  AdminEngine,
 } from '@/types/admin'
 
 /**
@@ -107,6 +110,86 @@ export async function publishModel(
 export async function unpublishModel(id: number): Promise<AdminCarModel> {
   const response = await api.post<ApiResource<AdminCarModel>>(
     `/admin/models/${id}/unpublish`,
+    {},
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+/* ---------- Versioni ---------- */
+
+export async function fetchModelVersions(
+  modelId: number,
+): Promise<AdminVersion[]> {
+  const response = await api.get<ApiResource<AdminVersion[]>>(
+    `/admin/models/${modelId}/versions`,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function fetchAdminVersion(id: number): Promise<AdminVersion> {
+  const response = await api.get<ApiResource<AdminVersion>>(
+    `/admin/versions/${id}`,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function createVersion(
+  modelId: number,
+  payload: VersionPayload,
+): Promise<AdminVersion> {
+  const response = await api.post<ApiResource<AdminVersion>>(
+    `/admin/models/${modelId}/versions`,
+    payload,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function updateVersion(
+  id: number,
+  payload: VersionPayload,
+): Promise<AdminVersion> {
+  const response = await api.patch<ApiResource<AdminVersion>>(
+    `/admin/versions/${id}`,
+    payload,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function fetchAdminEngines(): Promise<AdminEngine[]> {
+  const response = await api.get<ApiResource<AdminEngine[]>>(
+    '/admin/engines',
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function publishVersion(
+  id: number,
+  publishedAt?: string,
+): Promise<AdminVersion> {
+  const response = await api.post<ApiResource<AdminVersion>>(
+    `/admin/versions/${id}/publish`,
+    publishedAt ? { published_at: publishedAt } : {},
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function unpublishVersion(id: number): Promise<AdminVersion> {
+  const response = await api.post<ApiResource<AdminVersion>>(
+    `/admin/versions/${id}/unpublish`,
     {},
     adminRequest,
   )
