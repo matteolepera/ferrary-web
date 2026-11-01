@@ -17,6 +17,7 @@ import type {
   DesignerPayload,
   AdminDriver,
   DriverPayload,
+  DesignerRole,
 } from '@/types/admin'
 
 /**
@@ -450,4 +451,27 @@ export async function updateDriver(
 
 export async function deleteDriver(id: number): Promise<void> {
   await api.delete(`/admin/drivers/${id}`, adminRequest)
+}
+
+/* ---------- Collegamenti delle versioni ---------- */
+
+/** Sostituisce i designer della versione: si manda sempre l'elenco completo */
+export async function saveDesignerCredits(
+  versionId: number,
+  credits: { id: number; role: DesignerRole }[],
+) {
+  await api.put(
+    `/admin/versions/${versionId}/designers`,
+    { designers: credits },
+    adminRequest,
+  )
+}
+
+/** Sostituisce i piloti della versione: si manda sempre l'elenco completo */
+export async function saveDriverCredits(versionId: number, ids: number[]) {
+  await api.put(
+    `/admin/versions/${versionId}/drivers`,
+    { drivers: ids },
+    adminRequest,
+  )
 }

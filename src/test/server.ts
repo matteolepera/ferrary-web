@@ -435,6 +435,12 @@ export const server = setupServer(
     `${API}/admin/drivers/:id`,
     () => new HttpResponse(null, { status: 204 }),
   ),
+  http.put(`${API}/admin/versions/:id/designers`, () =>
+    HttpResponse.json({ data: [] }),
+  ),
+  http.put(`${API}/admin/versions/:id/drivers`, () =>
+    HttpResponse.json({ data: [] }),
+  ),
 )
 
 /**

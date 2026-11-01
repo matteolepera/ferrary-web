@@ -463,6 +463,8 @@ export const adminVersions: AdminVersion[] = [
       drivetrain: 'integrale',
       powertrain_type: 'ibrido',
     },
+    designers: [{ id: 2, name: 'Flavio Manzoni', role: 'design' }],
+    drivers: [],
   },
   {
     id: 11,

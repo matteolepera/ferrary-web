@@ -122,6 +122,19 @@ export type AdminVersion = {
   updated_at: string
   specs?: VersionSpecs | null
   powertrain?: VersionPowertrain | null
+  /** I collegamenti, nella forma del backend: credits.ts li riconduce a DesignerCredit e DriverCredit */
+  designers?: {
+    id: number
+    name: string
+    role?: DesignerRole
+    pivot?: { role: DesignerRole }
+  }[]
+  drivers?: {
+    id: number
+    name?: string
+    first_name?: string
+    last_name?: string
+  }[]
 }
 
 /** Quello che il form manda: i dati della versione con le sue due sezioni */
@@ -230,3 +243,9 @@ export type DriverPayload = {
   nationality: string | null
   birth_date: string | null
 }
+
+/** Un designer collegato a una versione, con il suo ruolo */
+export type DesignerCredit = { id: number; name: string; role: DesignerRole }
+
+/** Un pilota collegato a una versione */
+export type DriverCredit = { id: number; name: string }
