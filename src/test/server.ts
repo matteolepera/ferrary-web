@@ -34,6 +34,7 @@ import type {
   AdminDriver,
   RacingPayload,
 } from '@/types/admin'
+import type { User } from '@/types/auth'
 
 const BACKEND = 'http://localhost:8000'
 const API = 'http://localhost:8000/api'
@@ -463,6 +464,52 @@ export const server = setupServer(
     `${API}/admin/racing/:id`,
     () => new HttpResponse(null, { status: 204 }),
   ),
+  http.post(`${API}/admin/staff`, async ({ request }) => {
+    const payload = (await request.json()) as {
+      name: string
+      email: string
+      role: string
+    }
+
+    return HttpResponse.json(
+      {
+        data: {
+          id: 40,
+          name: payload.name,
+          email: payload.email,
+          role: payload.role,
+        },
+      },
+      { status: 201 },
+    )
+  }),
+  http.patch(`${API}/admin/staff/:id/role`, async ({ params, request }) => {
+    const person = staffMembers.find((item) => item.id === Number(params.id))
+    const { role } = (await request.json()) as { role: string }
+
+    return person
+      ? HttpResponse.json({ data: { ...person, role } })
+      : new HttpResponse(null, { status: 404 })
+  }),
+  http.patch(`${API}/admin/staff/:id`, async ({ params, request }) => {
+    const person = staffMembers.find((item) => item.id === Number(params.id))
+    const changes = (await request.json()) as Partial<User>
+
+    return person
+      ? HttpResponse.json({ data: { ...person, ...changes } })
+      : new HttpResponse(null, { status: 404 })
+  }),
+  http.delete(
+    `${API}/admin/staff/:id`,
+    () => new HttpResponse(null, { status: 204 }),
+  ),
+  http.post(`${API}/admin/staff/:id/transfer-master`, ({ params }) => {
+    const person = staffMembers.find((item) => item.id === Number(params.id))
+
+    return person
+      ? HttpResponse.json({ data: { ...person, role: 'master' } })
+      : new HttpResponse(null, { status: 404 })
+  }),
 )
 
 /**

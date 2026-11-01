@@ -49,3 +49,10 @@ export function backendMessage(error: unknown): string | null {
 
   return null
 }
+
+/**
+ * Vero se l'API ha risposto 403: so chi sei, ma non puoi farlo.
+ */
+export function isForbidden(error: unknown): boolean {
+  return isAxiosError(error) && error.response?.status === 403
+}

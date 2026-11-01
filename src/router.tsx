@@ -181,6 +181,12 @@ export const routes: RouteObject[] = [
           Component: (await import('@/pages/admin/DriversPage')).DriversPage,
         }),
       },
+      {
+        path: 'staff',
+        lazy: async () => ({
+          Component: (await import('@/pages/admin/StaffPage')).StaffPage,
+        }),
+      },
       { path: '*', element: <NotFoundPage backTo="/admin" /> },
     ],
   },
