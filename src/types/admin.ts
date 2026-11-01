@@ -138,6 +138,6 @@ export type VersionPayload = Omit<
   | 'powertrain'
 > & {
   slug?: string
-  specs: Partial<VersionSpecs> | null
-  powertrain: Partial<Omit<VersionPowertrain, 'powertrain_type'>> | null
+  specs?: Partial<VersionSpecs> | null
+  powertrain?: Partial<Omit<VersionPowertrain, 'powertrain_type'>> | null
 }
