@@ -32,3 +32,7 @@ window.IntersectionObserver = class {
     return []
   }
 } as unknown as typeof IntersectionObserver
+
+// jsdom non crea indirizzi temporanei per i file: li simuliamo per le anteprime delle foto
+URL.createObjectURL = vi.fn(() => 'blob:anteprima')
+URL.revokeObjectURL = vi.fn()

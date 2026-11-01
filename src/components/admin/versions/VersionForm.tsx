@@ -37,6 +37,7 @@ import type {
   ProductionType,
   VehicleType,
 } from '@/types/admin'
+import { GalleryCard } from '@/components/admin/images/GalleryCard'
 
 const dateFormat = new Intl.DateTimeFormat('it', {
   day: 'numeric',
@@ -371,6 +372,16 @@ export function VersionForm({ modelId, modelName, version }: VersionFormProps) {
           )}
           {summary}
         </div>
+
+        {/* Le foto si caricano in una versione: prima la versione deve esistere */}
+        {version && (
+          <GalleryCard
+            versionId={version.id}
+            versionName={version.name}
+            delay={150}
+            className="col-span-6 lg:col-span-12"
+          />
+        )}
 
         <AdminCard
           aria-labelledby="versione-produzione"

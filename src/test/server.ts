@@ -17,9 +17,10 @@ import {
   adminModels,
   adminCategories,
   adminVersions,
+  adminImages,
 } from '@/test/fixtures'
 import { staffUser, STAFF_PASSWORD } from '@/test/fixtures'
-import type { ModelPayload, VersionPayload } from '@/types/admin'
+import type { ModelPayload, VersionPayload, AdminImage } from '@/types/admin'
 
 const BACKEND = 'http://localhost:8000'
 const API = 'http://localhost:8000/api'
@@ -278,6 +279,43 @@ export const server = setupServer(
           },
         })
       : new HttpResponse(null, { status: 404 })
+  }),
+
+  http.get(`${API}/admin/versions/:id/images`, ({ params }) =>
+    HttpResponse.json({ data: Number(params.id) === 21 ? adminImages : [] }),
+  ),
+  http.post(`${API}/admin/versions/:id/images`, () =>
+    HttpResponse.json(
+      {
+        data: {
+          id: 99,
+          url: 'http://localhost:8000/storage/versions/nuova/foto.jpg',
+          alt_text: { it: 'Foto caricata' },
+          is_cover: false,
+          sort_order: 3,
+        },
+      },
+      { status: 201 },
+    ),
+  ),
+  http.patch(`${API}/admin/images/:id`, async ({ params, request }) => {
+    const image = adminImages.find((item) => item.id === Number(params.id))
+    const changes = (await request.json()) as Partial<AdminImage>
+
+    return image
+      ? HttpResponse.json({ data: { ...image, ...changes } })
+      : new HttpResponse(null, { status: 404 })
+  }),
+  http.delete(
+    `${API}/admin/images/:id`,
+    () => new HttpResponse(null, { status: 204 }),
+  ),
+  http.put(`${API}/admin/versions/:id/images/order`, async ({ request }) => {
+    const { images } = (await request.json()) as { images: number[] }
+
+    return HttpResponse.json({
+      data: images.map((id) => adminImages.find((image) => image.id === id)),
+    })
   }),
 )
 
