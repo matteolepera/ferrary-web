@@ -377,6 +377,7 @@ export function VersionForm({ modelId, modelName, version }: VersionFormProps) {
         {version && (
           <GalleryCard
             versionId={version.id}
+            versionName={version.name}
             delay={150}
             className="col-span-6 lg:col-span-12"
           />

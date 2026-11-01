@@ -3,9 +3,11 @@ import { AdminButton } from '@/components/admin/ui/AdminButton'
 import { AdminCard } from '@/components/admin/ui/AdminCard'
 import { Icon } from '@/components/admin/ui/Icon'
 import { useImageActions, useVersionImages } from '@/hooks/useVersionImages'
+import { ImageUploader } from '@/components/admin/images/ImageUploader'
 
 type GalleryCardProps = {
   versionId: number
+  versionName: string
   delay?: number
   className?: string
 }
@@ -15,6 +17,7 @@ type GalleryCardProps = {
  */
 export function GalleryCard({
   versionId,
+  versionName,
   delay,
   className = '',
 }: GalleryCardProps) {
@@ -41,6 +44,8 @@ export function GalleryCard({
         La copertina rappresenta la versione nell'archivio e nella pagina del
         modello.
       </p>
+
+      <ImageUploader versionId={versionId} versionName={versionName} />
 
       {isPending && (
         <div
