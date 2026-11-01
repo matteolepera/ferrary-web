@@ -28,6 +28,13 @@ import {
   type PowertrainField,
   type PowertrainValues,
 } from '@/components/admin/versions/powertrain'
+import { SpecsCard } from '@/components/admin/versions/SpecsCard'
+import {
+  specsValues,
+  toSpecsPayload,
+  type SpecsField,
+  type SpecsValues,
+} from '@/components/admin/versions/specs'
 
 const dateFormat = new Intl.DateTimeFormat('it', {
   day: 'numeric',
@@ -106,6 +113,15 @@ export function VersionForm({ modelId, modelName, version }: VersionFormProps) {
     setSaved(false)
   }
 
+  const [specs, setSpecs] = useState<SpecsValues>(() =>
+    specsValues(version?.specs),
+  )
+
+  function updateSpecs(field: SpecsField, value: string) {
+    setSpecs((current) => ({ ...current, [field]: value }))
+    setSaved(false)
+  }
+
   const justCreated =
     (location.state as { created?: boolean } | null)?.created === true
   const errors = validationErrors(save.error)
@@ -137,7 +153,7 @@ export function VersionForm({ modelId, modelName, version }: VersionFormProps) {
         sort_order: toNumber(values.sort_order) ?? 1,
         description: { it: values.description_it, en: values.description_en },
         powertrain: toPowertrainPayload(powertrain),
-        // specs non c'è ancora: il backend lascia la scheda tecnica com'è
+        specs: toSpecsPayload(specs),
       },
       {
         onSuccess: (result) => {
@@ -448,6 +464,12 @@ export function VersionForm({ modelId, modelName, version }: VersionFormProps) {
           onChange={updatePowertrain}
           errors={errors}
           delay={240}
+        />
+        <SpecsCard
+          values={specs}
+          onChange={updateSpecs}
+          errors={errors}
+          delay={300}
         />
       </div>
     </form>

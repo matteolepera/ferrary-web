@@ -45,7 +45,7 @@ test('crea una versione nel modello, senza toccare motorizzazione e scheda tecni
     year_start: 2025,
     seats: null,
   })
-  expect(sent).not.toHaveProperty('specs')
+  expect(sent).toHaveProperty('specs', null)
   expect(sent).toHaveProperty('powertrain', null)
 })
 
@@ -100,4 +100,32 @@ test('togliendo il motore, i dati termici si disattivano e il tipo cambia', asyn
 
   expect(screen.getByLabelText('Potenza (CV)')).toBeDisabled()
   expect(screen.getByText('Elettrico')).toBeInTheDocument()
+})
+
+test('mostra la scheda tecnica, con il giro di Fiorano leggibile', async () => {
+  let sent: { specs?: Record<string, unknown> } | null = null
+  server.use(
+    http.patch(
+      'http://localhost:8000/api/admin/versions/:id',
+      async ({ request }) => {
+        sent = (await request.json()) as { specs?: Record<string, unknown> }
+        return HttpResponse.json({ data: { ...adminVersions[0], ...sent } })
+      },
+    ),
+  )
+  signIn()
+  renderRoute('/admin/modelli/2/versioni/21')
+
+  expect(await screen.findByLabelText('Lunghezza (mm)')).toHaveValue(4710)
+  expect(screen.getByText(/^Si legge 1:19/)).toBeInTheDocument()
+
+  fireEvent.change(screen.getByLabelText('Velocità massima (km/h)'), {
+    target: { value: '345' },
+  })
+  fireEvent.click(screen.getByRole('button', { name: 'Salva modifiche' }))
+
+  await screen.findByText('Modifiche salvate.')
+  expect(sent).toMatchObject({
+    specs: { top_speed_kmh: 345, length_mm: 4710, chassis_material: 'misto' },
+  })
 })
