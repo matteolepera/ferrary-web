@@ -141,3 +141,10 @@ export type VersionPayload = Omit<
   specs?: Partial<VersionSpecs> | null
   powertrain?: Partial<Omit<VersionPowertrain, 'powertrain_type'>> | null
 }
+
+/** Un motore del catalogo, per la scelta nella motorizzazione */
+export type AdminEngine = {
+  id: number
+  code: string
+  name: string | null
+}

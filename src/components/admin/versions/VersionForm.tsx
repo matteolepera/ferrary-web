@@ -21,6 +21,13 @@ import type {
   ProductionType,
   VehicleType,
 } from '@/types/admin'
+import { PowertrainCard } from '@/components/admin/versions/PowertrainCard'
+import {
+  powertrainValues,
+  toPowertrainPayload,
+  type PowertrainField,
+  type PowertrainValues,
+} from '@/components/admin/versions/powertrain'
 
 const dateFormat = new Intl.DateTimeFormat('it', {
   day: 'numeric',
@@ -89,6 +96,16 @@ export function VersionForm({ modelId, modelName, version }: VersionFormProps) {
   })
   const [saved, setSaved] = useState(false)
 
+  // La motorizzazione ha il suo stato: è un gruppo di campi con regole proprie
+  const [powertrain, setPowertrain] = useState<PowertrainValues>(() =>
+    powertrainValues(version?.powertrain),
+  )
+
+  function updatePowertrain(field: PowertrainField, value: string) {
+    setPowertrain((current) => ({ ...current, [field]: value }))
+    setSaved(false)
+  }
+
   const justCreated =
     (location.state as { created?: boolean } | null)?.created === true
   const errors = validationErrors(save.error)
@@ -119,7 +136,8 @@ export function VersionForm({ modelId, modelName, version }: VersionFormProps) {
         units_produced: toNumber(values.units_produced),
         sort_order: toNumber(values.sort_order) ?? 1,
         description: { it: values.description_it, en: values.description_en },
-        // specs e powertrain non ci sono: il backend lascia le sezioni come sono
+        powertrain: toPowertrainPayload(powertrain),
+        // specs non c'è ancora: il backend lascia la scheda tecnica com'è
       },
       {
         onSuccess: (result) => {
@@ -425,6 +443,12 @@ export function VersionForm({ modelId, modelName, version }: VersionFormProps) {
             />
           </div>
         </AdminCard>
+        <PowertrainCard
+          values={powertrain}
+          onChange={updatePowertrain}
+          errors={errors}
+          delay={240}
+        />
       </div>
     </form>
   )

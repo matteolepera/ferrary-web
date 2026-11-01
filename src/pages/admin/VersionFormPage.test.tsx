@@ -46,7 +46,7 @@ test('crea una versione nel modello, senza toccare motorizzazione e scheda tecni
     seats: null,
   })
   expect(sent).not.toHaveProperty('specs')
-  expect(sent).not.toHaveProperty('powertrain')
+  expect(sent).toHaveProperty('powertrain', null)
 })
 
 test("in produzione non c'è un anno di fine", async () => {
@@ -85,4 +85,19 @@ test('una versione di un altro modello è un "non trovato"', async () => {
   expect(
     await screen.findByRole('heading', { name: 'Pagina non trovata' }),
   ).toBeInTheDocument()
+})
+
+test('togliendo il motore, i dati termici si disattivano e il tipo cambia', async () => {
+  signIn()
+  renderRoute('/admin/modelli/2/versioni/21')
+
+  const engine = await screen.findByLabelText('Motore')
+  await screen.findByRole('option', { name: 'F154 · V8 biturbo' })
+  expect(engine).toHaveValue('1')
+  expect(screen.getByText('Ibrido')).toBeInTheDocument()
+
+  fireEvent.change(engine, { target: { value: '' } })
+
+  expect(screen.getByLabelText('Potenza (CV)')).toBeDisabled()
+  expect(screen.getByText('Elettrico')).toBeInTheDocument()
 })

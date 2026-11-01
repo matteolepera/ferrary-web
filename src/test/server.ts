@@ -231,6 +231,14 @@ export const server = setupServer(
       ? HttpResponse.json({ data: { ...version, ...payload } })
       : new HttpResponse(null, { status: 404 })
   }),
+  http.get(`${API}/admin/engines`, () =>
+    HttpResponse.json({
+      data: [
+        { id: 1, code: 'F154', name: 'V8 biturbo' },
+        { id: 2, code: 'F140', name: 'V12' },
+      ],
+    }),
+  ),
 )
 
 /**

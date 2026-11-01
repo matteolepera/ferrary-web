@@ -10,6 +10,7 @@ import type {
   ModelPayload,
   AdminVersion,
   VersionPayload,
+  AdminEngine,
 } from '@/types/admin'
 
 /**
@@ -158,6 +159,15 @@ export async function updateVersion(
   const response = await api.patch<ApiResource<AdminVersion>>(
     `/admin/versions/${id}`,
     payload,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function fetchAdminEngines(): Promise<AdminEngine[]> {
+  const response = await api.get<ApiResource<AdminEngine[]>>(
+    '/admin/engines',
     adminRequest,
   )
 
