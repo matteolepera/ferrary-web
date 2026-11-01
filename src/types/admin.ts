@@ -210,3 +210,23 @@ export type DesignerPayload = {
   type: DesignerType | null
   country: string | null
 }
+
+export type AdminDriver = {
+  id: number
+  first_name: string
+  last_name: string
+  slug: string
+  /** Il codice del paese, di due lettere: MC */
+  nationality: string | null
+  /** La data senza ora: 1997-10-16 */
+  birth_date: string | null
+  versions_count?: number
+}
+
+export type DriverPayload = {
+  first_name: string
+  last_name: string
+  slug?: string
+  nationality: string | null
+  birth_date: string | null
+}

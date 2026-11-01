@@ -15,6 +15,8 @@ import type {
   EnginePayload,
   AdminDesigner,
   DesignerPayload,
+  AdminDriver,
+  DriverPayload,
 } from '@/types/admin'
 
 /**
@@ -408,4 +410,44 @@ export async function updateDesigner(
 
 export async function deleteDesigner(id: number): Promise<void> {
   await api.delete(`/admin/designers/${id}`, adminRequest)
+}
+
+/* ---------- Piloti ---------- */
+
+export async function fetchAdminDrivers(): Promise<AdminDriver[]> {
+  const response = await api.get<ApiResource<AdminDriver[]>>(
+    '/admin/drivers',
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function createDriver(
+  payload: DriverPayload,
+): Promise<AdminDriver> {
+  const response = await api.post<ApiResource<AdminDriver>>(
+    '/admin/drivers',
+    payload,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function updateDriver(
+  id: number,
+  payload: DriverPayload,
+): Promise<AdminDriver> {
+  const response = await api.patch<ApiResource<AdminDriver>>(
+    `/admin/drivers/${id}`,
+    payload,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function deleteDriver(id: number): Promise<void> {
+  await api.delete(`/admin/drivers/${id}`, adminRequest)
 }

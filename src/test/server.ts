@@ -20,6 +20,7 @@ import {
   adminImages,
   adminEngines,
   adminDesigners,
+  adminDrivers,
 } from '@/test/fixtures'
 import { staffUser, STAFF_PASSWORD } from '@/test/fixtures'
 import type {
@@ -29,6 +30,7 @@ import type {
   AdminCategory,
   EnginePayload,
   AdminDesigner,
+  AdminDriver,
 } from '@/types/admin'
 
 const BACKEND = 'http://localhost:8000'
@@ -410,6 +412,27 @@ export const server = setupServer(
   }),
   http.delete(
     `${API}/admin/designers/:id`,
+    () => new HttpResponse(null, { status: 204 }),
+  ),
+  http.get(`${API}/admin/drivers`, () =>
+    HttpResponse.json({ data: adminDrivers }),
+  ),
+  http.post(`${API}/admin/drivers`, () =>
+    HttpResponse.json(
+      { data: { ...adminDrivers[0], id: 80 } },
+      { status: 201 },
+    ),
+  ),
+  http.patch(`${API}/admin/drivers/:id`, async ({ params, request }) => {
+    const driver = adminDrivers.find((item) => item.id === Number(params.id))
+    const payload = (await request.json()) as Partial<AdminDriver>
+
+    return driver
+      ? HttpResponse.json({ data: { ...driver, ...payload } })
+      : new HttpResponse(null, { status: 404 })
+  }),
+  http.delete(
+    `${API}/admin/drivers/:id`,
     () => new HttpResponse(null, { status: 204 }),
   ),
 )

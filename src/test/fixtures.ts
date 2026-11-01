@@ -16,6 +16,7 @@ import type {
   AdminImage,
   AdminEngine,
   AdminDesigner,
+  AdminDriver,
 } from '@/types/admin'
 
 export const families: Category[] = [
@@ -557,5 +558,26 @@ export const adminDesigners: AdminDesigner[] = [
     type: 'persona',
     country: 'IT',
     versions_count: 2,
+  },
+]
+
+export const adminDrivers: AdminDriver[] = [
+  {
+    id: 1,
+    first_name: 'Michael',
+    last_name: 'Schumacher',
+    slug: 'michael-schumacher',
+    nationality: 'DE',
+    birth_date: '1969-01-03',
+    versions_count: 5,
+  },
+  {
+    id: 2,
+    first_name: 'Charles',
+    last_name: 'Leclerc',
+    slug: 'charles-leclerc',
+    nationality: 'MC',
+    birth_date: '1997-10-16',
+    versions_count: 3,
   },
 ]

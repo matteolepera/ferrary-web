@@ -175,6 +175,12 @@ export const routes: RouteObject[] = [
             .DesignersPage,
         }),
       },
+      {
+        path: 'piloti',
+        lazy: async () => ({
+          Component: (await import('@/pages/admin/DriversPage')).DriversPage,
+        }),
+      },
       { path: '*', element: <NotFoundPage backTo="/admin" /> },
     ],
   },
