@@ -143,10 +143,41 @@ export type VersionPayload = Omit<
 }
 
 /** Un motore del catalogo, per la scelta nella motorizzazione */
+export type EngineArchitecture = 'V' | 'in_linea' | 'piatto'
+export type Aspiration = 'aspirato' | 'turbo' | 'compressore'
+
+/** Un motore del catalogo */
 export type AdminEngine = {
   id: number
   code: string
   name: string | null
+  architecture: EngineArchitecture
+  v_angle_deg: number | null
+  cylinders: number
+  displacement_cc: number
+  bore_mm: number | null
+  stroke_mm: number | null
+  valves_per_cylinder: number | null
+  aspiration: Aspiration
+  description: Partial<Translations>
+  versions_count?: number
+}
+
+/** Quello che il form manda: tutti i campi modificabili */
+export type EnginePayload = Omit<
+  AdminEngine,
+  | 'id'
+  | 'versions_count'
+  | 'architecture'
+  | 'aspiration'
+  | 'cylinders'
+  | 'displacement_cc'
+> & {
+  // Possono arrivare vuoti dal form: il backend risponde "obbligatorio" sotto il campo
+  architecture: EngineArchitecture | null
+  aspiration: Aspiration | null
+  cylinders: number | null
+  displacement_cc: number | null
 }
 
 /** Una foto di una versione, come la restituisce l'admin */

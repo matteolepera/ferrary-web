@@ -12,6 +12,7 @@ import type {
   VersionPayload,
   AdminEngine,
   AdminImage,
+  EnginePayload,
 } from '@/types/admin'
 
 /**
@@ -175,6 +176,44 @@ export async function fetchAdminEngines(): Promise<AdminEngine[]> {
   return response.data.data
 }
 
+export async function fetchAdminEngine(id: number): Promise<AdminEngine> {
+  const response = await api.get<ApiResource<AdminEngine>>(
+    `/admin/engines/${id}`,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function createEngine(
+  payload: EnginePayload,
+): Promise<AdminEngine> {
+  const response = await api.post<ApiResource<AdminEngine>>(
+    '/admin/engines',
+    payload,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function updateEngine(
+  id: number,
+  payload: EnginePayload,
+): Promise<AdminEngine> {
+  const response = await api.patch<ApiResource<AdminEngine>>(
+    `/admin/engines/${id}`,
+    payload,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function deleteEngine(id: number): Promise<void> {
+  await api.delete(`/admin/engines/${id}`, adminRequest)
+}
+
 export async function publishVersion(
   id: number,
   publishedAt?: string,
@@ -290,4 +329,41 @@ export async function reorderImages(
   )
 
   return response.data.data
+}
+
+/* ---------- Famiglie ---------- */
+
+export type CategoryPayload = {
+  name: { it: string; en?: string }
+  slug?: string
+  sort_order: number
+}
+
+export async function createCategory(
+  payload: CategoryPayload,
+): Promise<AdminCategory> {
+  const response = await api.post<ApiResource<AdminCategory>>(
+    '/admin/categories',
+    payload,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function updateCategory(
+  id: number,
+  payload: CategoryPayload,
+): Promise<AdminCategory> {
+  const response = await api.patch<ApiResource<AdminCategory>>(
+    `/admin/categories/${id}`,
+    payload,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function deleteCategory(id: number): Promise<void> {
+  await api.delete(`/admin/categories/${id}`, adminRequest)
 }

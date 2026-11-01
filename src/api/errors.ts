@@ -34,3 +34,18 @@ export function validationErrors(
 export function isTooManyRequests(error: unknown): boolean {
   return isAxiosError(error) && error.response?.status === 429
 }
+
+/**
+ * Il messaggio che il backend ha scritto nella risposta d'errore, se c'è:
+ * per i rifiuti con un motivo, come una famiglia che contiene ancora dei modelli.
+ */
+export function backendMessage(error: unknown): string | null {
+  if (
+    isAxiosError<{ message?: unknown }>(error) &&
+    typeof error.response?.data?.message === 'string'
+  ) {
+    return error.response.data.message
+  }
+
+  return null
+}

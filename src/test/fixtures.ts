@@ -14,6 +14,7 @@ import type {
   AdminCategory,
   AdminVersion,
   AdminImage,
+  AdminEngine,
 } from '@/types/admin'
 
 export const families: Category[] = [
@@ -503,5 +504,38 @@ export const adminImages: AdminImage[] = [
     alt_text: { it: 'SF90 Stradale, vista posteriore' },
     is_cover: false,
     sort_order: 2,
+  },
+]
+
+export const adminEngines: AdminEngine[] = [
+  {
+    id: 1,
+    code: 'F154',
+    name: 'V8 biturbo',
+    architecture: 'V',
+    v_angle_deg: 90,
+    cylinders: 8,
+    displacement_cc: 3990,
+    bore_mm: 88,
+    stroke_mm: 82,
+    valves_per_cylinder: 4,
+    aspiration: 'turbo',
+    description: { it: 'Il V8 biturbo.' },
+    versions_count: 3,
+  },
+  {
+    id: 2,
+    code: 'F140',
+    name: 'V12',
+    architecture: 'V',
+    v_angle_deg: 65,
+    cylinders: 12,
+    displacement_cc: 6496,
+    bore_mm: 94,
+    stroke_mm: 78,
+    valves_per_cylinder: 4,
+    aspiration: 'aspirato',
+    description: {},
+    versions_count: 0,
   },
 ]
