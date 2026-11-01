@@ -17,6 +17,7 @@ import { useSaveModel } from '@/hooks/useAdminModel'
 import { useCurrentUser } from '@/hooks/useAuth'
 import { slugify } from '@/lib/slugify'
 import type { AdminCarModel } from '@/types/admin'
+import { VersionsCard } from '@/components/admin/versions/VersionsCard'
 
 const dateFormat = new Intl.DateTimeFormat('it', {
   day: 'numeric',
@@ -279,6 +280,14 @@ export function ModelForm({ model }: { model?: AdminCarModel }) {
 
         {/* Per un modello esistente, il riepilogo scende accanto alla descrizione */}
         {model && summary}
+
+        {model && (
+          <VersionsCard
+            model={model}
+            delay={240}
+            className="col-span-6 lg:col-span-12"
+          />
+        )}
       </div>
     </form>
   )

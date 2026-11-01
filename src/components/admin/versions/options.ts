@@ -6,6 +6,7 @@ import type {
   GearboxType,
   ProductionType,
   VehicleType,
+  AdminVersion,
 } from '@/types/admin'
 
 /** Un valore con la sua etichetta, per i menu a tendina */
@@ -67,4 +68,15 @@ export function labelOf<T extends string>(
   value: T | null | undefined,
 ) {
   return options.find((option) => option.value === value)?.label ?? value ?? '—'
+}
+
+/** Gli anni di una versione: "2019 – oggi", "2013 – 2017", oppure un anno solo */
+export function yearsOf(
+  version: Pick<AdminVersion, 'year_start' | 'year_end' | 'in_production'>,
+) {
+  if (version.in_production) return `${version.year_start} – oggi`
+  if (version.year_end && version.year_end !== version.year_start)
+    return `${version.year_start} – ${version.year_end}`
+
+  return String(version.year_start)
 }
