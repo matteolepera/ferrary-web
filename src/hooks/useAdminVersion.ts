@@ -7,6 +7,9 @@ import {
 } from '@/api/admin'
 import { isNotFound } from '@/api/errors'
 import type { VersionPayload } from '@/types/admin'
+import { publishVersion, unpublishVersion } from '@/api/admin'
+import type { PublicationChange } from '@/hooks/useAdminModel'
+import type { AdminVersion } from '@/types/admin'
 
 /** Le versioni di un modello, nel loro ordine */
 export function useModelVersions(modelId: number) {
@@ -42,6 +45,32 @@ export function useSaveVersion(modelId: number, id: number | undefined) {
       queryClient.invalidateQueries({ queryKey: ['admin', 'models', modelId] })
       queryClient.invalidateQueries({ queryKey: ['admin', 'dashboard'] })
       queryClient.setQueryData(['admin', 'versions', version.id], version)
+    },
+  })
+}
+/**
+ * Pubblica, programma o riporta in bozza una versione.
+ */
+export function useVersionPublication(id: number, modelId: number) {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (change: PublicationChange) =>
+      change.action === 'unpublish'
+        ? unpublishVersion(id)
+        : publishVersion(
+            id,
+            change.action === 'schedule' ? change.publishedAt : undefined,
+          ),
+    onSuccess: (result) => {
+      // Come per i modelli: la risposta non ha scheda tecnica e motorizzazione, la uniamo
+      queryClient.setQueryData<AdminVersion>(
+        ['admin', 'versions', id],
+        (current) => (current ? { ...current, ...result } : result),
+      )
+      // L'elenco delle versioni del modello, con l'avviso dei modelli invisibili, e il pannello
+      queryClient.invalidateQueries({ queryKey: ['admin', 'models', modelId] })
+      queryClient.invalidateQueries({ queryKey: ['admin', 'dashboard'] })
     },
   })
 }

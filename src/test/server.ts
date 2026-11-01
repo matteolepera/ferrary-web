@@ -239,6 +239,46 @@ export const server = setupServer(
       ],
     }),
   ),
+  http.post(
+    `${API}/admin/versions/:id/publish`,
+    async ({ params, request }) => {
+      const version = adminVersions.find(
+        (item) => item.id === Number(params.id),
+      )
+      const body = (await request.json()) as { published_at?: string }
+      const publishedAt = body.published_at ?? new Date().toISOString()
+      const status =
+        new Date(publishedAt) > new Date() ? 'scheduled' : 'published'
+
+      // Come il backend vero: la risposta non ha scheda tecnica e motorizzazione
+      return version
+        ? HttpResponse.json({
+            data: {
+              ...version,
+              specs: undefined,
+              powertrain: undefined,
+              published_at: publishedAt,
+              status,
+            },
+          })
+        : new HttpResponse(null, { status: 404 })
+    },
+  ),
+  http.post(`${API}/admin/versions/:id/unpublish`, ({ params }) => {
+    const version = adminVersions.find((item) => item.id === Number(params.id))
+
+    return version
+      ? HttpResponse.json({
+          data: {
+            ...version,
+            specs: undefined,
+            powertrain: undefined,
+            published_at: null,
+            status: 'draft',
+          },
+        })
+      : new HttpResponse(null, { status: 404 })
+  }),
 )
 
 /**

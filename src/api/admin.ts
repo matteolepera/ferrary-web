@@ -173,3 +173,26 @@ export async function fetchAdminEngines(): Promise<AdminEngine[]> {
 
   return response.data.data
 }
+
+export async function publishVersion(
+  id: number,
+  publishedAt?: string,
+): Promise<AdminVersion> {
+  const response = await api.post<ApiResource<AdminVersion>>(
+    `/admin/versions/${id}/publish`,
+    publishedAt ? { published_at: publishedAt } : {},
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function unpublishVersion(id: number): Promise<AdminVersion> {
+  const response = await api.post<ApiResource<AdminVersion>>(
+    `/admin/versions/${id}/unpublish`,
+    {},
+    adminRequest,
+  )
+
+  return response.data.data
+}

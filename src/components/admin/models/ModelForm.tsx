@@ -5,7 +5,7 @@ import {
   PredecessorPicker,
   type ModelOption,
 } from '@/components/admin/models/PredecessorPicker'
-import { PublicationCard } from '@/components/admin/models/PublicationCard'
+import { ModelPublication } from '@/components/admin/models/ModelPublication'
 import { AdminCard } from '@/components/admin/ui/AdminCard'
 import { AdminField } from '@/components/admin/ui/AdminField'
 import { AdminSelect } from '@/components/admin/ui/AdminSelect'
@@ -242,7 +242,7 @@ export function ModelForm({ model }: { model?: AdminCarModel }) {
 
         {/* Accanto ai dati: la pubblicazione per un modello esistente, il riepilogo per uno nuovo */}
         {model ? (
-          <PublicationCard
+          <ModelPublication
             model={model}
             canPublish={user?.role !== 'moderator'}
             hasUnsavedChanges={dirty}
