@@ -6,6 +6,7 @@ import { AdminCard } from '@/components/admin/ui/AdminCard'
 import { useCurrentUser } from '@/hooks/useAuth'
 import { useStaff } from '@/hooks/useStaff'
 import { StaffRow } from '@/components/admin/staff/StaffRow'
+import { TransferMasterCard } from '@/components/admin/staff/TransferMasterCard'
 
 /**
  * Le persone dello staff: l'elenco, con il Master per primo, e il form per aggiungerne una.
@@ -92,6 +93,14 @@ export function StaffPage() {
                 }}
               />
             </AdminCard>
+          )}
+          {me?.role === 'master' && staff && (
+            <TransferMasterCard
+              me={me}
+              staff={staff}
+              onMessage={setMessage}
+              className="col-span-6 lg:col-span-8"
+            />
           )}
         </div>
       )}

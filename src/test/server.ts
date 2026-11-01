@@ -503,6 +503,13 @@ export const server = setupServer(
     `${API}/admin/staff/:id`,
     () => new HttpResponse(null, { status: 204 }),
   ),
+  http.post(`${API}/admin/staff/:id/transfer-master`, ({ params }) => {
+    const person = staffMembers.find((item) => item.id === Number(params.id))
+
+    return person
+      ? HttpResponse.json({ data: { ...person, role: 'master' } })
+      : new HttpResponse(null, { status: 404 })
+  }),
 )
 
 /**

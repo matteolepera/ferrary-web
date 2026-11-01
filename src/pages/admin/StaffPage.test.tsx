@@ -89,8 +89,14 @@ test('a un moderatore che arriva qui dice che la pagina è riservata', async () 
     'La gestione dello staff è riservata ad Admin e Master.',
   )
 })
-const row = async (name: string) =>
-  within((await screen.findByText(name)).closest('li') as HTMLElement)
+/** La riga di una persona, cercata solo nell'elenco dello staff: il nome compare anche nel menu del nuovo Master */
+const row = async (name: string) => {
+  const list = within(
+    await screen.findByRole('list', { name: 'Persone dello staff' }),
+  )
+
+  return within(list.getByText(name).closest('li') as HTMLElement)
+}
 
 test('le azioni compaiono solo per chi si può gestire', async () => {
   signIn()
@@ -187,4 +193,60 @@ test('elimina una persona dopo la conferma, avvisando che è definitivo', async 
     await screen.findByText('Andrea Bianchi non fa più parte dello staff.'),
   ).toBeInTheDocument()
   expect(deleted).toBe('3')
+})
+
+test('passa il ruolo di Master solo dopo aver scritto il nome esatto', async () => {
+  let transferredTo: string | null = null
+  server.use(
+    http.post(
+      'http://localhost:8000/api/admin/staff/:id/transfer-master',
+      ({ params }) => {
+        transferredTo = String(params.id)
+        return HttpResponse.json({
+          data: { ...staffUser, id: 2, name: 'Giulia Rossi', role: 'master' },
+        })
+      },
+    ),
+  )
+  signIn()
+  renderRoute('/admin/staff')
+
+  const card = within(
+    await screen.findByRole('region', {
+      name: 'Passaggio del ruolo di Master',
+    }),
+  )
+  await card.findByRole('option', { name: 'Giulia Rossi' })
+  fireEvent.change(card.getByLabelText('Nuovo Master'), {
+    target: { value: '2' },
+  })
+
+  const button = card.getByRole('button', { name: 'Passa il ruolo di Master' })
+  fireEvent.change(card.getByLabelText('Per confermare, scrivi il suo nome'), {
+    target: { value: 'giulia rossi' },
+  })
+  // Il nome deve essere esatto, maiuscole comprese
+  expect(button).toBeDisabled()
+
+  fireEvent.change(card.getByLabelText('Per confermare, scrivi il suo nome'), {
+    target: { value: 'Giulia Rossi' },
+  })
+  fireEvent.click(button)
+
+  expect(
+    await screen.findByText(
+      'Il nuovo Master è Giulia Rossi. Ora il tuo ruolo è Admin.',
+    ),
+  ).toBeInTheDocument()
+  expect(transferredTo).toBe('2')
+})
+
+test('solo il Master vede il passaggio del ruolo', async () => {
+  signIn({ ...staffUser, role: 'admin' })
+  renderRoute('/admin/staff')
+
+  await screen.findByRole('list', { name: 'Persone dello staff' })
+  expect(
+    screen.queryByRole('region', { name: 'Passaggio del ruolo di Master' }),
+  ).not.toBeInTheDocument()
 })
