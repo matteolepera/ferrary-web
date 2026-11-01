@@ -9,7 +9,12 @@ import type {
 } from '@/types/catalog'
 import type { User } from '@/types/auth'
 import type { Dashboard } from '@/types/dashboard'
-import type { AdminCarModel, AdminCategory, AdminVersion } from '@/types/admin'
+import type {
+  AdminCarModel,
+  AdminCategory,
+  AdminVersion,
+  AdminImage,
+} from '@/types/admin'
 
 export const families: Category[] = [
   { id: 2, name: 'Stradali', slug: 'stradali', models_count: 12 },
@@ -478,5 +483,25 @@ export const adminVersions: AdminVersion[] = [
     updated_at: '2026-10-29T15:00:00+00:00',
     specs: null,
     powertrain: null,
+  },
+]
+
+export const adminImages: AdminImage[] = [
+  {
+    id: 31,
+    url: 'http://localhost:8000/storage/versions/21/frontale.jpg',
+    alt_text: {
+      it: 'SF90 Stradale, vista frontale',
+      en: 'SF90 Stradale, front view',
+    },
+    is_cover: true,
+    sort_order: 1,
+  },
+  {
+    id: 32,
+    url: 'http://localhost:8000/storage/versions/21/posteriore.jpg',
+    alt_text: { it: 'SF90 Stradale, vista posteriore' },
+    is_cover: false,
+    sort_order: 2,
   },
 ]

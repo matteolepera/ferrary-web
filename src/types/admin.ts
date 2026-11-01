@@ -148,3 +148,14 @@ export type AdminEngine = {
   code: string
   name: string | null
 }
+
+/** Una foto di una versione, come la restituisce l'admin */
+export type AdminImage = {
+  id: number
+  /** L'indirizzo completo del file */
+  url: string
+  /** Il testo alternativo in tutte le lingue: l'italiano c'è sempre */
+  alt_text: Partial<Translations>
+  is_cover: boolean
+  sort_order: number
+}

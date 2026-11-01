@@ -11,6 +11,7 @@ import type {
   AdminVersion,
   VersionPayload,
   AdminEngine,
+  AdminImage,
 } from '@/types/admin'
 
 /**
@@ -191,6 +192,100 @@ export async function unpublishVersion(id: number): Promise<AdminVersion> {
   const response = await api.post<ApiResource<AdminVersion>>(
     `/admin/versions/${id}/unpublish`,
     {},
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+/* ---------- Foto ---------- */
+
+export async function fetchVersionImages(
+  versionId: number,
+): Promise<AdminImage[]> {
+  const response = await api.get<ApiResource<AdminImage[]>>(
+    `/admin/versions/${versionId}/images`,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export type ImageUpload = {
+  file: File
+  altText: { it: string; en?: string }
+  /** Chiamata durante il caricamento, con la percentuale da 0 a 100 */
+  onProgress?: (percent: number) => void
+}
+
+/**
+ * Il modulo di una foto: il file nel campo image, e il testo alternativo per lingua.
+ * Separato dall'invio per poterlo provare nei test, dove la rete non sa leggere i moduli.
+ */
+export function imageForm({
+  file,
+  altText,
+}: Pick<ImageUpload, 'file' | 'altText'>) {
+  const form = new FormData()
+  form.append('image', file)
+  form.append('alt_text[it]', altText.it)
+  if (altText.en) form.append('alt_text[en]', altText.en)
+
+  return form
+}
+
+/**
+ * Carica una foto. Il file viaggia come multipart/form-data, il formato dei moduli con allegati,
+ * e i campi annidati si scrivono con le parentesi quadre: alt_text[it].
+ */
+export async function uploadImage(
+  versionId: number,
+  { file, altText, onProgress }: ImageUpload,
+): Promise<AdminImage> {
+  const form = imageForm({ file, altText })
+
+  const response = await api.post<ApiResource<AdminImage>>(
+    `/admin/versions/${versionId}/images`,
+    form,
+    {
+      headers: {
+        ...adminRequest.headers,
+        'Content-Type': 'multipart/form-data',
+      },
+      onUploadProgress: (event) => {
+        if (event.total)
+          onProgress?.(Math.round((event.loaded / event.total) * 100))
+      },
+    },
+  )
+
+  return response.data.data
+}
+
+export async function updateImage(
+  id: number,
+  changes: { alt_text?: { it: string; en?: string }; is_cover?: true },
+): Promise<AdminImage> {
+  const response = await api.patch<ApiResource<AdminImage>>(
+    `/admin/images/${id}`,
+    changes,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function deleteImage(id: number): Promise<void> {
+  await api.delete(`/admin/images/${id}`, adminRequest)
+}
+
+export async function reorderImages(
+  versionId: number,
+  ids: number[],
+): Promise<AdminImage[]> {
+  const response = await api.put<ApiResource<AdminImage[]>>(
+    `/admin/versions/${versionId}/images/order`,
+    { images: ids },
     adminRequest,
   )
 
