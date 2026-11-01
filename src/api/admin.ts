@@ -12,6 +12,14 @@ import type {
   VersionPayload,
   AdminEngine,
   AdminImage,
+  EnginePayload,
+  AdminDesigner,
+  DesignerPayload,
+  AdminDriver,
+  DriverPayload,
+  DesignerRole,
+  AdminRacingRecord,
+  RacingPayload,
 } from '@/types/admin'
 
 /**
@@ -175,6 +183,44 @@ export async function fetchAdminEngines(): Promise<AdminEngine[]> {
   return response.data.data
 }
 
+export async function fetchAdminEngine(id: number): Promise<AdminEngine> {
+  const response = await api.get<ApiResource<AdminEngine>>(
+    `/admin/engines/${id}`,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function createEngine(
+  payload: EnginePayload,
+): Promise<AdminEngine> {
+  const response = await api.post<ApiResource<AdminEngine>>(
+    '/admin/engines',
+    payload,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function updateEngine(
+  id: number,
+  payload: EnginePayload,
+): Promise<AdminEngine> {
+  const response = await api.patch<ApiResource<AdminEngine>>(
+    `/admin/engines/${id}`,
+    payload,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function deleteEngine(id: number): Promise<void> {
+  await api.delete(`/admin/engines/${id}`, adminRequest)
+}
+
 export async function publishVersion(
   id: number,
   publishedAt?: string,
@@ -290,4 +336,187 @@ export async function reorderImages(
   )
 
   return response.data.data
+}
+
+/* ---------- Famiglie ---------- */
+
+export type CategoryPayload = {
+  name: { it: string; en?: string }
+  slug?: string
+  sort_order: number
+}
+
+export async function createCategory(
+  payload: CategoryPayload,
+): Promise<AdminCategory> {
+  const response = await api.post<ApiResource<AdminCategory>>(
+    '/admin/categories',
+    payload,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function updateCategory(
+  id: number,
+  payload: CategoryPayload,
+): Promise<AdminCategory> {
+  const response = await api.patch<ApiResource<AdminCategory>>(
+    `/admin/categories/${id}`,
+    payload,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function deleteCategory(id: number): Promise<void> {
+  await api.delete(`/admin/categories/${id}`, adminRequest)
+}
+
+/* ---------- Designer ---------- */
+
+export async function fetchAdminDesigners(): Promise<AdminDesigner[]> {
+  const response = await api.get<ApiResource<AdminDesigner[]>>(
+    '/admin/designers',
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function createDesigner(
+  payload: DesignerPayload,
+): Promise<AdminDesigner> {
+  const response = await api.post<ApiResource<AdminDesigner>>(
+    '/admin/designers',
+    payload,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function updateDesigner(
+  id: number,
+  payload: DesignerPayload,
+): Promise<AdminDesigner> {
+  const response = await api.patch<ApiResource<AdminDesigner>>(
+    `/admin/designers/${id}`,
+    payload,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function deleteDesigner(id: number): Promise<void> {
+  await api.delete(`/admin/designers/${id}`, adminRequest)
+}
+
+/* ---------- Piloti ---------- */
+
+export async function fetchAdminDrivers(): Promise<AdminDriver[]> {
+  const response = await api.get<ApiResource<AdminDriver[]>>(
+    '/admin/drivers',
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function createDriver(
+  payload: DriverPayload,
+): Promise<AdminDriver> {
+  const response = await api.post<ApiResource<AdminDriver>>(
+    '/admin/drivers',
+    payload,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function updateDriver(
+  id: number,
+  payload: DriverPayload,
+): Promise<AdminDriver> {
+  const response = await api.patch<ApiResource<AdminDriver>>(
+    `/admin/drivers/${id}`,
+    payload,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function deleteDriver(id: number): Promise<void> {
+  await api.delete(`/admin/drivers/${id}`, adminRequest)
+}
+
+/* ---------- Collegamenti delle versioni ---------- */
+
+/** Sostituisce i designer della versione: si manda sempre l'elenco completo */
+export async function saveDesignerCredits(
+  versionId: number,
+  credits: { id: number; role: DesignerRole }[],
+) {
+  await api.put(
+    `/admin/versions/${versionId}/designers`,
+    { designers: credits },
+    adminRequest,
+  )
+}
+
+/** Sostituisce i piloti della versione: si manda sempre l'elenco completo */
+export async function saveDriverCredits(versionId: number, ids: number[]) {
+  await api.put(
+    `/admin/versions/${versionId}/drivers`,
+    { drivers: ids },
+    adminRequest,
+  )
+}
+
+/* ---------- Risultati sportivi ---------- */
+
+export async function fetchVersionRacing(
+  versionId: number,
+): Promise<AdminRacingRecord[]> {
+  const response = await api.get<ApiResource<AdminRacingRecord[]>>(
+    `/admin/versions/${versionId}/racing`,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function createRacing(
+  versionId: number,
+  payload: RacingPayload,
+): Promise<AdminRacingRecord> {
+  const response = await api.post<ApiResource<AdminRacingRecord>>(
+    `/admin/versions/${versionId}/racing`,
+    payload,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function updateRacing(
+  id: number,
+  payload: RacingPayload,
+): Promise<AdminRacingRecord> {
+  const response = await api.patch<ApiResource<AdminRacingRecord>>(
+    `/admin/racing/${id}`,
+    payload,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function deleteRacing(id: number): Promise<void> {
+  await api.delete(`/admin/racing/${id}`, adminRequest)
 }

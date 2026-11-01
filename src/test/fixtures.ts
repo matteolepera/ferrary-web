@@ -14,6 +14,10 @@ import type {
   AdminCategory,
   AdminVersion,
   AdminImage,
+  AdminEngine,
+  AdminDesigner,
+  AdminDriver,
+  AdminRacingRecord,
 } from '@/types/admin'
 
 export const families: Category[] = [
@@ -460,6 +464,8 @@ export const adminVersions: AdminVersion[] = [
       drivetrain: 'integrale',
       powertrain_type: 'ibrido',
     },
+    designers: [{ id: 2, name: 'Flavio Manzoni', role: 'design' }],
+    drivers: [],
   },
   {
     id: 11,
@@ -503,5 +509,95 @@ export const adminImages: AdminImage[] = [
     alt_text: { it: 'SF90 Stradale, vista posteriore' },
     is_cover: false,
     sort_order: 2,
+  },
+]
+
+export const adminEngines: AdminEngine[] = [
+  {
+    id: 1,
+    code: 'F154',
+    name: 'V8 biturbo',
+    architecture: 'V',
+    v_angle_deg: 90,
+    cylinders: 8,
+    displacement_cc: 3990,
+    bore_mm: 88,
+    stroke_mm: 82,
+    valves_per_cylinder: 4,
+    aspiration: 'turbo',
+    description: { it: 'Il V8 biturbo.' },
+    versions_count: 3,
+  },
+  {
+    id: 2,
+    code: 'F140',
+    name: 'V12',
+    architecture: 'V',
+    v_angle_deg: 65,
+    cylinders: 12,
+    displacement_cc: 6496,
+    bore_mm: 94,
+    stroke_mm: 78,
+    valves_per_cylinder: 4,
+    aspiration: 'aspirato',
+    description: {},
+    versions_count: 0,
+  },
+]
+
+export const adminDesigners: AdminDesigner[] = [
+  {
+    id: 1,
+    name: 'Pininfarina',
+    slug: 'pininfarina',
+    type: 'studio',
+    country: 'IT',
+    versions_count: 5,
+  },
+  {
+    id: 2,
+    name: 'Flavio Manzoni',
+    slug: 'flavio-manzoni',
+    type: 'persona',
+    country: 'IT',
+    versions_count: 2,
+  },
+]
+
+export const adminDrivers: AdminDriver[] = [
+  {
+    id: 1,
+    first_name: 'Michael',
+    last_name: 'Schumacher',
+    slug: 'michael-schumacher',
+    nationality: 'DE',
+    birth_date: '1969-01-03',
+    versions_count: 5,
+  },
+  {
+    id: 2,
+    first_name: 'Charles',
+    last_name: 'Leclerc',
+    slug: 'charles-leclerc',
+    nationality: 'MC',
+    birth_date: '1997-10-16',
+    versions_count: 3,
+  },
+]
+
+export const adminRacing: AdminRacingRecord[] = [
+  {
+    id: 91,
+    championship: 'Formula 1',
+    season_start: 2004,
+    season_end: null,
+    races: 18,
+    wins: 15,
+    poles: 12,
+    podiums: 29,
+    fastest_laps: 14,
+    drivers_titles: 1,
+    constructors_titles: 1,
+    notes: { it: 'Il record di vittorie in una stagione per la Ferrari.' },
   },
 ]

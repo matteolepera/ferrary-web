@@ -18,9 +18,22 @@ import {
   adminCategories,
   adminVersions,
   adminImages,
+  adminEngines,
+  adminDesigners,
+  adminDrivers,
+  adminRacing,
 } from '@/test/fixtures'
 import { staffUser, STAFF_PASSWORD } from '@/test/fixtures'
-import type { ModelPayload, VersionPayload, AdminImage } from '@/types/admin'
+import type {
+  ModelPayload,
+  VersionPayload,
+  AdminImage,
+  AdminCategory,
+  EnginePayload,
+  AdminDesigner,
+  AdminDriver,
+  RacingPayload,
+} from '@/types/admin'
 
 const BACKEND = 'http://localhost:8000'
 const API = 'http://localhost:8000/api'
@@ -62,6 +75,36 @@ export const server = setupServer(
     params.id === String(f154faDetail.id)
       ? HttpResponse.json({ data: f154faDetail })
       : new HttpResponse(null, { status: 404 }),
+  ),
+  http.get(`${API}/admin/engines`, () =>
+    HttpResponse.json({ data: adminEngines }),
+  ),
+  http.get(`${API}/admin/engines/:id`, ({ params }) => {
+    const engine = adminEngines.find((item) => item.id === Number(params.id))
+
+    return engine
+      ? HttpResponse.json({ data: engine })
+      : new HttpResponse(null, { status: 404 })
+  }),
+  http.post(`${API}/admin/engines`, async ({ request }) => {
+    const payload = (await request.json()) as EnginePayload
+
+    return HttpResponse.json(
+      { data: { ...adminEngines[1], ...payload, id: 60, versions_count: 0 } },
+      { status: 201 },
+    )
+  }),
+  http.patch(`${API}/admin/engines/:id`, async ({ params, request }) => {
+    const engine = adminEngines.find((item) => item.id === Number(params.id))
+    const payload = (await request.json()) as EnginePayload
+
+    return engine
+      ? HttpResponse.json({ data: { ...engine, ...payload } })
+      : new HttpResponse(null, { status: 404 })
+  }),
+  http.delete(
+    `${API}/admin/engines/:id`,
+    () => new HttpResponse(null, { status: 204 }),
   ),
   http.get(
     `${BACKEND}/sanctum/csrf-cookie`,
@@ -317,6 +360,109 @@ export const server = setupServer(
       data: images.map((id) => adminImages.find((image) => image.id === id)),
     })
   }),
+  http.post(`${API}/admin/categories`, async ({ request }) => {
+    const payload = (await request.json()) as {
+      name: { it: string; en?: string }
+      sort_order: number
+    }
+
+    return HttpResponse.json(
+      {
+        data: {
+          id: 50,
+          name: payload.name,
+          slug: payload.name.it.toLowerCase(),
+          sort_order: payload.sort_order,
+          car_models_count: 0,
+        },
+      },
+      { status: 201 },
+    )
+  }),
+  http.patch(`${API}/admin/categories/:id`, async ({ params, request }) => {
+    const category = adminCategories.find(
+      (item) => item.id === Number(params.id),
+    )
+    const payload = (await request.json()) as Partial<AdminCategory>
+
+    return category
+      ? HttpResponse.json({ data: { ...category, ...payload } })
+      : new HttpResponse(null, { status: 404 })
+  }),
+  http.delete(
+    `${API}/admin/categories/:id`,
+    () => new HttpResponse(null, { status: 204 }),
+  ),
+  http.get(`${API}/admin/designers`, () =>
+    HttpResponse.json({ data: adminDesigners }),
+  ),
+  http.post(`${API}/admin/designers`, () =>
+    HttpResponse.json(
+      { data: { ...adminDesigners[0], id: 70 } },
+      { status: 201 },
+    ),
+  ),
+  http.patch(`${API}/admin/designers/:id`, async ({ params, request }) => {
+    const designer = adminDesigners.find(
+      (item) => item.id === Number(params.id),
+    )
+    const payload = (await request.json()) as Partial<AdminDesigner>
+
+    return designer
+      ? HttpResponse.json({ data: { ...designer, ...payload } })
+      : new HttpResponse(null, { status: 404 })
+  }),
+  http.delete(
+    `${API}/admin/designers/:id`,
+    () => new HttpResponse(null, { status: 204 }),
+  ),
+  http.get(`${API}/admin/drivers`, () =>
+    HttpResponse.json({ data: adminDrivers }),
+  ),
+  http.post(`${API}/admin/drivers`, () =>
+    HttpResponse.json(
+      { data: { ...adminDrivers[0], id: 80 } },
+      { status: 201 },
+    ),
+  ),
+  http.patch(`${API}/admin/drivers/:id`, async ({ params, request }) => {
+    const driver = adminDrivers.find((item) => item.id === Number(params.id))
+    const payload = (await request.json()) as Partial<AdminDriver>
+
+    return driver
+      ? HttpResponse.json({ data: { ...driver, ...payload } })
+      : new HttpResponse(null, { status: 404 })
+  }),
+  http.delete(
+    `${API}/admin/drivers/:id`,
+    () => new HttpResponse(null, { status: 204 }),
+  ),
+  http.put(`${API}/admin/versions/:id/designers`, () =>
+    HttpResponse.json({ data: [] }),
+  ),
+  http.put(`${API}/admin/versions/:id/drivers`, () =>
+    HttpResponse.json({ data: [] }),
+  ),
+  http.get(`${API}/admin/versions/:id/racing`, ({ params }) =>
+    HttpResponse.json({ data: Number(params.id) === 21 ? adminRacing : [] }),
+  ),
+  http.post(`${API}/admin/versions/:id/racing`, async ({ request }) => {
+    const payload = (await request.json()) as RacingPayload
+
+    return HttpResponse.json(
+      { data: { ...adminRacing[0], ...payload, id: 92 } },
+      { status: 201 },
+    )
+  }),
+  http.patch(`${API}/admin/racing/:id`, async ({ request }) => {
+    const payload = (await request.json()) as RacingPayload
+
+    return HttpResponse.json({ data: { ...adminRacing[0], ...payload } })
+  }),
+  http.delete(
+    `${API}/admin/racing/:id`,
+    () => new HttpResponse(null, { status: 204 }),
+  ),
 )
 
 /**

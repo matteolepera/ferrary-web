@@ -38,6 +38,8 @@ import type {
   VehicleType,
 } from '@/types/admin'
 import { GalleryCard } from '@/components/admin/images/GalleryCard'
+import { CreditsCard } from '@/components/admin/versions/CreditsCard'
+import { RacingCard } from '@/components/admin/racing/RacingCard'
 
 const dateFormat = new Intl.DateTimeFormat('it', {
   day: 'numeric',
@@ -494,12 +496,29 @@ export function VersionForm({ modelId, modelName, version }: VersionFormProps) {
           </div>
         </AdminCard>
 
+        {version && (
+          <CreditsCard
+            version={version}
+            delay={270}
+            className="col-span-6 lg:col-span-12"
+          />
+        )}
+
+        {version && (
+          <RacingCard
+            versionId={version.id}
+            delay={285}
+            className="col-span-6 lg:col-span-12"
+          />
+        )}
+
         <PowertrainCard
           values={powertrain}
           onChange={updatePowertrain}
           errors={errors}
           delay={300}
         />
+
         <SpecsCard
           values={specs}
           onChange={updateSpecs}

@@ -122,6 +122,19 @@ export type AdminVersion = {
   updated_at: string
   specs?: VersionSpecs | null
   powertrain?: VersionPowertrain | null
+  /** I collegamenti, nella forma del backend: credits.ts li riconduce a DesignerCredit e DriverCredit */
+  designers?: {
+    id: number
+    name: string
+    role?: DesignerRole
+    pivot?: { role: DesignerRole }
+  }[]
+  drivers?: {
+    id: number
+    name?: string
+    first_name?: string
+    last_name?: string
+  }[]
 }
 
 /** Quello che il form manda: i dati della versione con le sue due sezioni */
@@ -143,10 +156,41 @@ export type VersionPayload = Omit<
 }
 
 /** Un motore del catalogo, per la scelta nella motorizzazione */
+export type EngineArchitecture = 'V' | 'in_linea' | 'piatto'
+export type Aspiration = 'aspirato' | 'turbo' | 'compressore'
+
+/** Un motore del catalogo */
 export type AdminEngine = {
   id: number
   code: string
   name: string | null
+  architecture: EngineArchitecture
+  v_angle_deg: number | null
+  cylinders: number
+  displacement_cc: number
+  bore_mm: number | null
+  stroke_mm: number | null
+  valves_per_cylinder: number | null
+  aspiration: Aspiration
+  description: Partial<Translations>
+  versions_count?: number
+}
+
+/** Quello che il form manda: tutti i campi modificabili */
+export type EnginePayload = Omit<
+  AdminEngine,
+  | 'id'
+  | 'versions_count'
+  | 'architecture'
+  | 'aspiration'
+  | 'cylinders'
+  | 'displacement_cc'
+> & {
+  // Possono arrivare vuoti dal form: il backend risponde "obbligatorio" sotto il campo
+  architecture: EngineArchitecture | null
+  aspiration: Aspiration | null
+  cylinders: number | null
+  displacement_cc: number | null
 }
 
 /** Una foto di una versione, come la restituisce l'admin */
@@ -158,4 +202,70 @@ export type AdminImage = {
   alt_text: Partial<Translations>
   is_cover: boolean
   sort_order: number
+}
+
+export type DesignerType = 'studio' | 'persona'
+export type DesignerRole = 'design' | 'carrozzeria'
+
+export type AdminDesigner = {
+  id: number
+  name: string
+  slug: string
+  type: DesignerType
+  /** Il codice del paese, di due lettere: IT */
+  country: string | null
+  versions_count?: number
+}
+
+export type DesignerPayload = {
+  name: string
+  slug?: string
+  type: DesignerType | null
+  country: string | null
+}
+
+export type AdminDriver = {
+  id: number
+  first_name: string
+  last_name: string
+  slug: string
+  /** Il codice del paese, di due lettere: MC */
+  nationality: string | null
+  /** La data senza ora: 1997-10-16 */
+  birth_date: string | null
+  versions_count?: number
+}
+
+export type DriverPayload = {
+  first_name: string
+  last_name: string
+  slug?: string
+  nationality: string | null
+  birth_date: string | null
+}
+
+/** Un designer collegato a una versione, con il suo ruolo */
+export type DesignerCredit = { id: number; name: string; role: DesignerRole }
+
+/** Un pilota collegato a una versione */
+export type DriverCredit = { id: number; name: string }
+
+/** I risultati di una versione in un campionato */
+export type AdminRacingRecord = {
+  id: number
+  championship: string
+  season_start: number
+  season_end: number | null
+  races: number | null
+  wins: number | null
+  poles: number | null
+  podiums: number | null
+  fastest_laps: number | null
+  drivers_titles: number | null
+  constructors_titles: number | null
+  notes: Partial<Translations> | null
+}
+
+export type RacingPayload = Omit<AdminRacingRecord, 'id' | 'season_start'> & {
+  season_start: number | null
 }

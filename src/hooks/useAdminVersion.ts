@@ -4,12 +4,14 @@ import {
   fetchAdminVersion,
   fetchModelVersions,
   updateVersion,
+  saveDesignerCredits,
+  saveDriverCredits,
 } from '@/api/admin'
 import { isNotFound } from '@/api/errors'
 import type { VersionPayload } from '@/types/admin'
 import { publishVersion, unpublishVersion } from '@/api/admin'
 import type { PublicationChange } from '@/hooks/useAdminModel'
-import type { AdminVersion } from '@/types/admin'
+import type { AdminVersion, DesignerRole } from '@/types/admin'
 
 /** Le versioni di un modello, nel loro ordine */
 export function useModelVersions(modelId: number) {
@@ -73,4 +75,35 @@ export function useVersionPublication(id: number, modelId: number) {
       queryClient.invalidateQueries({ queryKey: ['admin', 'dashboard'] })
     },
   })
+}
+
+/**
+ * I collegamenti della versione con designer e piloti. Dopo ogni salvataggio si ricarica la versione,
+ * e anche i cataloghi, che contano le versioni di ogni designer e pilota.
+ */
+export function useVersionCredits(versionId: number) {
+  const queryClient = useQueryClient()
+
+  function refresh() {
+    queryClient.invalidateQueries({
+      queryKey: ['admin', 'versions', versionId],
+    })
+    queryClient.invalidateQueries({ queryKey: ['admin', 'designers'] })
+    queryClient.invalidateQueries({ queryKey: ['admin', 'drivers'] })
+    queryClient.invalidateQueries({ queryKey: ['designers'] })
+    queryClient.invalidateQueries({ queryKey: ['drivers'] })
+  }
+
+  const designers = useMutation({
+    mutationFn: (credits: { id: number; role: DesignerRole }[]) =>
+      saveDesignerCredits(versionId, credits),
+    onSuccess: refresh,
+  })
+
+  const drivers = useMutation({
+    mutationFn: (ids: number[]) => saveDriverCredits(versionId, ids),
+    onSuccess: refresh,
+  })
+
+  return { designers, drivers }
 }

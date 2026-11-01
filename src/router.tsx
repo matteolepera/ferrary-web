@@ -141,6 +141,46 @@ export const routes: RouteObject[] = [
             .ModelFormPage,
         }),
       },
+      {
+        path: 'famiglie',
+        lazy: async () => ({
+          Component: (await import('@/pages/admin/CategoriesPage'))
+            .CategoriesPage,
+        }),
+      },
+      {
+        path: 'motori',
+        lazy: async () => ({
+          Component: (await import('@/pages/admin/EnginesPage')).EnginesPage,
+        }),
+      },
+      {
+        path: 'motori/nuovo',
+        lazy: async () => ({
+          Component: (await import('@/pages/admin/EngineFormPage'))
+            .EngineFormPage,
+        }),
+      },
+      {
+        path: 'motori/:id',
+        lazy: async () => ({
+          Component: (await import('@/pages/admin/EngineFormPage'))
+            .EngineFormPage,
+        }),
+      },
+      {
+        path: 'designer',
+        lazy: async () => ({
+          Component: (await import('@/pages/admin/DesignersPage'))
+            .DesignersPage,
+        }),
+      },
+      {
+        path: 'piloti',
+        lazy: async () => ({
+          Component: (await import('@/pages/admin/DriversPage')).DriversPage,
+        }),
+      },
       { path: '*', element: <NotFoundPage backTo="/admin" /> },
     ],
   },
