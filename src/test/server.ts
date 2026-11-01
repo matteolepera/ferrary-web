@@ -16,9 +16,10 @@ import {
   staffMembers,
   adminModels,
   adminCategories,
+  adminVersions,
 } from '@/test/fixtures'
 import { staffUser, STAFF_PASSWORD } from '@/test/fixtures'
-import type { ModelPayload } from '@/types/admin'
+import type { ModelPayload, VersionPayload } from '@/types/admin'
 
 const BACKEND = 'http://localhost:8000'
 const API = 'http://localhost:8000/api'
@@ -188,6 +189,46 @@ export const server = setupServer(
             status: 'draft',
           },
         })
+      : new HttpResponse(null, { status: 404 })
+  }),
+  http.get(`${API}/admin/models/:id/versions`, ({ params }) =>
+    HttpResponse.json({
+      data: adminVersions.filter(
+        (version) => version.car_model_id === Number(params.id),
+      ),
+    }),
+  ),
+  http.get(`${API}/admin/versions/:id`, ({ params }) => {
+    const version = adminVersions.find((item) => item.id === Number(params.id))
+
+    return version
+      ? HttpResponse.json({ data: version })
+      : new HttpResponse(null, { status: 404 })
+  }),
+  http.post(`${API}/admin/models/:id/versions`, async ({ params, request }) => {
+    const payload = (await request.json()) as VersionPayload
+
+    return HttpResponse.json(
+      {
+        data: {
+          ...adminVersions[1],
+          ...payload,
+          id: 77,
+          car_model_id: Number(params.id),
+          slug: payload.slug || payload.name.toLowerCase().replaceAll(' ', '-'),
+          status: 'draft',
+          published_at: null,
+        },
+      },
+      { status: 201 },
+    )
+  }),
+  http.patch(`${API}/admin/versions/:id`, async ({ params, request }) => {
+    const version = adminVersions.find((item) => item.id === Number(params.id))
+    const payload = (await request.json()) as VersionPayload
+
+    return version
+      ? HttpResponse.json({ data: { ...version, ...payload } })
       : new HttpResponse(null, { status: 404 })
   }),
 )
