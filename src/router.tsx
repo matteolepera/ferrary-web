@@ -168,6 +168,13 @@ export const routes: RouteObject[] = [
             .EngineFormPage,
         }),
       },
+      {
+        path: 'designer',
+        lazy: async () => ({
+          Component: (await import('@/pages/admin/DesignersPage'))
+            .DesignersPage,
+        }),
+      },
       { path: '*', element: <NotFoundPage backTo="/admin" /> },
     ],
   },

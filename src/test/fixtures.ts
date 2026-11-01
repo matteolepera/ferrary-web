@@ -15,6 +15,7 @@ import type {
   AdminVersion,
   AdminImage,
   AdminEngine,
+  AdminDesigner,
 } from '@/types/admin'
 
 export const families: Category[] = [
@@ -537,5 +538,24 @@ export const adminEngines: AdminEngine[] = [
     aspiration: 'aspirato',
     description: {},
     versions_count: 0,
+  },
+]
+
+export const adminDesigners: AdminDesigner[] = [
+  {
+    id: 1,
+    name: 'Pininfarina',
+    slug: 'pininfarina',
+    type: 'studio',
+    country: 'IT',
+    versions_count: 5,
+  },
+  {
+    id: 2,
+    name: 'Flavio Manzoni',
+    slug: 'flavio-manzoni',
+    type: 'persona',
+    country: 'IT',
+    versions_count: 2,
   },
 ]

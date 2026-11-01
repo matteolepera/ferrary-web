@@ -19,6 +19,7 @@ import {
   adminVersions,
   adminImages,
   adminEngines,
+  adminDesigners,
 } from '@/test/fixtures'
 import { staffUser, STAFF_PASSWORD } from '@/test/fixtures'
 import type {
@@ -27,6 +28,7 @@ import type {
   AdminImage,
   AdminCategory,
   EnginePayload,
+  AdminDesigner,
 } from '@/types/admin'
 
 const BACKEND = 'http://localhost:8000'
@@ -385,6 +387,29 @@ export const server = setupServer(
   }),
   http.delete(
     `${API}/admin/categories/:id`,
+    () => new HttpResponse(null, { status: 204 }),
+  ),
+  http.get(`${API}/admin/designers`, () =>
+    HttpResponse.json({ data: adminDesigners }),
+  ),
+  http.post(`${API}/admin/designers`, () =>
+    HttpResponse.json(
+      { data: { ...adminDesigners[0], id: 70 } },
+      { status: 201 },
+    ),
+  ),
+  http.patch(`${API}/admin/designers/:id`, async ({ params, request }) => {
+    const designer = adminDesigners.find(
+      (item) => item.id === Number(params.id),
+    )
+    const payload = (await request.json()) as Partial<AdminDesigner>
+
+    return designer
+      ? HttpResponse.json({ data: { ...designer, ...payload } })
+      : new HttpResponse(null, { status: 404 })
+  }),
+  http.delete(
+    `${API}/admin/designers/:id`,
     () => new HttpResponse(null, { status: 204 }),
   ),
 )

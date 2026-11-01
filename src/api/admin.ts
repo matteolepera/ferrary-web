@@ -13,6 +13,8 @@ import type {
   AdminEngine,
   AdminImage,
   EnginePayload,
+  AdminDesigner,
+  DesignerPayload,
 } from '@/types/admin'
 
 /**
@@ -366,4 +368,44 @@ export async function updateCategory(
 
 export async function deleteCategory(id: number): Promise<void> {
   await api.delete(`/admin/categories/${id}`, adminRequest)
+}
+
+/* ---------- Designer ---------- */
+
+export async function fetchAdminDesigners(): Promise<AdminDesigner[]> {
+  const response = await api.get<ApiResource<AdminDesigner[]>>(
+    '/admin/designers',
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function createDesigner(
+  payload: DesignerPayload,
+): Promise<AdminDesigner> {
+  const response = await api.post<ApiResource<AdminDesigner>>(
+    '/admin/designers',
+    payload,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function updateDesigner(
+  id: number,
+  payload: DesignerPayload,
+): Promise<AdminDesigner> {
+  const response = await api.patch<ApiResource<AdminDesigner>>(
+    `/admin/designers/${id}`,
+    payload,
+    adminRequest,
+  )
+
+  return response.data.data
+}
+
+export async function deleteDesigner(id: number): Promise<void> {
+  await api.delete(`/admin/designers/${id}`, adminRequest)
 }

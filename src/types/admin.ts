@@ -190,3 +190,23 @@ export type AdminImage = {
   is_cover: boolean
   sort_order: number
 }
+
+export type DesignerType = 'studio' | 'persona'
+export type DesignerRole = 'design' | 'carrozzeria'
+
+export type AdminDesigner = {
+  id: number
+  name: string
+  slug: string
+  type: DesignerType
+  /** Il codice del paese, di due lettere: IT */
+  country: string | null
+  versions_count?: number
+}
+
+export type DesignerPayload = {
+  name: string
+  slug?: string
+  type: DesignerType | null
+  country: string | null
+}
