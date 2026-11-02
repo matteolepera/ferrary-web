@@ -76,3 +76,22 @@ test('a un moderatore che arriva qui dice che il registro è riservato', async (
     'Il registro è riservato ad Admin e Master.',
   )
 })
+
+test('mostra le modifiche di una voce, campo per campo', async () => {
+  signIn()
+  renderRoute('/admin/registro')
+
+  const yesterday = within(await screen.findByRole('region', { name: 'Ieri' }))
+  const toggle = yesterday.getByRole('button', { name: 'Dettagli' })
+  expect(toggle).toHaveAttribute('aria-expanded', 'false')
+
+  fireEvent.click(toggle)
+
+  expect(yesterday.getByRole('button', { name: 'Nascondi' })).toHaveAttribute(
+    'aria-expanded',
+    'true',
+  )
+  const row = within(yesterday.getByRole('row', { name: /Ruolo/ }))
+  expect(row.getByText('Moderatore')).toBeInTheDocument()
+  expect(row.getByText('Admin')).toBeInTheDocument()
+})

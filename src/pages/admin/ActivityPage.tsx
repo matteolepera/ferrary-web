@@ -1,29 +1,21 @@
 import { isForbidden } from '@/api/errors'
-import {
-  phrase,
-  subjectLabel,
-  subjectTypes,
-} from '@/components/admin/activity/phrases'
+import { subjectTypes } from '@/components/admin/activity/phrases'
 import { AdminCard } from '@/components/admin/ui/AdminCard'
 import { AdminField } from '@/components/admin/ui/AdminField'
 import { AdminPagination } from '@/components/admin/ui/AdminPagination'
 import { AdminSelect } from '@/components/admin/ui/AdminSelect'
-import { Avatar } from '@/components/admin/ui/Avatar'
 import { useActivity, useActivityFilters } from '@/hooks/useActivity'
 import { useCurrentUser } from '@/hooks/useAuth'
 import { useStaff } from '@/hooks/useStaff'
 import { isSameDay } from '@/lib/calendar'
 import type { ActivityEntry, ActivityFilters } from '@/types/dashboard'
+import { ActivityEntryRow } from '@/components/admin/activity/ActivityEntryRow'
 
 const dayFormat = new Intl.DateTimeFormat('it', {
   weekday: 'long',
   day: 'numeric',
   month: 'long',
   year: 'numeric',
-})
-const timeFormat = new Intl.DateTimeFormat('it', {
-  hour: '2-digit',
-  minute: '2-digit',
 })
 
 const logFilters: { value: ActivityFilters['log']; label: string }[] = [
@@ -247,36 +239,11 @@ export function ActivityPage() {
                     </h2>
                     <ul>
                       {group.entries.map((entry) => (
-                        <li
+                        <ActivityEntryRow
                           key={entry.id}
-                          className="border-linea flex gap-3.5 border-b px-6 py-4 last:border-b-0"
-                        >
-                          <Avatar
-                            name={entry.causer}
-                            highlighted={
-                              entry.causer_id !== null &&
-                              entry.causer_id === me?.id
-                            }
-                            className="size-9 text-xs"
-                          />
-                          <div className="min-w-0 flex-1">
-                            <p className="text-sm leading-relaxed text-neutral-300">
-                              <strong className="font-semibold text-white">
-                                {entry.causer ?? 'Sistema'}
-                              </strong>{' '}
-                              {phrase(entry)}{' '}
-                              <strong className="font-semibold text-white">
-                                {subjectLabel(entry)}
-                              </strong>
-                            </p>
-                            <p className="mt-0.5 text-xs text-neutral-500">
-                              <time dateTime={entry.created_at}>
-                                {timeFormat.format(new Date(entry.created_at))}
-                              </time>
-                              {entry.log === 'staff' && ' · Staff'}
-                            </p>
-                          </div>
-                        </li>
+                          entry={entry}
+                          currentUserId={me?.id}
+                        />
                       ))}
                     </ul>
                   </section>
