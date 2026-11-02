@@ -18,6 +18,8 @@ import { useCurrentUser } from '@/hooks/useAuth'
 import { slugify } from '@/lib/slugify'
 import type { AdminCarModel } from '@/types/admin'
 import { VersionsCard } from '@/components/admin/versions/VersionsCard'
+import { TrashCard } from '@/components/admin/ui/TrashCard'
+import { useTrashActions } from '@/hooks/useTrash'
 
 const dateFormat = new Intl.DateTimeFormat('it', {
   day: 'numeric',
@@ -48,6 +50,7 @@ export function ModelForm({ model }: { model?: AdminCarModel }) {
   const { data: user } = useCurrentUser()
   const { data: categories } = useAdminCategories()
   const save = useSaveModel(model?.id)
+  const { trashModel } = useTrashActions()
 
   const [values, setValues] = useState<FormValues>({
     name: model?.name ?? '',
@@ -285,6 +288,21 @@ export function ModelForm({ model }: { model?: AdminCarModel }) {
           <VersionsCard
             model={model}
             delay={240}
+            className="col-span-6 lg:col-span-12"
+          />
+        )}
+        {model && user?.role !== 'moderator' && (
+          <TrashCard
+            description="Il modello sparirà dal sito e dall'admin, insieme a tutte le sue versioni. Si può ripristinare dal cestino."
+            question={`Spostare ${model.name} nel cestino?`}
+            isPending={trashModel.isPending}
+            error={trashModel.error}
+            onConfirm={() =>
+              trashModel.mutate(model.id, {
+                onSuccess: () => navigate('/admin/modelli', { replace: true }),
+              })
+            }
+            delay={300}
             className="col-span-6 lg:col-span-12"
           />
         )}

@@ -187,6 +187,12 @@ export const routes: RouteObject[] = [
           Component: (await import('@/pages/admin/StaffPage')).StaffPage,
         }),
       },
+      {
+        path: 'cestino',
+        lazy: async () => ({
+          Component: (await import('@/pages/admin/TrashPage')).TrashPage,
+        }),
+      },
       { path: '*', element: <NotFoundPage backTo="/admin" /> },
     ],
   },

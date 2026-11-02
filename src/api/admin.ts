@@ -20,6 +20,7 @@ import type {
   DesignerRole,
   AdminRacingRecord,
   RacingPayload,
+  AdminTrash,
 } from '@/types/admin'
 
 /**
@@ -578,4 +579,37 @@ export async function transferMaster(id: number): Promise<User> {
   )
 
   return response.data.data
+}
+
+/* ---------- Cestino ---------- */
+
+/** Il cestino risponde senza la chiave data: models e versions stanno al primo livello */
+export async function fetchTrash(): Promise<AdminTrash> {
+  const response = await api.get<AdminTrash>('/admin/trash', adminRequest)
+
+  return response.data
+}
+
+export async function trashModel(id: number): Promise<void> {
+  await api.delete(`/admin/models/${id}`, adminRequest)
+}
+
+export async function trashVersion(id: number): Promise<void> {
+  await api.delete(`/admin/versions/${id}`, adminRequest)
+}
+
+export async function restoreModel(id: number): Promise<void> {
+  await api.post(`/admin/models/${id}/restore`, {}, adminRequest)
+}
+
+export async function restoreVersion(id: number): Promise<void> {
+  await api.post(`/admin/versions/${id}/restore`, {}, adminRequest)
+}
+
+export async function purgeModel(id: number): Promise<void> {
+  await api.delete(`/admin/trash/models/${id}`, adminRequest)
+}
+
+export async function purgeVersion(id: number): Promise<void> {
+  await api.delete(`/admin/trash/versions/${id}`, adminRequest)
 }

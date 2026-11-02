@@ -18,6 +18,7 @@ import type {
   AdminDesigner,
   AdminDriver,
   AdminRacingRecord,
+  AdminTrash,
 } from '@/types/admin'
 
 export const families: Category[] = [
@@ -601,3 +602,8 @@ export const adminRacing: AdminRacingRecord[] = [
     notes: { it: 'Il record di vittorie in una stagione per la Ferrari.' },
   },
 ]
+
+export const trash: AdminTrash = {
+  models: [{ ...adminModels[1], versions_count: 1 }],
+  versions: [{ ...adminVersions[1], model: { id: 2, name: 'SF90 Stradale' } }],
+}
