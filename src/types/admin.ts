@@ -135,6 +135,8 @@ export type AdminVersion = {
     first_name?: string
     last_name?: string
   }[]
+  /** Il modello, quando il backend lo carica: nel cestino, per sapere di chi è la versione */
+  model?: { id: number; name: string }
 }
 
 /** Quello che il form manda: i dati della versione con le sue due sezioni */
@@ -268,4 +270,10 @@ export type AdminRacingRecord = {
 
 export type RacingPayload = Omit<AdminRacingRecord, 'id' | 'season_start'> & {
   season_start: number | null
+}
+
+/** Il contenuto del cestino: i modelli, e le versioni cestinate da sole */
+export type AdminTrash = {
+  models: AdminCarModel[]
+  versions: AdminVersion[]
 }

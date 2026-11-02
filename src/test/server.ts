@@ -510,6 +510,14 @@ export const server = setupServer(
       ? HttpResponse.json({ data: { ...person, role: 'master' } })
       : new HttpResponse(null, { status: 404 })
   }),
+  http.delete(
+    `${API}/admin/models/:id`,
+    () => new HttpResponse(null, { status: 204 }),
+  ),
+  http.delete(
+    `${API}/admin/versions/:id`,
+    () => new HttpResponse(null, { status: 204 }),
+  ),
 )
 
 /**

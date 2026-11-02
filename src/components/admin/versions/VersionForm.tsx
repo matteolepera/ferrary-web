@@ -40,6 +40,8 @@ import type {
 import { GalleryCard } from '@/components/admin/images/GalleryCard'
 import { CreditsCard } from '@/components/admin/versions/CreditsCard'
 import { RacingCard } from '@/components/admin/racing/RacingCard'
+import { TrashCard } from '@/components/admin/ui/TrashCard'
+import { useTrashActions } from '@/hooks/useTrash'
 
 const dateFormat = new Intl.DateTimeFormat('it', {
   day: 'numeric',
@@ -90,6 +92,7 @@ export function VersionForm({ modelId, modelName, version }: VersionFormProps) {
   const location = useLocation()
   const { data: user } = useCurrentUser()
   const save = useSaveVersion(modelId, version?.id)
+  const { trashVersion } = useTrashActions()
 
   const [values, setValues] = useState<FormValues>({
     name: version?.name ?? '',
@@ -525,6 +528,22 @@ export function VersionForm({ modelId, modelName, version }: VersionFormProps) {
           errors={errors}
           delay={360}
         />
+        {version && user?.role !== 'moderator' && (
+          <TrashCard
+            description="La versione sparirà dal sito e dall'admin. Si può ripristinare dal cestino."
+            question={`Spostare ${version.name} nel cestino?`}
+            isPending={trashVersion.isPending}
+            error={trashVersion.error}
+            onConfirm={() =>
+              trashVersion.mutate(version.id, {
+                onSuccess: () =>
+                  navigate(`/admin/modelli/${modelId}`, { replace: true }),
+              })
+            }
+            delay={420}
+            className="col-span-6 lg:col-span-12"
+          />
+        )}
       </div>
     </form>
   )

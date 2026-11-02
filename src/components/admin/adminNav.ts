@@ -56,6 +56,7 @@ export const adminNav: AdminNavItem[] = [
     to: '/admin/cestino',
     label: 'Cestino',
     icon: 'M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13',
+    roles: ['master', 'admin'],
   },
 ]
 
