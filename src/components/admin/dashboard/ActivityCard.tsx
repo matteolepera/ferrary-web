@@ -3,47 +3,7 @@ import { AdminCard } from '@/components/admin/ui/AdminCard'
 import { Avatar } from '@/components/admin/ui/Avatar'
 import { timeAgo } from '@/lib/timeAgo'
 import type { ActivityItem } from '@/types/dashboard'
-
-const phrases: Record<string, string> = {
-  created: 'ha creato',
-  updated: 'ha modificato',
-  deleted: 'ha spostato nel cestino',
-  restored: 'ha ripristinato',
-  published: 'ha pubblicato',
-  scheduled: 'ha programmato',
-  unpublished: 'ha riportato in bozza',
-  role_changed: 'ha cambiato il ruolo di',
-}
-
-/** Le frasi sulle persone dello staff, dove "ha creato" suonerebbe strano */
-const staffPhrases: Record<string, string> = {
-  created: 'ha aggiunto allo staff',
-  deleted: 'ha rimosso dallo staff',
-  updated: 'ha modificato il profilo di',
-}
-
-/** Quando ciò che è stato modificato non ha un nome, come una foto */
-const subjectTypes: Record<string, string> = {
-  car_model: 'un modello',
-  version: 'una versione',
-  version_spec: 'una scheda tecnica',
-  version_powertrain: 'una motorizzazione',
-  image: 'una foto',
-  engine: 'un motore',
-  designer: 'un designer',
-  driver: 'un pilota',
-  category: 'una famiglia',
-  user: 'una persona',
-}
-
-function phrase({ action, subject_type }: ActivityItem) {
-  if (subject_type === 'user' && staffPhrases[action]) {
-    return staffPhrases[action]
-  }
-
-  // Un'azione che non conosciamo ancora: meglio una frase generica che un codice
-  return phrases[action] ?? 'ha modificato'
-}
+import { phrase, subjectLabel } from '@/components/admin/activity/phrases'
 
 type Tab = 'all' | ActivityItem['log']
 
@@ -144,7 +104,7 @@ export function ActivityCard({
                       {item.subject_name}
                     </strong>
                   ) : (
-                    (subjectTypes[item.subject_type] ?? 'un elemento')
+                    subjectLabel(item)
                   )}
                 </p>
                 <p className="mt-0.5 text-[0.6875rem] text-neutral-400">

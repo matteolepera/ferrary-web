@@ -46,3 +46,19 @@ export type Dashboard = {
   to_complete: ToCompleteItem[]
   activity: ActivityItem[]
 }
+
+/** Una voce del registro: quella del pannello, con chi, su cosa, e le modifiche campo per campo */
+export type ActivityEntry = ActivityItem & {
+  causer_id: number | null
+  subject_id: number | null
+  changes: { field: string; old: unknown; new: unknown }[]
+}
+
+export type ActivityFilters = {
+  log?: 'catalogo' | 'staff'
+  causer_id?: number
+  subject_type?: string
+  from?: string
+  to?: string
+  page?: number
+}

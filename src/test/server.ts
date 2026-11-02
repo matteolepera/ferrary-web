@@ -23,6 +23,7 @@ import {
   adminDrivers,
   adminRacing,
   trash,
+  activityEntries,
 } from '@/test/fixtures'
 import { staffUser, STAFF_PASSWORD } from '@/test/fixtures'
 import type {
@@ -534,6 +535,18 @@ export const server = setupServer(
     `${API}/admin/trash/versions/:id`,
     () => new HttpResponse(null, { status: 204 }),
   ),
+  http.get(`${API}/admin/activity`, ({ request }) => {
+    const log = new URL(request.url).searchParams.get('log')
+    const data = log
+      ? activityEntries.filter((entry) => entry.log === log)
+      : activityEntries
+
+    return HttpResponse.json({
+      data,
+      meta: { current_page: 1, last_page: 1, per_page: 25, total: data.length },
+      links: {},
+    })
+  }),
 )
 
 /**
