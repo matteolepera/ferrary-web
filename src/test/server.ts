@@ -22,6 +22,7 @@ import {
   adminDesigners,
   adminDrivers,
   adminRacing,
+  trash,
 } from '@/test/fixtures'
 import { staffUser, STAFF_PASSWORD } from '@/test/fixtures'
 import type {
@@ -516,6 +517,21 @@ export const server = setupServer(
   ),
   http.delete(
     `${API}/admin/versions/:id`,
+    () => new HttpResponse(null, { status: 204 }),
+  ),
+  http.get(`${API}/admin/trash`, () => HttpResponse.json(trash)),
+  http.post(`${API}/admin/models/:id/restore`, () =>
+    HttpResponse.json({ data: {} }),
+  ),
+  http.post(`${API}/admin/versions/:id/restore`, () =>
+    HttpResponse.json({ data: {} }),
+  ),
+  http.delete(
+    `${API}/admin/trash/models/:id`,
+    () => new HttpResponse(null, { status: 204 }),
+  ),
+  http.delete(
+    `${API}/admin/trash/versions/:id`,
     () => new HttpResponse(null, { status: 204 }),
   ),
 )
