@@ -188,6 +188,12 @@ export const routes: RouteObject[] = [
         }),
       },
       {
+        path: 'registro',
+        lazy: async () => ({
+          Component: (await import('@/pages/admin/ActivityPage')).ActivityPage,
+        }),
+      },
+      {
         path: 'cestino',
         lazy: async () => ({
           Component: (await import('@/pages/admin/TrashPage')).TrashPage,

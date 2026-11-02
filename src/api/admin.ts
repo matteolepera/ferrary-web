@@ -1,7 +1,11 @@
 import type { AxiosRequestConfig } from 'axios'
 import { api } from '@/api/client'
 import type { ApiResource, Paginated } from '@/types/api'
-import type { Dashboard } from '@/types/dashboard'
+import type {
+  Dashboard,
+  ActivityEntry,
+  ActivityFilters,
+} from '@/types/dashboard'
 import type { User, UserRole } from '@/types/auth'
 import type {
   AdminCarModel,
@@ -612,4 +616,17 @@ export async function purgeModel(id: number): Promise<void> {
 
 export async function purgeVersion(id: number): Promise<void> {
   await api.delete(`/admin/trash/versions/${id}`, adminRequest)
+}
+
+/* ---------- Registro delle attività ---------- */
+
+export async function fetchActivity(
+  filters: ActivityFilters = {},
+): Promise<Paginated<ActivityEntry>> {
+  const response = await api.get<Paginated<ActivityEntry>>('/admin/activity', {
+    ...adminRequest,
+    params: filters,
+  })
+
+  return response.data
 }

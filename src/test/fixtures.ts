@@ -8,7 +8,7 @@ import type {
   Driver,
 } from '@/types/catalog'
 import type { User } from '@/types/auth'
-import type { Dashboard } from '@/types/dashboard'
+import type { Dashboard, ActivityEntry } from '@/types/dashboard'
 import type {
   AdminCarModel,
   AdminCategory,
@@ -607,3 +607,20 @@ export const trash: AdminTrash = {
   models: [{ ...adminModels[1], versions_count: 1 }],
   versions: [{ ...adminVersions[1], model: { id: 2, name: 'SF90 Stradale' } }],
 }
+
+export const activityEntries: ActivityEntry[] = [
+  {
+    ...dashboard.activity[0],
+    causer_id: 1,
+    subject_id: 7,
+    changes: [
+      { field: 'published_at', old: null, new: '2026-10-30T09:00:00+00:00' },
+    ],
+  },
+  {
+    ...dashboard.activity[1],
+    causer_id: 1,
+    subject_id: 2,
+    changes: [{ field: 'role', old: 'moderator', new: 'admin' }],
+  },
+]
