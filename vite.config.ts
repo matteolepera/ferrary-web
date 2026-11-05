@@ -9,6 +9,8 @@ const apiProxy = {
   '/api': 'http://localhost:8000',
   '/sanctum': 'http://localhost:8000',
   '/docs': 'http://localhost:8000',
+  // Le foto caricate dall'admin: dal telefono passano da qui, come l'API
+  '/storage': { target: 'http://localhost:8000', changeOrigin: true },
 }
 
 // https://vite.dev/config/
