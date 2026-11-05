@@ -38,7 +38,7 @@ export function HomeHero() {
             {t('home.hero.eyebrow')}
           </p>
 
-          <h1 className="font-display mt-3.5 text-[2.625rem] leading-none font-extrabold tracking-[-0.035em] md:mt-4 md:text-[4.25rem] md:leading-[0.98] lg:text-[clamp(3rem,5vw,5rem)]">
+          <h1 className="font-display mt-3.5 text-[2.625rem] leading-none font-extrabold tracking-[-0.035em] text-balance md:mt-4 md:text-[4.25rem] md:leading-[0.98] lg:text-[clamp(3rem,5vw,5rem)]">
             <span className="lg:block">{t('home.hero.titleStart')}</span>{' '}
             <span className="lg:block">{t('home.hero.titleEnd')}</span>
           </h1>
