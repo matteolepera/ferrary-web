@@ -8,8 +8,8 @@ export function HomePage() {
   return (
     <>
       <HomeHero />
-      <HomeManifesto />
       <FeaturedCarousel />
+      <HomeManifesto />
       <HomeFamilies />
       <HomeInvite />
     </>

@@ -54,13 +54,6 @@ export function HomeHero() {
             >
               {t('home.hero.cta')}
             </Link>
-            {/* Su mobile resta solo l'azione principale */}
-            <Link
-              to="/#famiglie"
-              className="hover:text-rosso-acceso hidden text-xs font-semibold tracking-[0.18em] uppercase md:inline"
-            >
-              {t('home.hero.families')} →
-            </Link>
           </div>
         </div>
       </div>
