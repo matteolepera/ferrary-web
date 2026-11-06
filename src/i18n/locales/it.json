@@ -61,7 +61,8 @@
       "text": "Ogni Ferrari appartiene a una famiglia: sceglila, e l'archivio ti mostrerà solo quelle.",
       "models_one": "{{count}} modello",
       "models_other": "{{count}} modelli",
-      "error": "Impossibile caricare le famiglie."
+      "error": "Impossibile caricare le famiglie.",
+      "showing": "In mostra"
     },
     "invite": {
       "titleStart": "Tutto l'archivio,",

@@ -22,10 +22,33 @@ import type {
 } from '@/types/admin'
 
 export const families: Category[] = [
-  { id: 2, name: 'Stradali', slug: 'stradali', models_count: 12 },
-  { id: 1, name: 'Hypercar', slug: 'hypercar', models_count: 1 },
+  {
+    id: 2,
+    name: 'Stradali',
+    slug: 'stradali',
+    models_count: 12,
+    cover: {
+      id: 901,
+      url: 'http://localhost:8000/storage/versions/1/stradali.jpg',
+      alt_text: 'Una stradale, vista frontale',
+      is_cover: true,
+      sort_order: 1,
+    },
+  },
+  {
+    id: 1,
+    name: 'Hypercar',
+    slug: 'hypercar',
+    models_count: 1,
+    cover: {
+      id: 902,
+      url: 'http://localhost:8000/storage/versions/2/hypercar.jpg',
+      alt_text: 'Una hypercar, vista laterale',
+      is_cover: true,
+      sort_order: 1,
+    },
+  },
 ]
-
 /**
  * Dati di esempio con la forma delle risposte dell'API, per i test.
  */

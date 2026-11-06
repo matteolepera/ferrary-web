@@ -22,6 +22,8 @@ export type Category = {
   slug: string
   /** Numero di modelli visibili, solo nell'elenco delle famiglie */
   models_count?: number
+  /** La foto della famiglia: la copertina del suo modello più recente, se c'è */
+  cover?: Image | null
 }
 
 export type Image = {

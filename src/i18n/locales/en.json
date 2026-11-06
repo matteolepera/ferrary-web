@@ -61,7 +61,8 @@
       "text": "Every Ferrari belongs to a family: pick one, and the archive will show you only those.",
       "models_one": "{{count}} model",
       "models_other": "{{count}} models",
-      "error": "Unable to load the families."
+      "error": "Unable to load the families.",
+      "showing": "On display"
     },
     "invite": {
       "titleStart": "The whole archive,",
