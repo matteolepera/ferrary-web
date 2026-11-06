@@ -51,7 +51,9 @@
       "topSpeed": "Top speed",
       "notAvailable": "n/a",
       "noPhoto": "Photo coming soon",
-      "error": "Unable to load the featured models."
+      "error": "Unable to load the featured models.",
+      "goTo": "Go to {{name}}",
+      "number": "No."
     },
     "families": {
       "eyebrow": "Families",

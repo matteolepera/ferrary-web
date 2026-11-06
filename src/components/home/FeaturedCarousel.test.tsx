@@ -9,9 +9,10 @@ test('mostra un modello con i suoi dati nel formato italiano', async () => {
   ).toBeInTheDocument()
   expect(screen.getByText('478 cv')).toBeInTheDocument()
   expect(screen.getByText('4,1 s')).toBeInTheDocument()
-  expect(
-    screen.getByRole('link', { name: 'Scopri il modello' }),
-  ).toHaveAttribute('href', '/modelli/f40')
+  expect(screen.getByRole('link', { name: 'F40' })).toHaveAttribute(
+    'href',
+    '/modelli/f40',
+  )
 })
 
 test('scorre i modelli con le frecce, anche in tondo', async () => {

@@ -51,7 +51,9 @@
       "topSpeed": "Velocità max",
       "notAvailable": "n.d.",
       "noPhoto": "Foto in arrivo",
-      "error": "Impossibile caricare i modelli in evidenza."
+      "error": "Impossibile caricare i modelli in evidenza.",
+      "goTo": "Vai a {{name}}",
+      "number": "N."
     },
     "families": {
       "eyebrow": "Le famiglie",
