@@ -1,7 +1,6 @@
-import { ChevronDown } from 'lucide-react'
-import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ModelFilters } from '@/api/models'
+import { ArchiveSelect } from '@/components/archive/ArchiveSelect'
 import type { PowertrainType } from '@/types/catalog'
 
 type FilterControlsProps = {
@@ -30,38 +29,6 @@ const pillClass = [
   'border px-4 py-2.5 text-[0.6875rem] font-semibold tracking-[0.16em] uppercase transition-colors',
   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rosso-acceso',
 ].join(' ')
-
-/** Menu a tendina con etichetta e freccia, nello stile del sito */
-function Select({
-  label,
-  value,
-  onChange,
-  children,
-}: {
-  label: string
-  value: string
-  onChange: (value: string) => void
-  children: ReactNode
-}) {
-  return (
-    <label className="flex flex-col gap-2">
-      <span className="text-xs text-neutral-400">{label}</span>
-      <span className="relative flex items-center">
-        <select
-          value={value}
-          onChange={(event) => onChange(event.target.value)}
-          className="border-linea bg-ombra w-full appearance-none border py-3 pr-10 pl-4 text-[0.9375rem] text-neutral-100 focus:border-neutral-400 focus:outline-none lg:min-w-44"
-        >
-          {children}
-        </select>
-        <ChevronDown
-          aria-hidden="true"
-          className="pointer-events-none absolute right-3 size-4 text-neutral-400"
-        />
-      </span>
-    </label>
-  )
-}
 
 /**
  * Motorizzazione, periodo e ordinamento: gli stessi controlli nel pannello mobile e in linea sul desktop.
@@ -112,7 +79,7 @@ export function FilterControls({ filters, onChange }: FilterControlsProps) {
       <fieldset>
         <legend className={labelClass}>{t('archive.filters.period')}</legend>
         <div className="mt-3 grid grid-cols-2 gap-3 lg:flex">
-          <Select
+          <ArchiveSelect
             label={t('archive.filters.from')}
             value={filters.year_from?.toString() ?? ''}
             onChange={(value) => onChange({ year_from: toYear(value) })}
@@ -130,9 +97,9 @@ export function FilterControls({ filters, onChange }: FilterControlsProps) {
                 {decadeLabel(decade)}
               </option>
             ))}
-          </Select>
+          </ArchiveSelect>
 
-          <Select
+          <ArchiveSelect
             label={t('archive.filters.to')}
             value={filters.year_to?.toString() ?? ''}
             onChange={(value) => onChange({ year_to: toYear(value) })}
@@ -151,11 +118,11 @@ export function FilterControls({ filters, onChange }: FilterControlsProps) {
                 {decadeLabel(decade)}
               </option>
             ))}
-          </Select>
+          </ArchiveSelect>
         </div>
       </fieldset>
 
-      <Select
+      <ArchiveSelect
         label={t('archive.filters.sort')}
         value={filters.sort ?? ''}
         onChange={(value) =>
@@ -169,7 +136,7 @@ export function FilterControls({ filters, onChange }: FilterControlsProps) {
         <option value="-name">{t('archive.filters.sorts.nameDesc')}</option>
         <option value="-year">{t('archive.filters.sorts.newest')}</option>
         <option value="year">{t('archive.filters.sorts.oldest')}</option>
-      </Select>
+      </ArchiveSelect>
     </div>
   )
 }

@@ -163,39 +163,20 @@ test('cerca per nome quando si smette di scrivere', async () => {
   await waitFor(() => expect(received.params.get('search')).toBe('F40'))
 })
 
-test('filtra per famiglia con le pillole', async () => {
-  const received = { params: new URLSearchParams() }
-
-  server.use(
-    http.get('http://localhost:8000/api/models', ({ request }) => {
-      received.params = new URL(request.url).searchParams
-
-      return HttpResponse.json(modelsPage)
-    }),
-  )
-
+test('filtra per famiglia con il menu', async () => {
+  const received = captureParams()
   renderRoute('/modelli')
-  const families = within(
-    await screen.findByRole('group', { name: 'Famiglia' }),
-  )
+  await screen.findByRole('heading', { name: 'F40' })
 
-  expect(families.getByRole('button', { name: 'Tutte' })).toHaveAttribute(
-    'aria-pressed',
-    'true',
-  )
+  const family = screen.getByRole('combobox', { name: 'Famiglia' })
+  expect(family).toHaveValue('')
 
-  fireEvent.click(families.getByRole('button', { name: 'Hypercar' }))
+  fireEvent.change(family, { target: { value: 'hypercar' } })
 
   await waitFor(() => expect(received.params.get('category')).toBe('hypercar'))
-  expect(families.getByRole('button', { name: 'Hypercar' })).toHaveAttribute(
-    'aria-pressed',
-    'true',
-  )
-  expect(families.getByRole('button', { name: 'Tutte' })).toHaveAttribute(
-    'aria-pressed',
-    'false',
-  )
+  expect(family).toHaveValue('hypercar')
 })
+
 /** Risposta simulata che ricorda i parametri ricevuti */
 function captureParams() {
   const received = { params: new URLSearchParams() }

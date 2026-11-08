@@ -249,7 +249,13 @@
     "searchLabel": "Search by name",
     "searchPlaceholder": "Search a Ferrari, e.g. F40",
     "family": "Family",
-    "allFamilies": "All",
+    "allFamilies": "All families",
+    "groups": {
+      "road": "Road cars",
+      "racing": "Racing",
+      "concept": "Concepts",
+      "other": "Other"
+    },
     "filters": {
       "open": "Filters",
       "title": "Filters",

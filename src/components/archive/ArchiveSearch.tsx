@@ -38,7 +38,7 @@ export function ArchiveSearch({ value, onChange }: ArchiveSearchProps) {
   }, [text, value, onChange])
 
   return (
-    <label className="relative flex items-center lg:w-80">
+    <label className="relative flex flex-1 items-center">
       <span className="sr-only">{t('archive.searchLabel')}</span>
       <Search
         aria-hidden="true"

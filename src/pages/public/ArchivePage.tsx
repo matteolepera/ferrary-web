@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ArchiveSearch } from '@/components/archive/ArchiveSearch'
-import { FamilyFilter } from '@/components/archive/FamilyFilter'
+import { FamilySelect } from '@/components/archive/FamilySelect'
 import { FilterControls } from '@/components/archive/FilterControls'
 import { FiltersSheet } from '@/components/archive/FiltersSheet'
 import { ModelCard } from '@/components/catalog/ModelCard'
@@ -52,15 +52,17 @@ export function ArchivePage() {
         {t('archive.text')}
       </p>
 
-      <div className="mt-8 flex flex-col gap-4 md:mt-10 lg:flex-row-reverse lg:items-center lg:justify-between">
+      {/* La barra: la ricerca larga, poi la famiglia */}
+      <div className="mt-8 flex flex-col gap-3 md:mt-10 md:flex-row md:items-stretch">
         <ArchiveSearch
           value={filters.search ?? ''}
           // Mentre si digita, l'indirizzo viene sostituito: Indietro non cancella una lettera alla volta
           onChange={(search) => setFilters({ search }, { replace: true })}
         />
-        <FamilyFilter
+        <FamilySelect
           value={filters.category}
           onChange={(category) => setFilters({ category })}
+          className="md:w-64"
         />
       </div>
 
