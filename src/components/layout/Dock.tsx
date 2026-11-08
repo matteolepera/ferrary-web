@@ -1,9 +1,11 @@
-import { History, LayoutGrid, Menu, Search, X } from 'lucide-react'
+import { CarFront, Hourglass, Layers, Menu, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, NavLink } from 'react-router'
+import { Link, NavLink, useLocation } from 'react-router'
 import monogram from '@/assets/brand/ferrary-y-rosso.svg'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
+import { catalogLinks, isCatalogPath } from '@/components/layout/publicNav'
+import { useSectionInView } from '@/hooks/useSectionInView'
 
 // Su mobile icona sopra e etichetta sotto; dal tablet in su sulla stessa riga
 const itemClass = [
@@ -13,18 +15,26 @@ const itemClass = [
   'focus-visible:outline-2 focus-visible:outline-rosso-acceso',
 ].join(' ')
 
-const idle = 'text-neutral-300 hover:text-white'
+/** La voce attiva è rossa, come nella pillola del desktop */
+const stateClass = (active: boolean) => (active ? 'text-rosso-acceso' : 'text-neutral-300 hover:text-white')
+
+const iconClass = 'size-5 md:size-4'
 
 const menuLinkClass =
   'border-b border-linea py-3 font-display text-4xl font-extrabold tracking-[-0.035em] focus-visible:outline-2 focus-visible:outline-rosso-acceso'
 
 /**
  * Navigazione di mobile e tablet: un dock fluttuante in basso, con il monogramma al centro.
+ * Le voci sono le stesse della pillola del desktop; i cataloghi e la lingua stanno nel menu.
  */
 export function Dock() {
   const { t } = useTranslation()
+  const { pathname } = useLocation()
   const [open, setOpen] = useState(false)
   const firstLink = useRef<HTMLAnchorElement>(null)
+
+  // Nella home, "Famiglie" si accende quando la sezione arriva al centro dello schermo
+  const familiesActive = useSectionInView('famiglie', pathname === '/')
 
   // Con il menu aperto: focus sulla prima voce, Esc per chiudere, pagina sotto ferma
   useEffect(() => {
@@ -50,6 +60,7 @@ export function Dock() {
   }, [open])
 
   const close = () => setOpen(false)
+
   return (
     <>
       {open && (
@@ -59,22 +70,23 @@ export function Dock() {
           aria-label={t('nav.menu')}
           className="bg-notte/95 fixed inset-0 z-40 flex flex-col px-6 pt-8 pb-32 backdrop-blur-md lg:hidden"
         >
-          {/* Il menu a tendina: voci grandi, senza icone */}
-          <nav aria-label={t('nav.menu')} className="flex flex-col">
-            <Link
-              ref={firstLink}
-              to="/modelli"
-              onClick={close}
-              className={menuLinkClass}
-            >
-              {t('nav.archive')}
-            </Link>
-            <Link to="/#famiglie" onClick={close} className={menuLinkClass}>
-              {t('nav.families')}
-            </Link>
-            <Link to="/storia" onClick={close} className={menuLinkClass}>
-              {t('nav.story')}
-            </Link>
+          {/* Il menu: quello che nel dock non entra, cioè i cataloghi e la lingua */}
+          <nav aria-label={t('catalogs.eyebrow')} className="flex flex-col">
+            <p className="text-rosso-acceso mb-3 text-[0.6875rem] font-semibold tracking-[0.22em] uppercase">
+              {t('catalogs.eyebrow')}
+            </p>
+            {catalogLinks.map((link, place) => (
+              <Link
+                key={link.to}
+                ref={place === 0 ? firstLink : undefined}
+                to={link.to}
+                onClick={close}
+                aria-current={pathname.startsWith(link.to) ? 'page' : undefined}
+                className={`${menuLinkClass} ${pathname.startsWith(link.to) ? 'text-rosso-acceso' : ''}`}
+              >
+                {t(link.label)}
+              </Link>
+            ))}
           </nav>
           <div className="mt-auto">
             <LanguageSwitcher />
@@ -92,25 +104,19 @@ export function Dock() {
           'md:max-w-xl lg:hidden',
         ].join(' ')}
       >
-        <NavLink
-          to="/modelli"
-          className={({ isActive }) =>
-            `${itemClass} ${isActive ? 'text-white' : idle}`
-          }
-        >
-          <LayoutGrid aria-hidden="true" className="size-5 md:size-4" />
+        <NavLink to="/modelli" className={({ isActive }) => `${itemClass} ${stateClass(isActive)}`}>
+          <CarFront aria-hidden="true" strokeWidth={1.75} className={iconClass} />
           {t('nav.archive')}
         </NavLink>
 
-        <NavLink
-          to="/storia"
-          className={({ isActive }) =>
-            `${itemClass} ${isActive ? 'text-white' : idle}`
-          }
+        <Link
+          to="/#famiglie"
+          aria-current={familiesActive ? 'true' : undefined}
+          className={`${itemClass} ${stateClass(familiesActive)}`}
         >
-          <History aria-hidden="true" className="size-5 md:size-4" />
-          {t('nav.story')}
-        </NavLink>
+          <Layers aria-hidden="true" strokeWidth={1.75} className={iconClass} />
+          {t('nav.families')}
+        </Link>
 
         {/* Il monogramma: sollevato sopra la barra, riporta alla home */}
         <Link
@@ -125,22 +131,22 @@ export function Dock() {
           <img src={monogram} alt="" className="h-6 w-auto md:h-7" />
         </Link>
 
-        {/* La ricerca vera arriva con l'archivio, nella scheda 6.2 */}
-        <Link to="/modelli" className={`${itemClass} ${idle}`}>
-          <Search aria-hidden="true" className="size-5 md:size-4" />
-          {t('nav.search')}
-        </Link>
+        <NavLink to="/storia" className={({ isActive }) => `${itemClass} ${stateClass(isActive)}`}>
+          <Hourglass aria-hidden="true" strokeWidth={1.75} className={iconClass} />
+          {t('nav.story')}
+        </NavLink>
 
         <button
           type="button"
           aria-expanded={open}
           onClick={() => setOpen(!open)}
-          className={`${itemClass} ${open ? 'text-white' : idle}`}
+          // Acceso anche sulle pagine dei cataloghi, che stanno nel menu
+          className={`${itemClass} ${stateClass(open || isCatalogPath(pathname))}`}
         >
           {open ? (
-            <X aria-hidden="true" className="size-5 md:size-4" />
+            <X aria-hidden="true" strokeWidth={1.75} className={iconClass} />
           ) : (
-            <Menu aria-hidden="true" className="size-5 md:size-4" />
+            <Menu aria-hidden="true" strokeWidth={1.75} className={iconClass} />
           )}
           {open ? t('nav.close') : t('nav.menu')}
         </button>
