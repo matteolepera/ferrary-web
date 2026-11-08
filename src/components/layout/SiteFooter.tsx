@@ -29,7 +29,7 @@ export function SiteFooter() {
       {/* In fondo, su mobile e tablet, lo spazio per il dock */}
       <div className="mx-auto flex max-w-[1360px] flex-col gap-12 px-5 pt-12 pb-32 md:px-10 md:pt-16 lg:flex-row lg:justify-between lg:gap-16 lg:pb-16">
         <div>
-          <Logo className="h-10 w-auto md:h-12" />
+          <Logo className="h-16 w-auto md:h-20" />
           <p className="mt-5 max-w-[34ch] text-xs leading-relaxed text-neutral-400">
             {t('footer.rights', { year })}
           </p>

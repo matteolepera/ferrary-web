@@ -26,7 +26,7 @@ export function HomeFamilies() {
     <section
       id="famiglie"
       aria-labelledby="famiglie-titolo"
-      className="relative overflow-hidden pb-18 md:pb-24 lg:mb-36 lg:pb-0"
+      className="relative overflow-hidden pb-18 md:pb-24 lg:mb-36 lg:scroll-mt-28 lg:pb-0"
     >
       {/* Lo sfondo, solo dal desktop: tutte le foto una sopra l'altra, per una dissolvenza al cambio */}
       <div
