@@ -283,7 +283,9 @@
       },
       "active_one": "{{count}} active",
       "active_other": "{{count}} active",
-      "reset": "Reset"
+      "reset": "Reset",
+      "periodHint": "Tap a decade, then another to widen the period.",
+      "range": "{{from}} – {{to}}"
     }
   },
   "catalogs": {

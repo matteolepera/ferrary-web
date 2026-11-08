@@ -219,20 +219,30 @@ test('filtra per motorizzazione nel pannello, e ordina dalla barra', async () =>
   await waitFor(() => expect(received.params.get('sort')).toBe('-year'))
 })
 
-test('filtra per decennio e impedisce i periodi al contrario', async () => {
+test('sceglie il periodo sulla linea dei decenni', async () => {
   const received = captureParams()
   renderRoute('/modelli')
   await screen.findByRole('heading', { name: 'F40' })
 
   const panel = openFilters()
-  fireEvent.change(panel.getByRole('combobox', { name: 'Dal' }), {
-    target: { value: '1980' },
-  })
 
+  // Un decennio: dal suo primo al suo ultimo anno
+  fireEvent.click(panel.getByRole('button', { name: "Anni '80" }))
   await waitFor(() => expect(received.params.get('year_from')).toBe('1980'))
-  const to = within(panel.getByRole('combobox', { name: 'Al' }))
-  expect(to.getByRole('option', { name: "Anni '70" })).toBeDisabled()
-  expect(to.getByRole('option', { name: "Anni '80" })).toBeEnabled()
+  expect(received.params.get('year_to')).toBe('1989')
+
+  // Un secondo decennio: il periodo si allarga fino a lui
+  fireEvent.click(panel.getByRole('button', { name: "Anni '90" }))
+  await waitFor(() => expect(received.params.get('year_to')).toBe('1999'))
+  expect(received.params.get('year_from')).toBe('1980')
+  expect(panel.getByRole('button', { name: "Anni '80" })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  )
+  expect(panel.getByRole('button', { name: "Anni '70" })).toHaveAttribute(
+    'aria-pressed',
+    'false',
+  )
 })
 
 test('il pulsante dei filtri dice quanti sono attivi, e il pannello mostra quanti risultati darà', async () => {

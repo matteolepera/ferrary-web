@@ -283,7 +283,9 @@
       },
       "active_one": "{{count}} attivo",
       "active_other": "{{count}} attivi",
-      "reset": "Azzera"
+      "reset": "Azzera",
+      "periodHint": "Tocca un decennio, poi un altro per allargare il periodo.",
+      "range": "{{from}} – {{to}}"
     }
   },
   "catalogs": {
