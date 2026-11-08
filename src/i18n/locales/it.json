@@ -280,7 +280,10 @@
         "nameDesc": "Nome, dalla Z alla A",
         "newest": "Dalla più recente",
         "oldest": "Dalla più storica"
-      }
+      },
+      "active_one": "{{count}} attivo",
+      "active_other": "{{count}} attivi",
+      "reset": "Azzera"
     }
   },
   "catalogs": {

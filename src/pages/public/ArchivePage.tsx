@@ -9,6 +9,8 @@ import { Button } from '@/components/ui/Button'
 import { useArchiveFilters } from '@/hooks/useArchiveFilters'
 import { useModels } from '@/hooks/useModels'
 import { ErrorState } from '@/components/ui/ErrorState'
+import { SlidersHorizontal } from 'lucide-react'
+import { SortSelect } from '@/components/archive/SortSelect'
 
 const gridClass = 'mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3'
 
@@ -28,13 +30,8 @@ export function ArchivePage() {
   // Stabile tra un disegno e l'altro: il pannello non deve rifare il focus a ogni filtro scelto
   const closeSheet = useCallback(() => setSheetOpen(false), [])
 
-  // I filtri del pannello attivi, per il numero sul pulsante "Filtri"
-  const panelFilters = [
-    filters.powertrain,
-    filters.year_from,
-    filters.year_to,
-    filters.sort,
-  ]
+  // I filtri del pannello attivi, per il pallino sul pulsante "Filtri"
+  const panelFilters = [filters.powertrain, filters.year_from, filters.year_to]
   const activeCount = panelFilters.filter((value) => value !== undefined).length
 
   const goToPage = (page: number) =>
@@ -52,38 +49,77 @@ export function ArchivePage() {
         {t('archive.text')}
       </p>
 
-      {/* La barra: la ricerca larga, poi la famiglia */}
-      <div className="mt-8 flex flex-col gap-3 md:mt-10 md:flex-row md:items-stretch">
+      {/* La barra: ricerca, famiglia, filtri e ordinamento */}
+      <div className="mt-8 flex flex-col gap-3 md:mt-10 lg:flex-row">
         <ArchiveSearch
           value={filters.search ?? ''}
           // Mentre si digita, l'indirizzo viene sostituito: Indietro non cancella una lettera alla volta
           onChange={(search) => setFilters({ search }, { replace: true })}
         />
-        <FamilySelect
-          value={filters.category}
-          onChange={(category) => setFilters({ category })}
-          className="md:w-64"
-        />
-      </div>
 
-      {/* Mobile e tablet: un pulsante apre il pannello */}
-      <Button
-        variant="secondary"
-        aria-expanded={sheetOpen}
-        onClick={() => setSheetOpen(true)}
-        className="mt-4 w-full md:w-auto lg:hidden"
-      >
-        {t('archive.filters.open')}
-        {activeCount > 0 && ` (${activeCount})`}
-      </Button>
+        {/* Telefono: famiglia su una riga, filtri e ordinamento sotto; tablet: tutti e tre in fila */}
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-[1fr_auto_1fr] lg:flex lg:shrink-0">
+          <FamilySelect
+            value={filters.category}
+            onChange={(category) => setFilters({ category })}
+            className="col-span-2 md:col-span-1 lg:w-60"
+          />
 
-      {/* Desktop: gli stessi controlli, in linea */}
-      <div className="mt-8 hidden lg:block">
-        <FilterControls filters={filters} onChange={setFilters} />
+          <button
+            type="button"
+            aria-haspopup="dialog"
+            aria-expanded={sheetOpen}
+            onClick={() => setSheetOpen(true)}
+            className={[
+              'border-linea bg-ombra flex items-center justify-center gap-2.5 border px-5 py-3.5 text-[0.9375rem] text-neutral-100',
+              'transition-colors hover:border-neutral-500',
+              'focus-visible:outline-rosso-acceso focus-visible:outline-2 focus-visible:outline-offset-2',
+            ].join(' ')}
+          >
+            <SlidersHorizontal
+              aria-hidden="true"
+              className="size-4 text-neutral-400"
+            />
+            {t('archive.filters.open')}
+            {activeCount > 0 && (
+              <>
+                {/* Il numero si vede nel pallino, e si sente come "1 attivo" */}
+                <span
+                  aria-hidden="true"
+                  className="bg-rosso flex size-5 items-center justify-center rounded-full text-[0.6875rem] font-semibold"
+                >
+                  {activeCount}
+                </span>
+                <span className="sr-only">
+                  , {t('archive.filters.active', { count: activeCount })}
+                </span>
+              </>
+            )}
+          </button>
+
+          <SortSelect
+            value={filters.sort}
+            onChange={(sort) => setFilters({ sort })}
+            className="lg:w-56"
+          />
+        </div>
       </div>
 
       {sheetOpen && (
-        <FiltersSheet count={meta?.total} onClose={closeSheet}>
+        <FiltersSheet
+          count={meta?.total}
+          onClose={closeSheet}
+          onReset={
+            activeCount > 0
+              ? () =>
+                  setFilters({
+                    powertrain: undefined,
+                    year_from: undefined,
+                    year_to: undefined,
+                  })
+              : undefined
+          }
+        >
           <FilterControls filters={filters} onChange={setFilters} />
         </FiltersSheet>
       )}

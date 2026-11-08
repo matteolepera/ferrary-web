@@ -31,7 +31,7 @@ const pillClass = [
 ].join(' ')
 
 /**
- * Motorizzazione, periodo e ordinamento: gli stessi controlli nel pannello mobile e in linea sul desktop.
+ * Motorizzazione e periodo: i filtri meno usati, nel pannello che si apre dal pulsante "Filtri".
  */
 export function FilterControls({ filters, onChange }: FilterControlsProps) {
   const { t } = useTranslation()
@@ -46,7 +46,7 @@ export function FilterControls({ filters, onChange }: FilterControlsProps) {
   const toYear = (value: string) => (value === '' ? undefined : Number(value))
 
   return (
-    <div className="flex flex-col gap-8 lg:flex-row lg:flex-wrap lg:items-end lg:gap-10">
+    <div className="flex flex-col gap-10">
       <fieldset>
         <legend className={labelClass}>
           {t('archive.filters.powertrain')}
@@ -78,7 +78,7 @@ export function FilterControls({ filters, onChange }: FilterControlsProps) {
 
       <fieldset>
         <legend className={labelClass}>{t('archive.filters.period')}</legend>
-        <div className="mt-3 grid grid-cols-2 gap-3 lg:flex">
+        <div className="mt-3 grid grid-cols-2 gap-3">
           <ArchiveSelect
             label={t('archive.filters.from')}
             value={filters.year_from?.toString() ?? ''}
@@ -121,22 +121,6 @@ export function FilterControls({ filters, onChange }: FilterControlsProps) {
           </ArchiveSelect>
         </div>
       </fieldset>
-
-      <ArchiveSelect
-        label={t('archive.filters.sort')}
-        value={filters.sort ?? ''}
-        onChange={(value) =>
-          onChange({
-            sort: value === '' ? undefined : (value as ModelFilters['sort']),
-          })
-        }
-      >
-        {/* Il valore vuoto è il predefinito dell'API: nome dalla A alla Z */}
-        <option value="">{t('archive.filters.sorts.nameAsc')}</option>
-        <option value="-name">{t('archive.filters.sorts.nameDesc')}</option>
-        <option value="-year">{t('archive.filters.sorts.newest')}</option>
-        <option value="year">{t('archive.filters.sorts.oldest')}</option>
-      </ArchiveSelect>
     </div>
   )
 }

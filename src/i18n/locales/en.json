@@ -280,7 +280,10 @@
         "nameDesc": "Name, Z to A",
         "newest": "Newest first",
         "oldest": "Oldest first"
-      }
+      },
+      "active_one": "{{count}} active",
+      "active_other": "{{count}} active",
+      "reset": "Reset"
     }
   },
   "catalogs": {

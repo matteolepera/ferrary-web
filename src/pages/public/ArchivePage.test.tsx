@@ -192,13 +192,21 @@ function captureParams() {
   return received
 }
 
-test('filtra per motorizzazione e ordina', async () => {
+/** Apre il pannello dei filtri e restituisce il suo contenuto */
+function openFilters() {
+  fireEvent.click(screen.getByRole('button', { name: /^Filtri/ }))
+
+  return within(screen.getByRole('dialog', { name: 'Filtri' }))
+}
+
+test('filtra per motorizzazione nel pannello, e ordina dalla barra', async () => {
   const received = captureParams()
   renderRoute('/modelli')
   await screen.findByRole('heading', { name: 'F40' })
 
+  const panel = openFilters()
   fireEvent.click(
-    within(screen.getByRole('group', { name: 'Motorizzazione' })).getByRole(
+    within(panel.getByRole('group', { name: 'Motorizzazione' })).getByRole(
       'button',
       { name: 'Ibrida' },
     ),
@@ -216,30 +224,29 @@ test('filtra per decennio e impedisce i periodi al contrario', async () => {
   renderRoute('/modelli')
   await screen.findByRole('heading', { name: 'F40' })
 
-  fireEvent.change(screen.getByRole('combobox', { name: 'Dal' }), {
+  const panel = openFilters()
+  fireEvent.change(panel.getByRole('combobox', { name: 'Dal' }), {
     target: { value: '1980' },
   })
 
   await waitFor(() => expect(received.params.get('year_from')).toBe('1980'))
-  const to = within(screen.getByRole('combobox', { name: 'Al' }))
+  const to = within(panel.getByRole('combobox', { name: 'Al' }))
   expect(to.getByRole('option', { name: "Anni '70" })).toBeDisabled()
   expect(to.getByRole('option', { name: "Anni '80" })).toBeEnabled()
 })
 
-test('su mobile apre i filtri in un pannello e mostra quanti risultati darà', async () => {
+test('il pulsante dei filtri dice quanti sono attivi, e il pannello mostra quanti risultati darà', async () => {
   renderRoute('/modelli')
   await screen.findByRole('heading', { name: 'F40' })
 
-  fireEvent.click(screen.getByRole('button', { name: 'Filtri' }))
-  const sheet = within(screen.getByRole('dialog', { name: 'Filtri' }))
-
-  fireEvent.click(sheet.getByRole('button', { name: 'Elettrica' }))
+  const panel = openFilters()
+  fireEvent.click(panel.getByRole('button', { name: 'Elettrica' }))
 
   expect(
-    await screen.findByRole('button', { name: 'Filtri (1)' }),
+    await screen.findByRole('button', { name: 'Filtri, 1 attivo' }),
   ).toBeInTheDocument()
 
-  fireEvent.click(sheet.getByRole('button', { name: 'Mostra 2 risultati' }))
+  fireEvent.click(panel.getByRole('button', { name: 'Mostra 2 risultati' }))
 
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 })
