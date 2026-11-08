@@ -260,3 +260,21 @@ test('il pulsante dei filtri dice quanti sono attivi, e il pannello mostra quant
 
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 })
+
+test('mostra i filtri della scheda come etichette, e li toglie uno alla volta', async () => {
+  const received = captureParams()
+  renderRoute('/modelli?powertrain=ibrido&year_from=1960&year_to=1979')
+  await screen.findByRole('heading', { name: 'F40' })
+
+  const active = within(screen.getByRole('list', { name: 'Filtri attivi' }))
+  expect(
+    active.getByRole('button', { name: "Togli il filtro Anni '60 – Anni '70" }),
+  ).toBeInTheDocument()
+
+  fireEvent.click(
+    active.getByRole('button', { name: 'Togli il filtro Ibrida' }),
+  )
+
+  await waitFor(() => expect(received.params.get('powertrain')).toBeNull())
+  expect(received.params.get('year_from')).toBe('1960')
+})

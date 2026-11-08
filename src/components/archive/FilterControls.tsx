@@ -1,6 +1,13 @@
 import { useId } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ModelFilters } from '@/api/models'
+import {
+  DECADES,
+  decadeLabel,
+  periodLabel,
+  periodOf,
+  shortDecade,
+} from '@/components/archive/decades'
 import type { PowertrainType } from '@/types/catalog'
 
 type FilterControlsProps = {
@@ -14,17 +21,6 @@ const POWERTRAINS: (PowertrainType | undefined)[] = [
   'ibrido',
   'elettrico',
 ]
-
-// Dagli anni '40 al decennio in corso
-const FIRST_DECADE = 1940
-const LAST_DECADE = Math.floor(new Date().getFullYear() / 10) * 10
-const DECADES = Array.from(
-  { length: (LAST_DECADE - FIRST_DECADE) / 10 + 1 },
-  (_, i) => FIRST_DECADE + i * 10,
-)
-
-/** L'anno del decennio: 1987 diventa 1980 */
-const decadeOf = (year: number) => Math.floor(year / 10) * 10
 
 /** Il centro di un decennio sulla linea, in percentuale: ogni decennio occupa una colonna */
 const centerOf = (decade: number) =>
@@ -41,20 +37,8 @@ export function FilterControls({ filters, onChange }: FilterControlsProps) {
   const powertrainId = useId()
   const periodId = useId()
 
-  const decadeLabel = (decade: number) =>
-    t('archive.filters.decade', {
-      short: decade < 2000 ? `'${String(decade).slice(2)}` : String(decade),
-      full: String(decade),
-    })
-
-  // Il periodo scelto, in decenni; se l'indirizzo ne ha solo un estremo, l'altro è il bordo della linea
-  const hasPeriod =
-    filters.year_from !== undefined || filters.year_to !== undefined
-  const low =
-    filters.year_from !== undefined ? decadeOf(filters.year_from) : FIRST_DECADE
-  const high =
-    filters.year_to !== undefined ? decadeOf(filters.year_to) : LAST_DECADE
-  const single = hasPeriod && low === high
+  // Il periodo scelto, in decenni: si ricalcola a ogni disegno, dai filtri attuali
+  const { hasPeriod, low, high, single } = periodOf(filters)
 
   function pickDecade(decade: number) {
     if (single && decade === low) {
@@ -76,15 +60,6 @@ export function FilterControls({ filters, onChange }: FilterControlsProps) {
     powertrain
       ? t(`archive.filters.powertrains.${powertrain}`)
       : t('archive.filters.any')
-
-  const periodValue = !hasPeriod
-    ? t('archive.filters.anyYear')
-    : single
-      ? decadeLabel(low)
-      : t('archive.filters.range', {
-          from: decadeLabel(low),
-          to: decadeLabel(high),
-        })
 
   return (
     <div className="flex flex-col gap-8">
@@ -131,7 +106,7 @@ export function FilterControls({ filters, onChange }: FilterControlsProps) {
             {t('archive.filters.period')}
           </span>
           <span aria-hidden="true" className="text-xs text-neutral-200">
-            {periodValue}
+            {periodLabel(t, filters)}
           </span>
         </div>
         <p className="mt-2 text-xs leading-relaxed text-neutral-500">
@@ -179,7 +154,7 @@ export function FilterControls({ filters, onChange }: FilterControlsProps) {
               <button
                 key={decade}
                 type="button"
-                aria-label={decadeLabel(decade)}
+                aria-label={decadeLabel(t, decade)}
                 aria-pressed={inside}
                 onClick={() => pickDecade(decade)}
                 className={[
@@ -188,7 +163,7 @@ export function FilterControls({ filters, onChange }: FilterControlsProps) {
                   inside ? 'text-white' : 'text-neutral-500 hover:text-white',
                 ].join(' ')}
               >
-                {decade < 2000 ? `'${String(decade).slice(2)}` : decade}
+                {shortDecade(decade)}
               </button>
             )
           })}

@@ -11,6 +11,7 @@ import { useModels } from '@/hooks/useModels'
 import { ErrorState } from '@/components/ui/ErrorState'
 import { SlidersHorizontal } from 'lucide-react'
 import { SortSelect } from '@/components/archive/SortSelect'
+import { ActiveFilters } from '@/components/archive/ActiveFilters'
 
 const gridClass = 'mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3'
 
@@ -124,17 +125,20 @@ export function ArchivePage() {
         </FiltersSheet>
       )}
 
-      <div className="border-linea mt-10 flex items-center justify-between gap-4 border-b pb-4">
+      <div className="border-linea mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 border-b pb-4 md:mt-10">
         {/* Il conteggio viene annunciato ai lettori di schermo quando cambia */}
         <p aria-live="polite" className="text-sm text-neutral-400">
           {meta ? t('archive.count', { count: meta.total }) : '\u00a0'}
         </p>
+
+        <ActiveFilters filters={filters} onChange={setFilters} />
+
         {/* Senza risultati, "Azzera i filtri" resta solo nel messaggio al centro della pagina */}
         {hasFilters && data && data.data.length > 0 && (
           <button
             type="button"
             onClick={clearFilters}
-            className="text-[0.6875rem] font-semibold tracking-[0.16em] text-neutral-300 uppercase hover:text-white"
+            className="ml-auto text-[0.6875rem] font-semibold tracking-[0.16em] text-neutral-300 uppercase hover:text-white"
           >
             {t('archive.clear')}
           </button>

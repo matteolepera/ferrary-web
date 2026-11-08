@@ -256,6 +256,8 @@
       "concept": "Concepts",
       "other": "Other"
     },
+    "activeFilters": "Active filters",
+    "removeFilter": "Remove the {{name}} filter",
     "filters": {
       "open": "Filters",
       "title": "Filters",
