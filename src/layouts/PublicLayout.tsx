@@ -1,14 +1,11 @@
 import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
-  Link,
-  NavLink,
   Outlet,
   ScrollRestoration,
   useLocation,
 } from 'react-router'
-import { LanguageSwitcher } from '@/components/LanguageSwitcher'
-import { Logo } from '@/components/Logo'
+import { SiteHeader } from '@/components/layout/SiteHeader'
 import { Dock } from '@/components/layout/Dock'
 import { SiteFooter } from '@/components/layout/SiteFooter'
 import { NavigationProgress } from '@/components/layout/NavigationProgress'
@@ -34,12 +31,6 @@ export function PublicLayout() {
     main.current?.focus({ preventScroll: true })
   }, [location.pathname])
 
-  const linkClass = ({ isActive }: { isActive: boolean }) =>
-    [
-      'text-xs font-semibold tracking-[0.18em] uppercase transition-colors',
-      isActive ? 'text-white' : 'text-neutral-300 hover:text-white',
-    ].join(' ')
-
   return (
     <div className="flex min-h-screen flex-col">
       <NavigationProgress />
@@ -50,28 +41,7 @@ export function PublicLayout() {
       >
         {t('nav.skip')}
       </a>
-      <header className="absolute inset-x-0 top-0 z-30">
-        <div className="mx-auto flex max-w-[1360px] items-center justify-between px-5 py-5 md:px-10 md:py-7">
-          <Link to="/" aria-label={t('nav.home')}>
-            <Logo alt="" className="h-7 w-auto md:h-8" />
-          </Link>
-
-          {/* Su mobile e tablet la navigazione è nel dock in basso */}
-          <nav aria-label={t('nav.main')} className="hidden gap-10 lg:flex">
-            <NavLink to="/modelli" className={linkClass}>
-              {t('nav.archive')}
-            </NavLink>
-            <Link to="/#famiglie" className={linkClass({ isActive: false })}>
-              {t('nav.families')}
-            </Link>
-            <NavLink to="/storia" className={linkClass}>
-              {t('nav.story')}
-            </NavLink>
-          </nav>
-
-          <LanguageSwitcher />
-        </div>
-      </header>
+      <SiteHeader />
 
       <main
         ref={main}

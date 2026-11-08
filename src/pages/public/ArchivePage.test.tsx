@@ -163,39 +163,20 @@ test('cerca per nome quando si smette di scrivere', async () => {
   await waitFor(() => expect(received.params.get('search')).toBe('F40'))
 })
 
-test('filtra per famiglia con le pillole', async () => {
-  const received = { params: new URLSearchParams() }
-
-  server.use(
-    http.get('http://localhost:8000/api/models', ({ request }) => {
-      received.params = new URL(request.url).searchParams
-
-      return HttpResponse.json(modelsPage)
-    }),
-  )
-
+test('filtra per famiglia con il menu', async () => {
+  const received = captureParams()
   renderRoute('/modelli')
-  const families = within(
-    await screen.findByRole('group', { name: 'Famiglia' }),
-  )
+  await screen.findByRole('heading', { name: 'F40' })
 
-  expect(families.getByRole('button', { name: 'Tutte' })).toHaveAttribute(
-    'aria-pressed',
-    'true',
-  )
+  const family = screen.getByRole('combobox', { name: 'Famiglia' })
+  expect(family).toHaveValue('')
 
-  fireEvent.click(families.getByRole('button', { name: 'Hypercar' }))
+  fireEvent.change(family, { target: { value: 'hypercar' } })
 
   await waitFor(() => expect(received.params.get('category')).toBe('hypercar'))
-  expect(families.getByRole('button', { name: 'Hypercar' })).toHaveAttribute(
-    'aria-pressed',
-    'true',
-  )
-  expect(families.getByRole('button', { name: 'Tutte' })).toHaveAttribute(
-    'aria-pressed',
-    'false',
-  )
+  expect(family).toHaveValue('hypercar')
 })
+
 /** Risposta simulata che ricorda i parametri ricevuti */
 function captureParams() {
   const received = { params: new URLSearchParams() }
@@ -211,13 +192,21 @@ function captureParams() {
   return received
 }
 
-test('filtra per motorizzazione e ordina', async () => {
+/** Apre il pannello dei filtri e restituisce il suo contenuto */
+function openFilters() {
+  fireEvent.click(screen.getByRole('button', { name: /^Filtri/ }))
+
+  return within(screen.getByRole('dialog', { name: 'Filtri' }))
+}
+
+test('filtra per motorizzazione nel pannello, e ordina dalla barra', async () => {
   const received = captureParams()
   renderRoute('/modelli')
   await screen.findByRole('heading', { name: 'F40' })
 
+  const panel = openFilters()
   fireEvent.click(
-    within(screen.getByRole('group', { name: 'Motorizzazione' })).getByRole(
+    within(panel.getByRole('group', { name: 'Motorizzazione' })).getByRole(
       'button',
       { name: 'Ibrida' },
     ),
@@ -230,35 +219,62 @@ test('filtra per motorizzazione e ordina', async () => {
   await waitFor(() => expect(received.params.get('sort')).toBe('-year'))
 })
 
-test('filtra per decennio e impedisce i periodi al contrario', async () => {
+test('sceglie il periodo sulla linea dei decenni', async () => {
   const received = captureParams()
   renderRoute('/modelli')
   await screen.findByRole('heading', { name: 'F40' })
 
-  fireEvent.change(screen.getByRole('combobox', { name: 'Dal' }), {
-    target: { value: '1980' },
-  })
+  const panel = openFilters()
 
+  // Un decennio: dal suo primo al suo ultimo anno
+  fireEvent.click(panel.getByRole('button', { name: "Anni '80" }))
   await waitFor(() => expect(received.params.get('year_from')).toBe('1980'))
-  const to = within(screen.getByRole('combobox', { name: 'Al' }))
-  expect(to.getByRole('option', { name: "Anni '70" })).toBeDisabled()
-  expect(to.getByRole('option', { name: "Anni '80" })).toBeEnabled()
+  expect(received.params.get('year_to')).toBe('1989')
+
+  // Un secondo decennio: il periodo si allarga fino a lui
+  fireEvent.click(panel.getByRole('button', { name: "Anni '90" }))
+  await waitFor(() => expect(received.params.get('year_to')).toBe('1999'))
+  expect(received.params.get('year_from')).toBe('1980')
+  expect(panel.getByRole('button', { name: "Anni '80" })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  )
+  expect(panel.getByRole('button', { name: "Anni '70" })).toHaveAttribute(
+    'aria-pressed',
+    'false',
+  )
 })
 
-test('su mobile apre i filtri in un pannello e mostra quanti risultati darà', async () => {
+test('il pulsante dei filtri dice quanti sono attivi, e il pannello mostra quanti risultati darà', async () => {
   renderRoute('/modelli')
   await screen.findByRole('heading', { name: 'F40' })
 
-  fireEvent.click(screen.getByRole('button', { name: 'Filtri' }))
-  const sheet = within(screen.getByRole('dialog', { name: 'Filtri' }))
-
-  fireEvent.click(sheet.getByRole('button', { name: 'Elettrica' }))
+  const panel = openFilters()
+  fireEvent.click(panel.getByRole('button', { name: 'Elettrica' }))
 
   expect(
-    await screen.findByRole('button', { name: 'Filtri (1)' }),
+    await screen.findByRole('button', { name: 'Filtri, 1 attivo' }),
   ).toBeInTheDocument()
 
-  fireEvent.click(sheet.getByRole('button', { name: 'Mostra 2 risultati' }))
+  fireEvent.click(panel.getByRole('button', { name: 'Mostra 2 risultati' }))
 
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+})
+
+test('mostra i filtri della scheda come etichette, e li toglie uno alla volta', async () => {
+  const received = captureParams()
+  renderRoute('/modelli?powertrain=ibrido&year_from=1960&year_to=1979')
+  await screen.findByRole('heading', { name: 'F40' })
+
+  const active = within(screen.getByRole('list', { name: 'Filtri attivi' }))
+  expect(
+    active.getByRole('button', { name: "Togli il filtro Anni '60 – Anni '70" }),
+  ).toBeInTheDocument()
+
+  fireEvent.click(
+    active.getByRole('button', { name: 'Togli il filtro Ibrida' }),
+  )
+
+  await waitFor(() => expect(received.params.get('powertrain')).toBeNull())
+  expect(received.params.get('year_from')).toBe('1960')
 })

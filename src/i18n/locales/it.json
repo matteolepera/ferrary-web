@@ -1,7 +1,7 @@
 {
   "nav": {
     "archive": "Archivio",
-    "families": "Le famiglie",
+    "families": "Famiglie",
     "story": "La storia",
     "main": "Principale",
     "home": "Ferrary, torna alla home",
@@ -20,7 +20,7 @@
     "apiCode": "Codice dell'API",
     "apiDocs": "Documentazione API",
     "newTab": "(si apre in una nuova scheda)",
-    "rights": "© {{year}} Ferrary. Archivio indipendente, non affiliato a Ferrari S.p.A."
+    "rights": "© {{year}} Ferrary. Archivio indipendente, non affiliato a Ferrari"
   },
   "home": {
     "hero": {
@@ -61,7 +61,8 @@
       "text": "Ogni Ferrari appartiene a una famiglia: sceglila, e l'archivio ti mostrerà solo quelle.",
       "models_one": "{{count}} modello",
       "models_other": "{{count}} modelli",
-      "error": "Impossibile caricare le famiglie."
+      "error": "Impossibile caricare le famiglie.",
+      "showing": "In mostra"
     },
     "invite": {
       "titleStart": "Tutto l'archivio,",
@@ -248,7 +249,15 @@
     "searchLabel": "Cerca per nome",
     "searchPlaceholder": "Cerca una Ferrari, ad esempio F40",
     "family": "Famiglia",
-    "allFamilies": "Tutte",
+    "allFamilies": "Tutte le famiglie",
+    "groups": {
+      "road": "Stradali",
+      "racing": "Corsa",
+      "concept": "Concept",
+      "other": "Altre"
+    },
+    "activeFilters": "Filtri attivi",
+    "removeFilter": "Togli il filtro {{name}}",
     "filters": {
       "open": "Filtri",
       "title": "Filtri",
@@ -273,7 +282,12 @@
         "nameDesc": "Nome, dalla Z alla A",
         "newest": "Dalla più recente",
         "oldest": "Dalla più storica"
-      }
+      },
+      "active_one": "{{count}} attivo",
+      "active_other": "{{count}} attivi",
+      "reset": "Azzera",
+      "periodHint": "Tocca un decennio, poi un altro per allargare il periodo.",
+      "range": "{{from}} – {{to}}"
     }
   },
   "catalogs": {

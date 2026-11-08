@@ -1,46 +1,23 @@
 import { fireEvent, screen, within } from '@testing-library/react'
 import { renderRoute } from '@/test/utils'
 
-const dock = () =>
-  within(screen.getByRole('navigation', { name: 'Navigazione rapida' }))
+const dock = () => within(screen.getByRole('navigation', { name: 'Navigazione rapida' }))
 
-test('il monogramma riporta alla home', async () => {
+test('ha le stesse voci della pillola del desktop, senza la ricerca', () => {
   renderRoute('/modelli')
 
-  const quick = within(
-    await screen.findByRole('navigation', { name: 'Navigazione rapida' }),
-  )
-  expect(
-    quick.getByRole('link', { name: 'Ferrary, torna alla home' }),
-  ).toHaveAttribute('href', '/')
+  expect(dock().getByRole('link', { name: 'Archivio' })).toHaveAttribute('aria-current', 'page')
+  expect(dock().getByRole('link', { name: 'Famiglie' })).toHaveAttribute('href', '/#famiglie')
+  expect(dock().getByRole('link', { name: 'La storia' })).toHaveAttribute('href', '/storia')
+  expect(dock().queryByRole('link', { name: 'Cerca' })).not.toBeInTheDocument()
 })
 
-test('apre e chiude il menu, anche con il tasto Esc', () => {
-  renderRoute('/')
+test('il menu contiene i cataloghi', () => {
+  renderRoute('/modelli')
 
   fireEvent.click(dock().getByRole('button', { name: 'Menu' }))
 
-  expect(screen.getByRole('dialog', { name: 'Menu' })).toBeInTheDocument()
-  expect(dock().getByRole('button', { name: 'Chiudi' })).toHaveAttribute(
-    'aria-expanded',
-    'true',
-  )
-
-  fireEvent.keyDown(document, { key: 'Escape' })
-
-  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-})
-
-test('chiude il menu quando si sceglie una voce', () => {
-  renderRoute('/')
-
-  fireEvent.click(dock().getByRole('button', { name: 'Menu' }))
   const menu = within(screen.getByRole('dialog', { name: 'Menu' }))
-
-  // Il focus entra subito nel menu, sulla prima voce
-  expect(menu.getByRole('link', { name: 'Archivio' })).toHaveFocus()
-
-  fireEvent.click(menu.getByRole('link', { name: 'Archivio' }))
-
-  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  expect(menu.getByRole('link', { name: 'Motori' })).toHaveAttribute('href', '/motori')
+  expect(menu.getByRole('link', { name: 'Piloti' })).toHaveAttribute('href', '/piloti')
 })

@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ArchiveSearch } from '@/components/archive/ArchiveSearch'
-import { FamilyFilter } from '@/components/archive/FamilyFilter'
+import { FamilySelect } from '@/components/archive/FamilySelect'
 import { FilterControls } from '@/components/archive/FilterControls'
 import { FiltersSheet } from '@/components/archive/FiltersSheet'
 import { ModelCard } from '@/components/catalog/ModelCard'
@@ -9,6 +9,9 @@ import { Button } from '@/components/ui/Button'
 import { useArchiveFilters } from '@/hooks/useArchiveFilters'
 import { useModels } from '@/hooks/useModels'
 import { ErrorState } from '@/components/ui/ErrorState'
+import { SlidersHorizontal } from 'lucide-react'
+import { SortSelect } from '@/components/archive/SortSelect'
+import { ActiveFilters } from '@/components/archive/ActiveFilters'
 
 const gridClass = 'mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3'
 
@@ -28,13 +31,8 @@ export function ArchivePage() {
   // Stabile tra un disegno e l'altro: il pannello non deve rifare il focus a ogni filtro scelto
   const closeSheet = useCallback(() => setSheetOpen(false), [])
 
-  // I filtri del pannello attivi, per il numero sul pulsante "Filtri"
-  const panelFilters = [
-    filters.powertrain,
-    filters.year_from,
-    filters.year_to,
-    filters.sort,
-  ]
+  // I filtri del pannello attivi, per il pallino sul pulsante "Filtri"
+  const panelFilters = [filters.powertrain, filters.year_from, filters.year_to]
   const activeCount = panelFilters.filter((value) => value !== undefined).length
 
   const goToPage = (page: number) =>
@@ -52,51 +50,95 @@ export function ArchivePage() {
         {t('archive.text')}
       </p>
 
-      <div className="mt-8 flex flex-col gap-4 md:mt-10 lg:flex-row-reverse lg:items-center lg:justify-between">
+      {/* La barra: ricerca, famiglia, filtri e ordinamento */}
+      <div className="mt-8 flex flex-col gap-3 md:mt-10 lg:flex-row">
         <ArchiveSearch
           value={filters.search ?? ''}
           // Mentre si digita, l'indirizzo viene sostituito: Indietro non cancella una lettera alla volta
           onChange={(search) => setFilters({ search }, { replace: true })}
         />
-        <FamilyFilter
-          value={filters.category}
-          onChange={(category) => setFilters({ category })}
-        />
-      </div>
 
-      {/* Mobile e tablet: un pulsante apre il pannello */}
-      <Button
-        variant="secondary"
-        aria-expanded={sheetOpen}
-        onClick={() => setSheetOpen(true)}
-        className="mt-4 w-full md:w-auto lg:hidden"
-      >
-        {t('archive.filters.open')}
-        {activeCount > 0 && ` (${activeCount})`}
-      </Button>
+        {/* Telefono: famiglia su una riga, filtri e ordinamento sotto; tablet: tutti e tre in fila */}
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-[1fr_auto_1fr] lg:flex lg:shrink-0">
+          <FamilySelect
+            value={filters.category}
+            onChange={(category) => setFilters({ category })}
+            className="col-span-2 md:col-span-1 lg:w-60"
+          />
 
-      {/* Desktop: gli stessi controlli, in linea */}
-      <div className="mt-8 hidden lg:block">
-        <FilterControls filters={filters} onChange={setFilters} />
+          <button
+            type="button"
+            aria-haspopup="dialog"
+            aria-expanded={sheetOpen}
+            onClick={() => setSheetOpen(true)}
+            className={[
+              'border-linea bg-ombra flex items-center justify-center gap-2.5 border px-5 py-3.5 text-[0.9375rem] text-neutral-100',
+              'transition-colors hover:border-neutral-500',
+              'focus-visible:outline-rosso-acceso focus-visible:outline-2 focus-visible:outline-offset-2',
+            ].join(' ')}
+          >
+            <SlidersHorizontal
+              aria-hidden="true"
+              className="size-4 text-neutral-400"
+            />
+            {t('archive.filters.open')}
+            {activeCount > 0 && (
+              <>
+                {/* Il numero si vede nel pallino, e si sente come "1 attivo" */}
+                <span
+                  aria-hidden="true"
+                  className="bg-rosso flex size-5 items-center justify-center rounded-full text-[0.6875rem] font-semibold"
+                >
+                  {activeCount}
+                </span>
+                <span className="sr-only">
+                  , {t('archive.filters.active', { count: activeCount })}
+                </span>
+              </>
+            )}
+          </button>
+
+          <SortSelect
+            value={filters.sort}
+            onChange={(sort) => setFilters({ sort })}
+            className="lg:w-56"
+          />
+        </div>
       </div>
 
       {sheetOpen && (
-        <FiltersSheet count={meta?.total} onClose={closeSheet}>
+        <FiltersSheet
+          count={meta?.total}
+          onClose={closeSheet}
+          onReset={
+            activeCount > 0
+              ? () =>
+                  setFilters({
+                    powertrain: undefined,
+                    year_from: undefined,
+                    year_to: undefined,
+                  })
+              : undefined
+          }
+        >
           <FilterControls filters={filters} onChange={setFilters} />
         </FiltersSheet>
       )}
 
-      <div className="border-linea mt-10 flex items-center justify-between gap-4 border-b pb-4">
+      <div className="border-linea mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 border-b pb-4 md:mt-10">
         {/* Il conteggio viene annunciato ai lettori di schermo quando cambia */}
         <p aria-live="polite" className="text-sm text-neutral-400">
           {meta ? t('archive.count', { count: meta.total }) : '\u00a0'}
         </p>
+
+        <ActiveFilters filters={filters} onChange={setFilters} />
+
         {/* Senza risultati, "Azzera i filtri" resta solo nel messaggio al centro della pagina */}
         {hasFilters && data && data.data.length > 0 && (
           <button
             type="button"
             onClick={clearFilters}
-            className="text-[0.6875rem] font-semibold tracking-[0.16em] text-neutral-300 uppercase hover:text-white"
+            className="ml-auto text-[0.6875rem] font-semibold tracking-[0.16em] text-neutral-300 uppercase hover:text-white"
           >
             {t('archive.clear')}
           </button>

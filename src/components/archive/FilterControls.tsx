@@ -1,7 +1,13 @@
-import { ChevronDown } from 'lucide-react'
-import type { ReactNode } from 'react'
+import { useId } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ModelFilters } from '@/api/models'
+import {
+  DECADES,
+  decadeLabel,
+  periodLabel,
+  periodOf,
+  shortDecade,
+} from '@/components/archive/decades'
 import type { PowertrainType } from '@/types/catalog'
 
 type FilterControlsProps = {
@@ -16,76 +22,60 @@ const POWERTRAINS: (PowertrainType | undefined)[] = [
   'elettrico',
 ]
 
-// Dagli anni '40 al decennio in corso
-const FIRST_DECADE = 1940
-const LAST_DECADE = Math.floor(new Date().getFullYear() / 10) * 10
-const DECADES = Array.from(
-  { length: (LAST_DECADE - FIRST_DECADE) / 10 + 1 },
-  (_, i) => FIRST_DECADE + i * 10,
-)
+/** Il centro di un decennio sulla linea, in percentuale: ogni decennio occupa una colonna */
+const centerOf = (decade: number) =>
+  ((DECADES.indexOf(decade) + 0.5) * 100) / DECADES.length
 
 const labelClass =
   'text-[0.6875rem] font-semibold tracking-[0.2em] text-neutral-400 uppercase'
-const pillClass = [
-  'border px-4 py-2.5 text-[0.6875rem] font-semibold tracking-[0.16em] uppercase transition-colors',
-  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rosso-acceso',
-].join(' ')
-
-/** Menu a tendina con etichetta e freccia, nello stile del sito */
-function Select({
-  label,
-  value,
-  onChange,
-  children,
-}: {
-  label: string
-  value: string
-  onChange: (value: string) => void
-  children: ReactNode
-}) {
-  return (
-    <label className="flex flex-col gap-2">
-      <span className="text-xs text-neutral-400">{label}</span>
-      <span className="relative flex items-center">
-        <select
-          value={value}
-          onChange={(event) => onChange(event.target.value)}
-          className="border-linea bg-ombra w-full appearance-none border py-3 pr-10 pl-4 text-[0.9375rem] text-neutral-100 focus:border-neutral-400 focus:outline-none lg:min-w-44"
-        >
-          {children}
-        </select>
-        <ChevronDown
-          aria-hidden="true"
-          className="pointer-events-none absolute right-3 size-4 text-neutral-400"
-        />
-      </span>
-    </label>
-  )
-}
 
 /**
- * Motorizzazione, periodo e ordinamento: gli stessi controlli nel pannello mobile e in linea sul desktop.
+ * Motorizzazione e periodo, nella scheda che si apre dal pulsante "Filtri".
  */
 export function FilterControls({ filters, onChange }: FilterControlsProps) {
   const { t } = useTranslation()
+  const powertrainId = useId()
+  const periodId = useId()
 
-  const decadeLabel = (decade: number) =>
-    t('archive.filters.decade', {
-      short: decade < 2000 ? `'${String(decade).slice(2)}` : String(decade),
-      full: String(decade),
-    })
+  // Il periodo scelto, in decenni: si ricalcola a ogni disegno, dai filtri attuali
+  const { hasPeriod, low, high, single } = periodOf(filters)
 
-  // Un valore vuoto del menu significa "nessun filtro"
-  const toYear = (value: string) => (value === '' ? undefined : Number(value))
+  function pickDecade(decade: number) {
+    if (single && decade === low) {
+      // Lo stesso decennio di nuovo: il periodo si toglie
+      onChange({ year_from: undefined, year_to: undefined })
+    } else if (single) {
+      // Un secondo decennio: il periodo si allarga fino a lui, da qualunque lato
+      onChange({
+        year_from: Math.min(low, decade),
+        year_to: Math.max(low, decade) + 9,
+      })
+    } else {
+      // Nessun periodo, o un periodo già allargato: si riparte da un decennio solo
+      onChange({ year_from: decade, year_to: decade + 9 })
+    }
+  }
+
+  const powertrainLabel = (powertrain: PowertrainType | undefined) =>
+    powertrain
+      ? t(`archive.filters.powertrains.${powertrain}`)
+      : t('archive.filters.any')
 
   return (
-    <div className="flex flex-col gap-8 lg:flex-row lg:flex-wrap lg:items-end lg:gap-10">
-      <fieldset>
-        <legend className={labelClass}>
-          {t('archive.filters.powertrain')}
-        </legend>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {POWERTRAINS.map((powertrain) => {
+    <div className="flex flex-col gap-8">
+      <div role="group" aria-labelledby={powertrainId}>
+        <div className="flex items-baseline justify-between gap-4">
+          <span id={powertrainId} className={labelClass}>
+            {t('archive.filters.powertrain')}
+          </span>
+          <span aria-hidden="true" className="text-xs text-neutral-200">
+            {powertrainLabel(filters.powertrain)}
+          </span>
+        </div>
+
+        {/* Quattro scelte attaccate: una sola alla volta */}
+        <div className="border-linea mt-3 grid grid-cols-4 border">
+          {POWERTRAINS.map((powertrain, place) => {
             const active = filters.powertrain === powertrain
 
             return (
@@ -94,82 +84,91 @@ export function FilterControls({ filters, onChange }: FilterControlsProps) {
                 type="button"
                 aria-pressed={active}
                 onClick={() => onChange({ powertrain })}
-                className={`${pillClass} ${
+                className={[
+                  'h-10 text-[0.625rem] font-semibold tracking-[0.14em] uppercase transition-colors md:text-[0.6875rem]',
+                  'focus-visible:outline-rosso-acceso focus-visible:outline-2 focus-visible:-outline-offset-2',
+                  place > 0 ? 'border-linea border-l' : '',
                   active
-                    ? 'text-notte border-white bg-white'
-                    : 'border-linea text-neutral-300 hover:border-neutral-500 hover:text-white'
-                }`}
+                    ? 'text-notte bg-white'
+                    : 'text-neutral-400 hover:text-white',
+                ].join(' ')}
               >
-                {powertrain
-                  ? t(`archive.filters.powertrains.${powertrain}`)
-                  : t('archive.filters.any')}
+                {powertrainLabel(powertrain)}
               </button>
             )
           })}
         </div>
-      </fieldset>
+      </div>
 
-      <fieldset>
-        <legend className={labelClass}>{t('archive.filters.period')}</legend>
-        <div className="mt-3 grid grid-cols-2 gap-3 lg:flex">
-          <Select
-            label={t('archive.filters.from')}
-            value={filters.year_from?.toString() ?? ''}
-            onChange={(value) => onChange({ year_from: toYear(value) })}
-          >
-            <option value="">{t('archive.filters.anyYear')}</option>
-            {DECADES.map((decade) => (
-              // Non si può partire da un decennio successivo alla fine scelta
-              <option
-                key={decade}
-                value={decade}
-                disabled={
-                  filters.year_to !== undefined && decade > filters.year_to
-                }
-              >
-                {decadeLabel(decade)}
-              </option>
-            ))}
-          </Select>
-
-          <Select
-            label={t('archive.filters.to')}
-            value={filters.year_to?.toString() ?? ''}
-            onChange={(value) => onChange({ year_to: toYear(value) })}
-          >
-            <option value="">{t('archive.filters.anyYear')}</option>
-            {DECADES.map((decade) => (
-              // "Al" un decennio significa fino al suo ultimo anno: Anni '60 → 1969
-              <option
-                key={decade}
-                value={decade + 9}
-                disabled={
-                  filters.year_from !== undefined &&
-                  decade + 9 < filters.year_from
-                }
-              >
-                {decadeLabel(decade)}
-              </option>
-            ))}
-          </Select>
+      <div role="group" aria-labelledby={periodId}>
+        <div className="flex items-baseline justify-between gap-4">
+          <span id={periodId} className={labelClass}>
+            {t('archive.filters.period')}
+          </span>
+          <span aria-hidden="true" className="text-xs text-neutral-200">
+            {periodLabel(t, filters)}
+          </span>
         </div>
-      </fieldset>
+        <p className="mt-2 text-xs leading-relaxed text-neutral-500">
+          {t('archive.filters.periodHint')}
+        </p>
 
-      <Select
-        label={t('archive.filters.sort')}
-        value={filters.sort ?? ''}
-        onChange={(value) =>
-          onChange({
-            sort: value === '' ? undefined : (value as ModelFilters['sort']),
-          })
-        }
-      >
-        {/* Il valore vuoto è il predefinito dell'API: nome dalla A alla Z */}
-        <option value="">{t('archive.filters.sorts.nameAsc')}</option>
-        <option value="-name">{t('archive.filters.sorts.nameDesc')}</option>
-        <option value="-year">{t('archive.filters.sorts.newest')}</option>
-        <option value="year">{t('archive.filters.sorts.oldest')}</option>
-      </Select>
+        {/* La linea del tempo: il tratto rosso va dal primo all'ultimo decennio scelto */}
+        <div
+          aria-hidden="true"
+          className="bg-linea relative mx-0.5 mt-6 h-[3px]"
+        >
+          {hasPeriod && (
+            <>
+              <span
+                className="bg-rosso absolute inset-y-0 transition-all duration-300"
+                style={{
+                  left: `${centerOf(low)}%`,
+                  width: `${centerOf(high) - centerOf(low)}%`,
+                }}
+              />
+              <span
+                className="absolute top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white shadow-[0_0_0_3px_var(--color-ombra)]"
+                style={{ left: `${centerOf(low)}%` }}
+              />
+              {!single && (
+                <span
+                  className="absolute top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white shadow-[0_0_0_3px_var(--color-ombra)]"
+                  style={{ left: `${centerOf(high)}%` }}
+                />
+              )}
+            </>
+          )}
+        </div>
+
+        <div
+          className="mt-1 grid"
+          style={{
+            gridTemplateColumns: `repeat(${DECADES.length}, minmax(0, 1fr))`,
+          }}
+        >
+          {DECADES.map((decade) => {
+            const inside = hasPeriod && decade >= low && decade <= high
+
+            return (
+              <button
+                key={decade}
+                type="button"
+                aria-label={decadeLabel(t, decade)}
+                aria-pressed={inside}
+                onClick={() => pickDecade(decade)}
+                className={[
+                  'h-9 text-[0.625rem] font-semibold tabular-nums transition-colors md:text-[0.6875rem]',
+                  'focus-visible:outline-rosso-acceso focus-visible:outline-2 focus-visible:-outline-offset-2',
+                  inside ? 'text-white' : 'text-neutral-500 hover:text-white',
+                ].join(' ')}
+              >
+                {shortDecade(decade)}
+              </button>
+            )
+          })}
+        </div>
+      </div>
     </div>
   )
 }

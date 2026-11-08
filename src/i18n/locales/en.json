@@ -20,7 +20,7 @@
     "apiCode": "API code",
     "apiDocs": "API documentation",
     "newTab": "(opens in a new tab)",
-    "rights": "© {{year}} Ferrary. Independent archive, not affiliated with Ferrari S.p.A."
+    "rights": "© {{year}} Ferrary. Independent archive, not affiliated with Ferrari"
   },
   "home": {
     "hero": {
@@ -61,7 +61,8 @@
       "text": "Every Ferrari belongs to a family: pick one, and the archive will show you only those.",
       "models_one": "{{count}} model",
       "models_other": "{{count}} models",
-      "error": "Unable to load the families."
+      "error": "Unable to load the families.",
+      "showing": "On display"
     },
     "invite": {
       "titleStart": "The whole archive,",
@@ -248,7 +249,15 @@
     "searchLabel": "Search by name",
     "searchPlaceholder": "Search a Ferrari, e.g. F40",
     "family": "Family",
-    "allFamilies": "All",
+    "allFamilies": "All families",
+    "groups": {
+      "road": "Road cars",
+      "racing": "Racing",
+      "concept": "Concepts",
+      "other": "Other"
+    },
+    "activeFilters": "Active filters",
+    "removeFilter": "Remove the {{name}} filter",
     "filters": {
       "open": "Filters",
       "title": "Filters",
@@ -273,7 +282,12 @@
         "nameDesc": "Name, Z to A",
         "newest": "Newest first",
         "oldest": "Oldest first"
-      }
+      },
+      "active_one": "{{count}} active",
+      "active_other": "{{count}} active",
+      "reset": "Reset",
+      "periodHint": "Tap a decade, then another to widen the period.",
+      "range": "{{from}} – {{to}}"
     }
   },
   "catalogs": {

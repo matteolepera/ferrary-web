@@ -18,7 +18,7 @@ const arrowClass = [
 ].join(' ')
 
 /**
- * Il carosello della home: un'auto alla volta, a tutta larghezza, come un'opera in una sala.
+ * Il carosello della home: un'auto alla volta, a tutta larghezza, come un'opera in una sala buia.
  * Tutta la slide è un link alla scheda del modello.
  */
 export function FeaturedCarousel() {
