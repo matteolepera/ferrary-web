@@ -4,12 +4,17 @@ import { renderRoute } from '@/test/utils'
 /** Il piè di pagina, quando la pagina è arrivata */
 const footer = async () => within(await screen.findByRole('contentinfo'))
 
-test("elenca le famiglie dell'API con i link all'archivio filtrato", async () => {
+test('firma il footer con il logo e il copyright, senza le famiglie', async () => {
   renderRoute('/modelli')
 
+  const content = await footer()
+
   expect(
-    await (await footer()).findByRole('link', { name: 'Stradali' }),
-  ).toHaveAttribute('href', '/modelli?category=stradali')
+    content.getByText(/Archivio indipendente, non affiliato a Ferrari/),
+  ).toHaveTextContent(String(new Date().getFullYear()))
+  expect(
+    content.queryByRole('navigation', { name: 'Famiglie' }),
+  ).not.toBeInTheDocument()
 })
 
 test('apre i link del progetto in una nuova scheda, in modo sicuro', async () => {

@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { Logo } from '@/components/Logo'
-import { useCategories } from '@/hooks/useCategories'
 
 const GITHUB = 'https://github.com/matteolepera'
 
@@ -11,11 +10,10 @@ const linkClass =
   'text-sm text-neutral-300 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rosso-acceso'
 
 /**
- * Piè di pagina del sito pubblico, presente in tutte le pagine.
+ * Piè di pagina del sito pubblico: il logo come firma, con il copyright, e tre colonne di link.
  */
 export function SiteFooter() {
   const { t } = useTranslation()
-  const { data: families } = useCategories()
   const year = new Date().getFullYear()
 
   // I link esterni si aprono in una nuova scheda: chi usa un lettore di schermo lo sente annunciare
@@ -29,15 +27,16 @@ export function SiteFooter() {
   return (
     <footer className="border-linea border-t">
       {/* In fondo, su mobile e tablet, lo spazio per il dock */}
-      <div className="mx-auto max-w-[1360px] px-5 pt-12 pb-32 md:px-10 md:pt-16 lg:pb-10">
-        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.4fr_repeat(4,1fr)] lg:gap-12">
-          <div className="md:col-span-2 lg:col-span-1">
-            <Logo className="h-7 w-auto" />
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-neutral-400">
-              {t('footer.tagline')}
-            </p>
-          </div>
+      <div className="mx-auto flex max-w-[1360px] flex-col gap-12 px-5 pt-12 pb-32 md:px-10 md:pt-16 lg:flex-row lg:justify-between lg:gap-16 lg:pb-16">
+        <div>
+          <Logo className="h-10 w-auto md:h-12" />
+          <p className="mt-5 max-w-[34ch] text-xs leading-relaxed text-neutral-400">
+            {t('footer.rights', { year })}
+          </p>
+        </div>
 
+        {/* Telefono: Esplora e Cataloghi affiancati, Il progetto sotto; dal tablet tre colonne */}
+        <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-3 md:gap-x-16">
           <nav aria-label={t('footer.explore')}>
             <h2 className={headingClass}>{t('footer.explore')}</h2>
             <ul className="mt-4 flex flex-col gap-2.5">
@@ -58,24 +57,6 @@ export function SiteFooter() {
               </li>
             </ul>
           </nav>
-
-          {families && families.length > 0 && (
-            <nav aria-label={t('footer.families')}>
-              <h2 className={headingClass}>{t('footer.families')}</h2>
-              <ul className="mt-4 flex flex-col gap-2.5">
-                {families.map((family) => (
-                  <li key={family.id}>
-                    <Link
-                      to={`/modelli?category=${family.slug}`}
-                      className={linkClass}
-                    >
-                      {family.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          )}
 
           <nav aria-label={t('catalogs.eyebrow')}>
             <h2 className={headingClass}>{t('catalogs.eyebrow')}</h2>
@@ -112,10 +93,6 @@ export function SiteFooter() {
             </ul>
           </nav>
         </div>
-
-        <p className="border-linea mt-12 border-t pt-6 text-xs leading-relaxed text-neutral-400 md:mt-16">
-          {t('footer.rights', { year })}
-        </p>
       </div>
     </footer>
   )
