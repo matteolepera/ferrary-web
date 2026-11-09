@@ -1,10 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  Outlet,
-  ScrollRestoration,
-  useLocation,
-} from 'react-router'
+import { Outlet, ScrollRestoration, useLocation } from 'react-router'
 import { SiteHeader } from '@/components/layout/SiteHeader'
 import { Dock } from '@/components/layout/Dock'
 import { SiteFooter } from '@/components/layout/SiteFooter'
