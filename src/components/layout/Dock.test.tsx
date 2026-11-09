@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { fireEvent, screen, within } from '@testing-library/react'
 import { renderRoute } from '@/test/utils'
 
 /** Il dock, quando la pagina è arrivata */
@@ -17,9 +17,9 @@ test('ha le voci della barra del desktop, con la ricerca', async () => {
     'href',
     '/storia',
   )
-  expect(nav.getByRole('link', { name: 'Cerca' })).toHaveAttribute(
-    'href',
-    '/modelli',
+  expect(nav.getByRole('button', { name: 'Cerca' })).toHaveAttribute(
+    'aria-expanded',
+    'false',
   )
   expect(nav.queryByRole('link', { name: 'Famiglie' })).not.toBeInTheDocument()
 })
@@ -40,12 +40,24 @@ test('il menu contiene i cataloghi', async () => {
   )
 })
 
-test('"Cerca" apre l\'archivio con il campo di ricerca già attivo', async () => {
+test('"Cerca" apre la ricerca a tutto schermo, e Invio apre l\'archivio', async () => {
   renderRoute('/storia')
 
-  fireEvent.click((await dock()).getByRole('link', { name: 'Cerca' }))
+  fireEvent.click((await dock()).getByRole('button', { name: 'Cerca' }))
 
-  await waitFor(() =>
-    expect(screen.getByLabelText('Cerca per nome')).toHaveFocus(),
+  const search = within(
+    screen.getByRole('dialog', { name: "Cerca nell'archivio" }),
   )
+  const field = search.getByRole('combobox', { name: "Cerca nell'archivio" })
+  expect(field).toHaveFocus()
+
+  fireEvent.change(field, { target: { value: 'F40' } })
+  expect(await search.findByRole('option', { name: /F40/ })).toBeInTheDocument()
+
+  fireEvent.keyDown(field, { key: 'Enter' })
+
+  expect(await screen.findByLabelText('Cerca per nome')).toHaveValue('F40')
+  expect(
+    screen.queryByRole('dialog', { name: "Cerca nell'archivio" }),
+  ).not.toBeInTheDocument()
 })

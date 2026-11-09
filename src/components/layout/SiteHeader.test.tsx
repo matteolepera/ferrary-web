@@ -75,8 +75,9 @@ test('Esc chiude la ricerca e riporta le voci', async () => {
     { key: 'Escape' },
   )
 
+  // Le voci tornano: la navigazione principale ha di nuovo il suo "Cerca"
   expect(
-    await screen.findByRole('button', { name: 'Cerca' }),
+    (await mainNav()).getByRole('button', { name: 'Cerca' }),
   ).toBeInTheDocument()
   expect(
     screen.queryByRole('combobox', { name: "Cerca nell'archivio" }),

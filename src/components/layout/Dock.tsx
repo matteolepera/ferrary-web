@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, NavLink, useLocation } from 'react-router'
 import monogram from '@/assets/brand/ferrary-y-rosso.svg'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
+import { MobileSearch } from '@/components/layout/MobileSearch'
 import { catalogLinks, isCatalogPath } from '@/components/layout/publicNav'
 
 // Su mobile icona sopra e etichetta sotto; dal tablet in su sulla stessa riga
@@ -21,12 +22,12 @@ const itemClass = [
 const stateClass = (active: boolean) =>
   active
     ? [
-      'text-white',
-      "before:pointer-events-none before:absolute before:inset-x-1 before:-top-1.5 before:bottom-0 before:content-['']",
-      'before:bg-[radial-gradient(ellipse_60%_70%_at_50%_0%,rgba(255,255,255,0.2),rgba(255,255,255,0.04)_55%,transparent_75%)]',
-      "after:absolute after:-top-1.5 after:left-1/2 after:h-[3px] after:w-4 after:-translate-x-1/2 after:-skew-x-[28deg] after:content-['']",
-      'after:bg-rosso-acceso after:shadow-[0_0_10px_rgba(255,59,48,0.8)]',
-    ].join(' ')
+        'text-white',
+        "before:pointer-events-none before:absolute before:inset-x-1 before:-top-1.5 before:bottom-0 before:content-['']",
+        'before:bg-[radial-gradient(ellipse_60%_70%_at_50%_0%,rgba(255,255,255,0.2),rgba(255,255,255,0.04)_55%,transparent_75%)]',
+        "after:absolute after:-top-1.5 after:left-1/2 after:h-[3px] after:w-4 after:-translate-x-1/2 after:-skew-x-[28deg] after:content-['']",
+        'after:bg-rosso-acceso after:shadow-[0_0_10px_rgba(255,59,48,0.8)]',
+      ].join(' ')
     : 'text-neutral-400 hover:text-white'
 
 const iconClass = 'relative size-5 md:size-4'
@@ -42,15 +43,16 @@ export function Dock() {
   const { t } = useTranslation()
   const { pathname } = useLocation()
   const [open, setOpen] = useState(false)
+  const [searching, setSearching] = useState(false)
   const firstLink = useRef<HTMLAnchorElement>(null)
 
-  // Con il menu aperto: focus sulla prima voce, Esc per chiudere, pagina sotto ferma
+  // Con il menu o la ricerca aperti: pagina sotto ferma; con il menu, focus sulla prima voce ed Esc per chiudere
   useEffect(() => {
-    if (!open) {
+    if (!open && !searching) {
       return
     }
 
-    firstLink.current?.focus()
+    if (open) firstLink.current?.focus()
     document.body.style.overflow = 'hidden'
 
     function onKeyDown(event: KeyboardEvent) {
@@ -60,12 +62,12 @@ export function Dock() {
     }
     document.addEventListener('keydown', onKeyDown)
 
-    // Pulizia: quando il menu si chiude, si annulla tutto
+    // Pulizia: quando il menu o la ricerca si chiudono, si annulla tutto
     return () => {
       document.body.style.overflow = ''
       document.removeEventListener('keydown', onKeyDown)
     }
-  }, [open])
+  }, [open, searching])
 
   const close = () => setOpen(false)
 
@@ -102,6 +104,8 @@ export function Dock() {
         </div>
       )}
 
+      {searching && <MobileSearch onClose={() => setSearching(false)} />}
+
       {/* Il dock: icone con etichetta, il monogramma al centro */}
       <nav
         aria-label={t('nav.quick')}
@@ -120,7 +124,7 @@ export function Dock() {
           aria-hidden="true"
           className={[
             'absolute inset-0 rounded-[4px] rounded-tl-[22px] backdrop-blur-xl',
-            'bg-[repeating-linear-gradient(45deg,rgba(255,255,255,0.022)_0_2px,transparent_2px_6px)] bg-neutral-900/85',
+            'bg-neutral-900/85 bg-[repeating-linear-gradient(45deg,rgba(255,255,255,0.022)_0_2px,transparent_2px_6px)]',
             // Il bordo e il filo di luce in alto, come ombre interne: un bordo vero verrebbe tagliato con l'angolo
             'shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12),inset_0_1px_0_rgba(255,255,255,0.08)]',
             '[clip-path:polygon(0_0,100%_0,100%_calc(100%-22px),calc(100%-22px)_100%,0_100%)]',
@@ -130,13 +134,27 @@ export function Dock() {
           <span className="absolute right-0 bottom-0 h-px w-[31px] origin-bottom-right -rotate-45 bg-white/12" />
         </span>
 
-        <NavLink to="/modelli" className={({ isActive }) => `${itemClass} ${stateClass(isActive)}`}>
-          <CarFront aria-hidden="true" strokeWidth={1.75} className={iconClass} />
+        <NavLink
+          to="/modelli"
+          className={({ isActive }) => `${itemClass} ${stateClass(isActive)}`}
+        >
+          <CarFront
+            aria-hidden="true"
+            strokeWidth={1.75}
+            className={iconClass}
+          />
           <span className="relative">{t('nav.archive')}</span>
         </NavLink>
 
-        <NavLink to="/storia" className={({ isActive }) => `${itemClass} ${stateClass(isActive)}`}>
-          <Hourglass aria-hidden="true" strokeWidth={1.75} className={iconClass} />
+        <NavLink
+          to="/storia"
+          className={({ isActive }) => `${itemClass} ${stateClass(isActive)}`}
+        >
+          <Hourglass
+            aria-hidden="true"
+            strokeWidth={1.75}
+            className={iconClass}
+          />
           <span className="relative">{t('nav.story')}</span>
         </NavLink>
 
@@ -153,16 +171,27 @@ export function Dock() {
           <img src={monogram} alt="" className="h-6 w-auto md:h-7" />
         </Link>
 
-        {/* Cerca: l'archivio con il campo di ricerca già attivo e la tastiera aperta */}
-        <Link to="/modelli" state={{ focusSearch: true }} className={`${itemClass} ${stateClass(false)}`}>
+        {/* Cerca: la ricerca a tutto schermo, con il campo in alto e la tastiera aperta */}
+        <button
+          type="button"
+          aria-expanded={searching}
+          onClick={() => {
+            setOpen(false)
+            setSearching(!searching)
+          }}
+          className={`${itemClass} ${stateClass(searching)}`}
+        >
           <Search aria-hidden="true" strokeWidth={1.75} className={iconClass} />
           <span className="relative">{t('nav.search')}</span>
-        </Link>
+        </button>
 
         <button
           type="button"
           aria-expanded={open}
-          onClick={() => setOpen(!open)}
+          onClick={() => {
+            setSearching(false)
+            setOpen(!open)
+          }}
           // Acceso anche sulle pagine dei cataloghi, che stanno nel menu
           className={`${itemClass} ${stateClass(open || isCatalogPath(pathname))}`}
         >
@@ -171,7 +200,9 @@ export function Dock() {
           ) : (
             <Menu aria-hidden="true" strokeWidth={1.75} className={iconClass} />
           )}
-          <span className="relative">{open ? t('nav.close') : t('nav.menu')}</span>
+          <span className="relative">
+            {open ? t('nav.close') : t('nav.menu')}
+          </span>
         </button>
       </nav>
     </>
