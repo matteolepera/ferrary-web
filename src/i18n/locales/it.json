@@ -9,7 +9,13 @@
     "menu": "Menu",
     "close": "Chiudi",
     "quick": "Navigazione rapida",
-    "skip": "Vai al contenuto"
+    "skip": "Vai al contenuto",
+    "searchLabel": "Cerca nell'archivio",
+    "searchPlaceholder": "Cerca una Ferrari, ad esempio F40",
+    "searchAll": "Tutti i risultati per «{{term}}»",
+    "searchEmpty": "Nessuna Ferrari con questo nome",
+    "searchClose": "Chiudi la ricerca",
+    "searchCancel": "Annulla"
   },
   "footer": {
     "tagline": "Il museo digitale delle Ferrari: la storia del Cavallino, modello dopo modello.",
