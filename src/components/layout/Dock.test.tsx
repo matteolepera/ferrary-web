@@ -1,23 +1,51 @@
-import { fireEvent, screen, within } from '@testing-library/react'
+import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { renderRoute } from '@/test/utils'
 
-const dock = () => within(screen.getByRole('navigation', { name: 'Navigazione rapida' }))
+/** Il dock, quando la pagina è arrivata */
+const dock = async () =>
+  within(await screen.findByRole('navigation', { name: 'Navigazione rapida' }))
 
-test('ha le stesse voci della pillola del desktop, senza la ricerca', () => {
+test('ha le voci della barra del desktop, con la ricerca', async () => {
   renderRoute('/modelli')
 
-  expect(dock().getByRole('link', { name: 'Archivio' })).toHaveAttribute('aria-current', 'page')
-  expect(dock().getByRole('link', { name: 'Famiglie' })).toHaveAttribute('href', '/#famiglie')
-  expect(dock().getByRole('link', { name: 'La storia' })).toHaveAttribute('href', '/storia')
-  expect(dock().queryByRole('link', { name: 'Cerca' })).not.toBeInTheDocument()
+  const nav = await dock()
+  expect(nav.getByRole('link', { name: 'Archivio' })).toHaveAttribute(
+    'aria-current',
+    'page',
+  )
+  expect(nav.getByRole('link', { name: 'La storia' })).toHaveAttribute(
+    'href',
+    '/storia',
+  )
+  expect(nav.getByRole('link', { name: 'Cerca' })).toHaveAttribute(
+    'href',
+    '/modelli',
+  )
+  expect(nav.queryByRole('link', { name: 'Famiglie' })).not.toBeInTheDocument()
 })
 
-test('il menu contiene i cataloghi', () => {
+test('il menu contiene i cataloghi', async () => {
   renderRoute('/modelli')
 
-  fireEvent.click(dock().getByRole('button', { name: 'Menu' }))
+  fireEvent.click((await dock()).getByRole('button', { name: 'Menu' }))
 
   const menu = within(screen.getByRole('dialog', { name: 'Menu' }))
-  expect(menu.getByRole('link', { name: 'Motori' })).toHaveAttribute('href', '/motori')
-  expect(menu.getByRole('link', { name: 'Piloti' })).toHaveAttribute('href', '/piloti')
+  expect(menu.getByRole('link', { name: 'Motori' })).toHaveAttribute(
+    'href',
+    '/motori',
+  )
+  expect(menu.getByRole('link', { name: 'Piloti' })).toHaveAttribute(
+    'href',
+    '/piloti',
+  )
+})
+
+test('"Cerca" apre l\'archivio con il campo di ricerca già attivo', async () => {
+  renderRoute('/storia')
+
+  fireEvent.click((await dock()).getByRole('link', { name: 'Cerca' }))
+
+  await waitFor(() =>
+    expect(screen.getByLabelText('Cerca per nome')).toHaveFocus(),
+  )
 })

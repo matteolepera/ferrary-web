@@ -1,11 +1,10 @@
-import { CarFront, Hourglass, Layers, Menu, X } from 'lucide-react'
+import { CarFront, Hourglass, Menu, Search, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, NavLink, useLocation } from 'react-router'
 import monogram from '@/assets/brand/ferrary-y-rosso.svg'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { catalogLinks, isCatalogPath } from '@/components/layout/publicNav'
-import { useSectionInView } from '@/hooks/useSectionInView'
 
 // Su mobile icona sopra e etichetta sotto; dal tablet in su sulla stessa riga
 const itemClass = [
@@ -15,8 +14,9 @@ const itemClass = [
   'focus-visible:outline-2 focus-visible:outline-rosso-acceso',
 ].join(' ')
 
-/** La voce attiva è rossa, come nella pillola del desktop */
-const stateClass = (active: boolean) => (active ? 'text-rosso-acceso' : 'text-neutral-300 hover:text-white')
+/** La voce attiva è rossa, come il segno della barra del desktop */
+const stateClass = (active: boolean) =>
+  active ? 'text-rosso-acceso' : 'text-neutral-300 hover:text-white'
 
 const iconClass = 'size-5 md:size-4'
 
@@ -25,16 +25,13 @@ const menuLinkClass =
 
 /**
  * Navigazione di mobile e tablet: un dock fluttuante in basso, con il monogramma al centro.
- * Le voci sono le stesse della pillola del desktop; i cataloghi e la lingua stanno nel menu.
+ * Le voci sono quelle della barra del desktop; i cataloghi e la lingua stanno nel menu.
  */
 export function Dock() {
   const { t } = useTranslation()
   const { pathname } = useLocation()
   const [open, setOpen] = useState(false)
   const firstLink = useRef<HTMLAnchorElement>(null)
-
-  // Nella home, "Famiglie" si accende quando la sezione arriva al centro dello schermo
-  const familiesActive = useSectionInView('famiglie', pathname === '/')
 
   // Con il menu aperto: focus sulla prima voce, Esc per chiudere, pagina sotto ferma
   useEffect(() => {
@@ -104,19 +101,29 @@ export function Dock() {
           'md:max-w-xl lg:hidden',
         ].join(' ')}
       >
-        <NavLink to="/modelli" className={({ isActive }) => `${itemClass} ${stateClass(isActive)}`}>
-          <CarFront aria-hidden="true" strokeWidth={1.75} className={iconClass} />
+        <NavLink
+          to="/modelli"
+          className={({ isActive }) => `${itemClass} ${stateClass(isActive)}`}
+        >
+          <CarFront
+            aria-hidden="true"
+            strokeWidth={1.75}
+            className={iconClass}
+          />
           {t('nav.archive')}
         </NavLink>
 
-        <Link
-          to="/#famiglie"
-          aria-current={familiesActive ? 'true' : undefined}
-          className={`${itemClass} ${stateClass(familiesActive)}`}
+        <NavLink
+          to="/storia"
+          className={({ isActive }) => `${itemClass} ${stateClass(isActive)}`}
         >
-          <Layers aria-hidden="true" strokeWidth={1.75} className={iconClass} />
-          {t('nav.families')}
-        </Link>
+          <Hourglass
+            aria-hidden="true"
+            strokeWidth={1.75}
+            className={iconClass}
+          />
+          {t('nav.story')}
+        </NavLink>
 
         {/* Il monogramma: sollevato sopra la barra, riporta alla home */}
         <Link
@@ -131,10 +138,15 @@ export function Dock() {
           <img src={monogram} alt="" className="h-6 w-auto md:h-7" />
         </Link>
 
-        <NavLink to="/storia" className={({ isActive }) => `${itemClass} ${stateClass(isActive)}`}>
-          <Hourglass aria-hidden="true" strokeWidth={1.75} className={iconClass} />
-          {t('nav.story')}
-        </NavLink>
+        {/* Cerca: l'archivio con il campo di ricerca già attivo e la tastiera aperta */}
+        <Link
+          to="/modelli"
+          state={{ focusSearch: true }}
+          className={`${itemClass} ${stateClass(false)}`}
+        >
+          <Search aria-hidden="true" strokeWidth={1.75} className={iconClass} />
+          {t('nav.search')}
+        </Link>
 
         <button
           type="button"

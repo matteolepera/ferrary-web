@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useLocation } from 'react-router'
 import { ArchiveSearch } from '@/components/archive/ArchiveSearch'
 import { FamilySelect } from '@/components/archive/FamilySelect'
 import { FilterControls } from '@/components/archive/FilterControls'
@@ -20,6 +21,11 @@ export function ArchivePage() {
   const { filters, setFilters, clearFilters } = useArchiveFilters()
   const { data, isPending, isError, isPlaceholderData, refetch } =
     useModels(filters)
+
+  // Arrivando dal pulsante "Cerca", il campo di ricerca prende subito il cursore
+  const location = useLocation()
+  const focusSearch =
+    (location.state as { focusSearch?: boolean } | null)?.focusSearch === true
 
   const meta = data?.meta
   // La pagina non conta come filtro: "azzera" serve solo se l'utente ha scelto qualcosa
@@ -56,6 +62,7 @@ export function ArchivePage() {
           value={filters.search ?? ''}
           // Mentre si digita, l'indirizzo viene sostituito: Indietro non cancella una lettera alla volta
           onChange={(search) => setFilters({ search }, { replace: true })}
+          autoFocus={focusSearch}
         />
 
         {/* Telefono: famiglia su una riga, filtri e ordinamento sotto; tablet: tutti e tre in fila */}
