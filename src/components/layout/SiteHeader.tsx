@@ -52,8 +52,8 @@ export function SiteHeader() {
   }, [pathname, i18n.language, searching])
 
   return (
-    // Su mobile scorre via con la pagina; dal desktop resta ferma in alto
-    <header className="absolute inset-x-0 top-0 z-30 lg:fixed">
+    // Solo dal desktop: su telefono e tablet logo, ricerca e lingua stanno nel dock
+    <header className="fixed inset-x-0 top-0 z-30 hidden lg:block">
       {/* Dal desktop, appena si scorre: un velo scuro dietro la barra */}
       <div
         aria-hidden="true"
@@ -63,21 +63,12 @@ export function SiteHeader() {
         ].join(' ')}
       />
 
-      {/*
-        Una riga sola, che cambia forma: su mobile logo e lingua ai due lati,
-        dal desktop la barra della Y al centro, con il logo, le voci e la lingua dentro
-      */}
-      <div
-        className={[
-          'relative mx-auto flex max-w-[1360px] items-center justify-between px-5 py-5 md:px-10 md:py-6',
-          'lg:mt-6 lg:h-[3.75rem] lg:w-[50rem] lg:max-w-none lg:justify-start lg:py-0 lg:pr-5 lg:pl-7',
-          'lg:drop-shadow-[0_14px_30px_rgba(0,0,0,0.55)]',
-        ].join(' ')}
-      >
-        <YBar className="hidden lg:block" />
+      {/* La barra della Y al centro, con il logo, le voci e la lingua dentro */}
+      <div className="relative mx-auto mt-6 flex h-[3.75rem] w-[50rem] items-center pr-5 pl-7 drop-shadow-[0_14px_30px_rgba(0,0,0,0.55)]">
+        <YBar />
 
-        <Link to="/" aria-label={t('nav.home')} className="relative lg:mr-6">
-          <Logo className="h-7 w-auto md:h-8 lg:h-7" />
+        <Link to="/" aria-label={t('nav.home')} className="relative mr-6">
+          <Logo className="h-7 w-auto" />
         </Link>
 
         {/* Dal desktop: le voci, oppure il campo di ricerca. Su mobile le voci stanno nel dock */}
@@ -86,7 +77,7 @@ export function SiteHeader() {
         ) : (
           <nav
             aria-label={t('nav.main')}
-            className="relative hidden items-center lg:flex"
+            className="relative flex items-center"
           >
             <ul ref={list} className="relative flex items-center">
               {/* Il riflettore: un cono di luce dall'alto sulla voce attiva, che scivola da una voce all'altra */}
@@ -143,7 +134,7 @@ export function SiteHeader() {
 
         {/* Durante la ricerca la lingua lascia tutto lo spazio al campo */}
         {!searching && (
-          <div className="relative lg:ml-auto">
+          <div className="relative ml-auto">
             <LanguageSwitcher />
           </div>
         )}
