@@ -40,17 +40,45 @@ test('apre il menu dei cataloghi, e lo chiude con Esc', async () => {
   expect(toggle).toHaveAttribute('aria-expanded', 'false')
 })
 
-test('ha la ricerca nella barra, e un solo logo che porta alla home', async () => {
+test('ha un solo logo che porta alla home', async () => {
   renderRoute('/storia')
-
-  const nav = await mainNav()
-  expect(nav.getByRole('link', { name: 'Cerca' })).toHaveAttribute(
-    'href',
-    '/modelli',
-  )
+  await mainNav()
 
   const header = within(screen.getByRole('banner'))
   expect(
     header.getAllByRole('link', { name: 'Ferrary, torna alla home' }),
   ).toHaveLength(1)
+})
+
+test("cerca nella barra, e Invio apre l'archivio con tutti i risultati", async () => {
+  renderRoute('/storia')
+
+  fireEvent.click((await mainNav()).getByRole('button', { name: 'Cerca' }))
+  const field = screen.getByRole('combobox', { name: "Cerca nell'archivio" })
+  expect(field).toHaveFocus()
+
+  fireEvent.change(field, { target: { value: 'F40' } })
+  expect(await screen.findByRole('option', { name: /F40/ })).toBeInTheDocument()
+
+  fireEvent.keyDown(field, { key: 'Enter' })
+
+  // L'archivio, con la ricerca già scritta nel suo campo
+  expect(await screen.findByLabelText('Cerca per nome')).toHaveValue('F40')
+})
+
+test('Esc chiude la ricerca e riporta le voci', async () => {
+  renderRoute('/storia')
+
+  fireEvent.click((await mainNav()).getByRole('button', { name: 'Cerca' }))
+  fireEvent.keyDown(
+    screen.getByRole('combobox', { name: "Cerca nell'archivio" }),
+    { key: 'Escape' },
+  )
+
+  expect(
+    await screen.findByRole('button', { name: 'Cerca' }),
+  ).toBeInTheDocument()
+  expect(
+    screen.queryByRole('combobox', { name: "Cerca nell'archivio" }),
+  ).not.toBeInTheDocument()
 })

@@ -1,10 +1,11 @@
 import { Search } from 'lucide-react'
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useCallback, useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, NavLink, useLocation } from 'react-router'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { Logo } from '@/components/Logo'
 import { CatalogsMenu } from '@/components/layout/CatalogsMenu'
+import { HeaderSearch } from '@/components/layout/HeaderSearch'
 import { YBar } from '@/components/layout/YBar'
 import { useScrolled } from '@/hooks/useScrolled'
 
@@ -30,6 +31,16 @@ export function SiteHeader() {
   const list = useRef<HTMLUListElement>(null)
   const [spot, setSpot] = useState<{ left: number; width: number } | null>(null)
 
+  // La barra cambia forma: le voci, oppure il campo di ricerca
+  const [searching, setSearching] = useState(false)
+  const searchButton = useRef<HTMLButtonElement>(null)
+
+  // Chiusa la ricerca, il focus torna sul pulsante "Cerca": chi usa la tastiera non si perde
+  const closeSearch = useCallback(() => {
+    setSearching(false)
+    requestAnimationFrame(() => searchButton.current?.focus())
+  }, [])
+
   useLayoutEffect(() => {
     const active = list.current?.querySelector<HTMLElement>(
       '[aria-current="page"], [data-active]',
@@ -37,8 +48,8 @@ export function SiteHeader() {
     setSpot(
       active ? { left: active.offsetLeft, width: active.offsetWidth } : null,
     )
-    // Anche cambiando lingua: le voci cambiano larghezza
-  }, [pathname, i18n.language])
+    // Anche cambiando lingua, e quando le voci tornano dopo la ricerca: vanno rimisurate
+  }, [pathname, i18n.language, searching])
 
   return (
     // Su mobile scorre via con la pagina; dal desktop resta ferma in alto
@@ -69,65 +80,73 @@ export function SiteHeader() {
           <Logo className="h-7 w-auto md:h-8 lg:h-7" />
         </Link>
 
-        {/* Le voci: solo dal desktop, su mobile stanno nel dock */}
-        <nav
-          aria-label={t('nav.main')}
-          className="relative hidden items-center lg:flex"
-        >
-          <ul ref={list} className="relative flex items-center">
-            {/* Il riflettore: un cono di luce dall'alto sulla voce attiva, che scivola da una voce all'altra */}
-            <li
-              aria-hidden="true"
-              className="pointer-events-none absolute -top-2 h-[3.75rem] bg-[radial-gradient(ellipse_60%_75%_at_50%_0%,rgba(255,255,255,0.2),rgba(255,255,255,0.05)_55%,transparent_75%)] transition-[left,width,opacity] duration-500 ease-[cubic-bezier(0.2,0.8,0.2,1)]"
-              style={{
-                left: spot?.left ?? 0,
-                width: spot?.width ?? 0,
-                opacity: spot ? 1 : 0,
-              }}
-            >
-              {/* Il segno rosso, obliquo come la gamba della Y */}
-              <span className="bg-rosso-acceso absolute bottom-2.5 left-1/2 h-[3px] w-[18px] -translate-x-1/2 -skew-x-[28deg] shadow-[0_0_10px_rgba(255,59,48,0.8)]" />
-            </li>
-            <li>
-              <NavLink
-                to="/modelli"
-                className={({ isActive }) => itemClass(isActive)}
-              >
-                {t('nav.archive')}
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/storia"
-                className={({ isActive }) => itemClass(isActive)}
-              >
-                {t('nav.story')}
-              </NavLink>
-            </li>
-            <li>
-              <CatalogsMenu itemClass={itemClass} />
-            </li>
-          </ul>
-
-          {/* Il separatore, inclinato come la Y */}
-          <span
-            aria-hidden="true"
-            className="relative mx-2 h-6 w-px -skew-x-[20deg] bg-white/12"
-          />
-
-          <Link
-            to="/modelli"
-            state={{ focusSearch: true }}
-            className={`${itemClass(false)} flex items-center gap-2.5`}
+        {/* Dal desktop: le voci, oppure il campo di ricerca. Su mobile le voci stanno nel dock */}
+        {searching ? (
+          <HeaderSearch onClose={closeSearch} />
+        ) : (
+          <nav
+            aria-label={t('nav.main')}
+            className="relative hidden items-center lg:flex"
           >
-            <Search aria-hidden="true" className="size-3.5" />
-            {t('nav.search')}
-          </Link>
-        </nav>
+            <ul ref={list} className="relative flex items-center">
+              {/* Il riflettore: un cono di luce dall'alto sulla voce attiva, che scivola da una voce all'altra */}
+              <li
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-2 h-[3.75rem] bg-[radial-gradient(ellipse_60%_75%_at_50%_0%,rgba(255,255,255,0.2),rgba(255,255,255,0.05)_55%,transparent_75%)] transition-[left,width,opacity] duration-500 ease-[cubic-bezier(0.2,0.8,0.2,1)]"
+                style={{
+                  left: spot?.left ?? 0,
+                  width: spot?.width ?? 0,
+                  opacity: spot ? 1 : 0,
+                }}
+              >
+                {/* Il segno rosso, obliquo come la gamba della Y */}
+                <span className="bg-rosso-acceso absolute bottom-2.5 left-1/2 h-[3px] w-[18px] -translate-x-1/2 -skew-x-[28deg] shadow-[0_0_10px_rgba(255,59,48,0.8)]" />
+              </li>
+              <li>
+                <NavLink
+                  to="/modelli"
+                  className={({ isActive }) => itemClass(isActive)}
+                >
+                  {t('nav.archive')}
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/storia"
+                  className={({ isActive }) => itemClass(isActive)}
+                >
+                  {t('nav.story')}
+                </NavLink>
+              </li>
+              <li>
+                <CatalogsMenu itemClass={itemClass} />
+              </li>
+            </ul>
 
-        <div className="relative lg:ml-auto">
-          <LanguageSwitcher />
-        </div>
+            {/* Il separatore, inclinato come la Y */}
+            <span
+              aria-hidden="true"
+              className="relative mx-2 h-6 w-px -skew-x-[20deg] bg-white/12"
+            />
+
+            <button
+              ref={searchButton}
+              type="button"
+              onClick={() => setSearching(true)}
+              className={`${itemClass(false)} flex items-center gap-2.5`}
+            >
+              <Search aria-hidden="true" className="size-3.5" />
+              {t('nav.search')}
+            </button>
+          </nav>
+        )}
+
+        {/* Durante la ricerca la lingua lascia tutto lo spazio al campo */}
+        {!searching && (
+          <div className="relative lg:ml-auto">
+            <LanguageSwitcher />
+          </div>
+        )}
       </div>
     </header>
   )

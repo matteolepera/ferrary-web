@@ -9,7 +9,12 @@
     "menu": "Menu",
     "close": "Close",
     "quick": "Quick navigation",
-    "skip": "Skip to content"
+    "skip": "Skip to content",
+    "searchLabel": "Search the archive",
+    "searchPlaceholder": "Search for a Ferrari, for example F40",
+    "searchAll": "All results for “{{term}}”",
+    "searchEmpty": "No Ferrari with this name",
+    "searchClose": "Close search"
   },
   "footer": {
     "tagline": "The digital museum of Ferrari: the story of the Prancing Horse, model by model.",
