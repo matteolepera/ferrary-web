@@ -153,7 +153,9 @@ export function ModelHero({
           <div
             role="group"
             aria-label={t('model.versions')}
-            className="senza-barra -mx-5 mt-7 flex gap-7 overflow-x-auto border-b border-white/15 px-5 md:mx-0 md:mt-8 md:px-0"
+            // La linea in basso è un'ombra interna: le schede ci si posano sopra senza sporgere,
+            // così il gruppo scorre solo di lato, e mai su e giù
+            className="senza-barra -mx-5 mt-7 flex gap-7 overflow-x-auto overflow-y-hidden px-5 shadow-[inset_0_-1px_0_rgba(255,255,255,0.15)] md:mx-0 md:mt-8 md:px-0"
           >
             {versions.map((item) => {
               const active = item.slug === selectedSlug
@@ -165,7 +167,7 @@ export function ModelHero({
                   aria-pressed={active}
                   onClick={() => onSelect(item.slug)}
                   className={[
-                    '-mb-px shrink-0 border-b-2 py-3 text-xs font-semibold tracking-[0.18em] uppercase transition-colors',
+                    'shrink-0 border-b-2 py-3 text-xs font-semibold tracking-[0.18em] uppercase transition-colors',
                     'focus-visible:outline-rosso-acceso focus-visible:outline-2 focus-visible:outline-offset-2',
                     active
                       ? 'border-rosso text-white'
