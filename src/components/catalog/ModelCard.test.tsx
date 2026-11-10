@@ -25,9 +25,10 @@ test('porta alla pagina del modello e ne mostra i dati chiave', () => {
   expect(screen.getByText('324 km/h')).toBeInTheDocument()
 })
 
-test('senza foto né dati chiave mostra i segnaposto', () => {
+test('senza foto mostra il segnaposto, e senza dati chiave non mostra la loro riga', () => {
   renderCard({ ...f40, cover: null, highlights: null })
 
   expect(screen.getByText('Foto in arrivo')).toBeInTheDocument()
-  expect(screen.getAllByText('n.d.')).toHaveLength(3)
+  expect(screen.queryByText('n.d.')).not.toBeInTheDocument()
+  expect(screen.queryByText('Potenza')).not.toBeInTheDocument()
 })
