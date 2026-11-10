@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import type { CarModel, Version } from '@/types/catalog'
+import { isShortStory } from '@/components/model/story'
 
 type ModelHeroProps = {
   model: CarModel
@@ -101,6 +102,16 @@ export function ModelHero({
         {model.description && (
           <p className="mt-4 line-clamp-3 max-w-[52ch] text-[0.9375rem] leading-relaxed text-neutral-300 md:text-[1.0625rem]">
             {model.description}
+          </p>
+        )}
+
+        {/* La descrizione della versione, se è breve: cambia con le schede, senza toccare quella del modello */}
+        {version?.description && isShortStory(version.description) && (
+          <p
+            key={version.slug}
+            className="animate-comparsa mt-2 max-w-[52ch] text-sm leading-relaxed text-neutral-400 md:text-[0.9375rem]"
+          >
+            {version.description}
           </p>
         )}
 
