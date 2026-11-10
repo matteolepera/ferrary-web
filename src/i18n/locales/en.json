@@ -229,7 +229,8 @@
       "totalWins": "Total wins",
       "totalPodiums": "Total podiums",
       "totalTitles": "Titles won"
-    }
+    },
+    "breadcrumb": "Breadcrumb"
   },
   "archive": {
     "eyebrow": "Archive",

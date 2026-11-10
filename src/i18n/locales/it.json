@@ -229,7 +229,8 @@
       "totalWins": "Vittorie in totale",
       "totalPodiums": "Podi in totale",
       "totalTitles": "Titoli conquistati"
-    }
+    },
+    "breadcrumb": "Percorso"
   },
   "archive": {
     "eyebrow": "Archivio",

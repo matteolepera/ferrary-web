@@ -88,17 +88,17 @@ export function VersionSpecStrip({ version }: VersionSpecStripProps) {
     )
     const single = years.end === null || years.end === years.start
 
-    primary = [
+    // I risultati: protagonisti se maggiori di zero, nella didascalia se zero
+    const results: Item[] = [
       {
         key: 'wins',
         label: t('model.racing.wins'),
         value: figure(total('wins')),
       },
-      // I titoli solo se ce ne sono: uno zero in grande direbbe poco
       {
         key: 'titles',
         label: t('model.racing.totalTitles'),
-        value: titles > 0 ? String(titles) : null,
+        value: String(titles),
       },
       {
         key: 'races',
@@ -106,6 +106,9 @@ export function VersionSpecStrip({ version }: VersionSpecStripProps) {
         value: figure(total('races')),
       },
     ]
+    const counts = (item: Item) => item.value !== null && item.value !== '0'
+
+    primary = results.filter(counts)
     secondary = [
       engine,
       displacement,
@@ -114,6 +117,8 @@ export function VersionSpecStrip({ version }: VersionSpecStripProps) {
         label: t('model.racing.season'),
         value: single ? String(years.start) : `${years.start}–${years.end}`,
       },
+      // Le vittorie a zero restano un'informazione, ma piccola. I titoli a zero invece non si nominano
+      ...results.filter((item) => item.key === 'wins' && item.value === '0'),
     ]
   } else {
     // Il numero di esemplari dice più del tipo di produzione, quando c'è
