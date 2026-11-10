@@ -188,27 +188,29 @@ export function FeaturedCarousel() {
                     </p>
                   </div>
 
-                  <div className="mt-5 md:mt-6 lg:mt-0">
-                    <dl className="border-linea grid grid-cols-3 border-y md:flex md:gap-8 md:border-0 lg:gap-10">
-                      {stats.map((stat, place) => (
-                        <div
-                          key={stat.key}
-                          className={
-                            place === 0
-                              ? 'py-3.5 pr-2 md:p-0'
-                              : 'border-linea border-l px-2 py-3.5 md:border-0 md:p-0'
-                          }
-                        >
-                          <dt className="text-[0.625rem] font-semibold tracking-[0.2em] text-neutral-400 uppercase">
-                            {stat.label}
-                          </dt>
-                          <dd className="font-display mt-1.5 text-xl font-extrabold tracking-[-0.02em] md:text-2xl">
-                            {stat.value}
-                          </dd>
-                        </div>
-                      ))}
-                    </dl>
-                  </div>
+                  {stats.length > 0 && (
+                    <div className="mt-5 md:mt-6 lg:mt-0">
+                      <dl className="border-linea grid grid-cols-3 border-y md:flex md:gap-8 md:border-0 lg:gap-10">
+                        {stats.map((stat, place) => (
+                          <div
+                            key={stat.key}
+                            className={
+                              place === 0
+                                ? 'py-3.5 pr-2 md:p-0'
+                                : 'border-linea border-l px-2 py-3.5 md:border-0 md:p-0'
+                            }
+                          >
+                            <dt className="text-[0.625rem] font-semibold tracking-[0.2em] text-neutral-400 uppercase">
+                              {stat.label}
+                            </dt>
+                            <dd className="font-display mt-1.5 text-xl font-extrabold tracking-[-0.02em] md:text-2xl">
+                              {stat.value}
+                            </dd>
+                          </div>
+                        ))}
+                      </dl>
+                    </div>
+                  )}
                 </div>
               </div>
 

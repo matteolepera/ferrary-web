@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import type { Version } from '@/types/catalog'
+import { isShortStory } from '@/components/model/story'
 
 type VersionStoryProps = {
   version: Version | undefined
@@ -11,7 +12,8 @@ type VersionStoryProps = {
 export function VersionStory({ version }: VersionStoryProps) {
   const { t } = useTranslation()
 
-  if (!version?.description) {
+  // I racconti brevi stanno già nell'apertura, sotto il nome: qui solo quelli lunghi
+  if (!version?.description || isShortStory(version.description)) {
     return null
   }
 

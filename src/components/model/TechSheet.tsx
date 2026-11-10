@@ -74,8 +74,8 @@ export function TechSheet({ version }: TechSheetProps) {
 
   const sections: { key: string; title: string; rows: Row[] }[] = [
     {
-      key: 'powertrain',
-      title: t('model.sheet.sections.powertrain'),
+      key: 'engine',
+      title: t('model.sheet.sections.engine'),
       rows: [
         {
           key: 'engineCode',
@@ -137,6 +137,13 @@ export function TechSheet({ version }: TechSheetProps) {
             1,
           ),
         },
+      ],
+    },
+    {
+      // Solo per le ibride e le elettriche: per le altre tutte le righe sono vuote, e il gruppo sparisce
+      key: 'electric',
+      title: t('model.sheet.sections.electric'),
+      rows: [
         {
           key: 'electricMotors',
           label: t('model.sheet.rows.electricMotors'),
@@ -167,6 +174,12 @@ export function TechSheet({ version }: TechSheetProps) {
           label: t('model.sheet.rows.systemTorque'),
           value: num(powertrain?.system.torque_nm, 'Nm'),
         },
+      ],
+    },
+    {
+      key: 'transmission',
+      title: t('model.sheet.sections.transmission'),
+      rows: [
         {
           key: 'gearbox',
           label: t('model.sheet.rows.gearbox'),
@@ -320,9 +333,13 @@ export function TechSheet({ version }: TechSheetProps) {
           {t('model.sheet.title')}
         </h2>
 
-        <div className="mt-8 grid gap-x-12 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
+        {/* Le colonne si riempiono a cascata, come in una rivista: i gruppi corti salgono a coprire i vuoti */}
+        <div className="mt-8 gap-x-12 md:columns-2 lg:columns-3">
           {filled.map((section) => (
-            <div key={section.key}>
+            <div
+              key={section.key}
+              className="mb-12 break-inside-avoid last:mb-0"
+            >
               <h3 className="font-display text-xl font-extrabold tracking-[-0.02em] md:text-2xl">
                 {section.title}
               </h3>
