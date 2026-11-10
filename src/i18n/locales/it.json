@@ -18,9 +18,7 @@
     "searchCancel": "Annulla"
   },
   "footer": {
-    "tagline": "Il museo digitale delle Ferrari: la storia del Cavallino, modello dopo modello.",
     "explore": "Esplora",
-    "families": "Famiglie",
     "project": "Il progetto",
     "webCode": "Codice del sito",
     "apiCode": "Codice dell'API",
@@ -52,19 +50,13 @@
       "discover": "Scopri il modello",
       "previous": "Modello precedente",
       "next": "Modello successivo",
-      "power": "Potenza",
-      "acceleration": "0–100 km/h",
-      "topSpeed": "Velocità max",
-      "notAvailable": "n.d.",
       "noPhoto": "Foto in arrivo",
       "error": "Impossibile caricare i modelli in evidenza.",
-      "goTo": "Vai a {{name}}",
-      "number": "N."
+      "goTo": "Vai a {{name}}"
     },
     "families": {
       "eyebrow": "Le famiglie",
       "title": "Da dove vuoi partire?",
-      "text": "Ogni Ferrari appartiene a una famiglia: sceglila, e l'archivio ti mostrerà solo quelle.",
       "models_one": "{{count}} modello",
       "models_other": "{{count}} modelli",
       "error": "Impossibile caricare le famiglie.",
@@ -80,7 +72,6 @@
     "power": "Potenza",
     "acceleration": "0–100 km/h",
     "topSpeed": "Velocità max",
-    "notAvailable": "n.d.",
     "noPhoto": "Foto in arrivo",
     "loading": "Caricamento del modello…",
     "error": "Impossibile caricare questo modello.",
@@ -125,7 +116,9 @@
     "sheet": {
       "title": "Scheda tecnica",
       "sections": {
-        "powertrain": "Motore e trasmissione",
+        "engine": "Motore termico",
+        "electric": "Parte elettrica",
+        "transmission": "Trasmissione",
         "performance": "Prestazioni",
         "dimensions": "Dimensioni e peso",
         "chassis": "Telaio",
@@ -278,8 +271,6 @@
         "elettrico": "Elettrica"
       },
       "period": "Periodo",
-      "from": "Dal",
-      "to": "Al",
       "anyYear": "Qualsiasi",
       "decade": "Anni {{short}}",
       "sort": "Ordina per",
