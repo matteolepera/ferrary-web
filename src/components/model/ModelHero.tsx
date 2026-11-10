@@ -25,6 +25,10 @@ export function ModelHero({
   const current = versions.find((item) => item.slug === selectedSlug)
   const cover = version?.cover ?? model.cover
   const title = current?.name ?? model.name
+  // Senza foto l'apertura è più bassa: niente grande vuoto, il nome arriva subito
+  const heightClass = cover
+    ? 'min-h-[34rem] md:min-h-[44rem] lg:min-h-[50rem]'
+    : 'min-h-[24rem] md:min-h-[30rem] lg:min-h-[34rem]'
 
   // "Dal 2019" se è ancora in produzione, "1987–1992" se ha una fine, altrimenti l'anno
   const yearsLabel = (years: Version['years']) => {
@@ -48,7 +52,7 @@ export function ModelHero({
   return (
     <section
       aria-labelledby="modello-titolo"
-      className="relative flex min-h-[34rem] flex-col overflow-hidden md:min-h-[44rem] lg:min-h-[50rem]"
+      className={`relative flex flex-col overflow-hidden ${heightClass}`}
     >
       {cover ? (
         <img
@@ -58,9 +62,10 @@ export function ModelHero({
           className="absolute inset-0 size-full object-cover brightness-[.62] contrast-[1.12] saturate-[1.05]"
         />
       ) : (
-        <div className="riflettore absolute inset-0">
-          <p className="mt-48 text-center text-[0.6875rem] font-semibold tracking-[0.2em] text-neutral-500 uppercase md:mt-64">
-            {t('model.noPhoto')}
+        // Senza foto: il riflettore e il nome del modello in filigrana, come una targa sul muro della sala
+        <div aria-hidden="true" className="riflettore absolute inset-0">
+          <p className="font-display absolute inset-x-0 top-[40%] -translate-y-1/2 text-center text-[7rem] leading-none font-extrabold tracking-[-0.045em] whitespace-nowrap text-neutral-900 md:text-[12rem] lg:text-[clamp(12rem,20vw,20rem)]">
+            {model.name}
           </p>
         </div>
       )}
@@ -69,7 +74,7 @@ export function ModelHero({
         className="from-notte via-notte/40 to-notte/60 absolute inset-0 bg-linear-to-t"
       />
 
-      <div className="relative mx-auto w-full max-w-[1360px] px-5 pt-24 md:px-10 md:pt-28">
+      <div className="relative mx-auto w-full max-w-[1360px] px-5 pt-8 md:px-10 md:pt-10 lg:pt-28">
         <Link
           to="/modelli"
           className="text-[0.6875rem] font-semibold tracking-[0.18em] text-neutral-300 uppercase hover:text-white md:text-xs"
