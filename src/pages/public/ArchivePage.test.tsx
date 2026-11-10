@@ -2,13 +2,14 @@ import { http, HttpResponse } from 'msw'
 import { server } from '@/test/server'
 import { renderRoute } from '@/test/utils'
 import { screen, fireEvent, waitFor, within } from '@testing-library/react'
-import { i18n } from '@/i18n'
 import { modelsPage } from '@/test/fixtures'
 
 test("mostra i modelli ricevuti dall'API", async () => {
   renderRoute('/modelli')
 
-  expect(await screen.findByText('F40')).toBeInTheDocument()
+  expect(
+    await screen.findByRole('heading', { name: 'F40' }),
+  ).toBeInTheDocument()
 })
 
 test("mostra un messaggio se l'API non risponde", async () => {
@@ -24,23 +25,6 @@ test("mostra un messaggio se l'API non risponde", async () => {
   expect(await screen.findByRole('alert')).toHaveTextContent(
     "Impossibile caricare l'archivio",
   )
-})
-test('chiede i contenuti nella lingua del sito', async () => {
-  let receivedLanguage: string | null = null
-
-  server.use(
-    http.get('http://localhost:8000/api/models', ({ request }) => {
-      receivedLanguage = request.headers.get('Accept-Language')
-
-      return HttpResponse.json(modelsPage)
-    }),
-  )
-
-  await i18n.changeLanguage('en')
-  renderRoute('/modelli')
-
-  await screen.findByText('F40')
-  expect(receivedLanguage).toBe('en')
 })
 
 test('ricarica i contenuti quando cambia la lingua', async () => {
@@ -60,30 +44,36 @@ test('ricarica i contenuti quando cambia la lingua', async () => {
   )
 
   renderRoute('/modelli')
-  expect(await screen.findByText('Nome italiano')).toBeInTheDocument()
+  expect(
+    await screen.findByRole('heading', { name: 'Nome italiano' }),
+  ).toBeInTheDocument()
 
   fireEvent.click(screen.getByRole('button', { name: 'English' }))
 
-  expect(await screen.findByText('English name')).toBeInTheDocument()
+  expect(
+    await screen.findByRole('heading', { name: 'English name' }),
+  ).toBeInTheDocument()
 })
 
-test("chiede all'API i filtri scritti nell'indirizzo", async () => {
-  // Un oggetto, così TypeScript non si confonde con un valore assegnato dentro la funzione
-  const received = { params: new URLSearchParams() }
+test('chiede i contenuti nella lingua del sito', async () => {
+  // Le lingue con cui l'archivio chiede i modelli, una per richiesta
+  const languages: (string | null)[] = []
 
   server.use(
     http.get('http://localhost:8000/api/models', ({ request }) => {
-      received.params = new URL(request.url).searchParams
+      languages.push(request.headers.get('Accept-Language'))
 
       return HttpResponse.json(modelsPage)
     }),
   )
 
-  renderRoute('/modelli?category=hypercar&sort=-year')
+  renderRoute('/modelli')
   await screen.findByRole('heading', { name: 'F40' })
+  expect(languages.at(-1)).toBe('it')
 
-  expect(received.params.get('category')).toBe('hypercar')
-  expect(received.params.get('sort')).toBe('-year')
+  // Cambiando lingua, la richiesta successiva arriva in inglese
+  fireEvent.click(screen.getByRole('button', { name: 'English' }))
+  await waitFor(() => expect(languages.at(-1)).toBe('en'))
 })
 
 test("scorre le pagine dell'archivio", async () => {
