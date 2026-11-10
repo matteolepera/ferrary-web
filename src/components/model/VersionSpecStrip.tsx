@@ -8,19 +8,20 @@ type VersionSpecStripProps = {
   version: Version | undefined
 }
 
-/** Le auto da corsa: per loro contano le stagioni e i risultati, non la velocità di punta */
+/** Le auto da corsa: per loro contano i risultati, non la velocità di punta */
 const RACING_TYPES: VehicleType[] = ['f1', 'prototipo', 'gt_corsa']
 
-type Item = {
-  key: string
-  label: string
-  value: string | null
-  accent?: boolean
-}
+/** Un dato: il valore, e per i numeri protagonisti l'unità a parte, più piccola */
+type Item = { key: string; label: string; value: string | null; unit?: string }
+
+/** Solo i dati che esistono */
+const present = (items: Item[]) =>
+  items.filter((item): item is Item & { value: string } => item.value !== null)
 
 /**
- * I dati chiave della versione, in una fascia sotto l'apertura.
- * Mostra solo quelli che esistono: un dato mancante non compare, invece di diventare "n.d.".
+ * I dati chiave della versione, come la didascalia di un'opera:
+ * tre numeri protagonisti, grandi, e il resto più piccolo accanto.
+ * Un dato mancante non compare.
  */
 export function VersionSpecStrip({ version }: VersionSpecStripProps) {
   const { t, i18n } = useTranslation()
@@ -29,20 +30,18 @@ export function VersionSpecStrip({ version }: VersionSpecStripProps) {
     return (
       <div
         aria-hidden="true"
-        className="border-linea bg-ombra h-48 animate-pulse border-y md:h-28"
+        className="border-linea h-56 animate-pulse border-y md:h-36"
       />
     )
   }
 
-  /** Un numero con la sua unità, oppure niente */
-  const number = (
-    value: number | null | undefined,
-    unit: string,
-    decimals = 0,
-  ) =>
-    value == null
-      ? null
-      : `${formatNumber(value, i18n.language, decimals)} ${unit}`
+  /** Il solo numero, nella lingua del sito; l'unità la mette la fascia */
+  const figure = (value: number | null | undefined, decimals = 0) =>
+    value == null ? null : formatNumber(value, i18n.language, decimals)
+
+  /** Un numero con la sua unità, per la didascalia */
+  const withUnit = (value: number | null | undefined, unit: string) =>
+    value == null ? null : `${formatNumber(value, i18n.language)} ${unit}`
 
   // "V8 turbo ibrido", "12 cilindri boxer", "Elettrico"
   const engineLabel = (powertrain: Powertrain | null | undefined) => {
@@ -61,23 +60,23 @@ export function VersionSpecStrip({ version }: VersionSpecStripProps) {
   }
 
   const { specs, powertrain, years, production } = version
-  const engine = {
+  const engine: Item = {
     key: 'engine',
     label: t('model.engine'),
     value: engineLabel(powertrain),
   }
-  const displacement = {
+  const displacement: Item = {
     key: 'displacement',
     label: t('model.displacement'),
-    value: number(powertrain?.engine?.displacement_cc, 'cm³'),
+    value: withUnit(powertrain?.engine?.displacement_cc, 'cm³'),
   }
 
-  let items: Item[]
+  let primary: Item[]
+  let secondary: Item[]
 
   if (RACING_TYPES.includes(version.vehicle_type)) {
-    // Le auto da corsa: le stagioni e i totali dei risultati sportivi
+    // Le auto da corsa: protagonisti i risultati, sommati sui campionati
     const racing = version.racing ?? []
-    // La somma di un campo, solo se almeno un campionato lo riporta
     const total = (field: 'races' | 'wins') =>
       racing.some((record) => record[field] != null)
         ? racing.reduce((sum, record) => sum + (record[field] ?? 0), 0)
@@ -89,31 +88,31 @@ export function VersionSpecStrip({ version }: VersionSpecStripProps) {
     )
     const single = years.end === null || years.end === years.start
 
-    items = [
+    primary = [
+      {
+        key: 'wins',
+        label: t('model.racing.wins'),
+        value: figure(total('wins')),
+      },
+      // I titoli solo se ce ne sono: uno zero in grande direbbe poco
+      {
+        key: 'titles',
+        label: t('model.racing.totalTitles'),
+        value: titles > 0 ? String(titles) : null,
+      },
+      {
+        key: 'races',
+        label: t('model.racing.races'),
+        value: figure(total('races')),
+      },
+    ]
+    secondary = [
       engine,
       displacement,
       {
         key: 'seasons',
         label: t('model.racing.season'),
         value: single ? String(years.start) : `${years.start}–${years.end}`,
-      },
-      {
-        key: 'races',
-        label: t('model.racing.races'),
-        value: total('races')?.toString() ?? null,
-      },
-      {
-        key: 'wins',
-        label: t('model.racing.wins'),
-        value: total('wins')?.toString() ?? null,
-        accent: true,
-      },
-      // I titoli solo se ce ne sono: uno zero, in prima fila, direbbe poco
-      {
-        key: 'titles',
-        label: t('model.racing.totalTitles'),
-        value: titles > 0 ? String(titles) : null,
-        accent: true,
       },
     ]
   } else {
@@ -125,34 +124,35 @@ export function VersionSpecStrip({ version }: VersionSpecStripProps) {
           ? t(`model.productionTypes.${production.type}`)
           : null
 
-    items = [
-      engine,
+    primary = [
       {
         key: 'power',
         label: t('model.power'),
-        value: number(
+        value: figure(
           powertrain?.system.power_cv ?? powertrain?.combustion?.power_cv,
-          'cv',
         ),
-        accent: true,
+        unit: 'cv',
       },
       {
         key: 'acceleration',
         label: t('model.acceleration'),
-        value: number(specs?.performance.zero_to_100_sec, 's', 2),
-        accent: true,
+        value: figure(specs?.performance.zero_to_100_sec, 2),
+        unit: 's',
       },
       {
         key: 'topSpeed',
         label: t('model.topSpeed'),
-        value: number(specs?.performance.top_speed_kmh, 'km/h'),
-        accent: true,
+        value: figure(specs?.performance.top_speed_kmh),
+        unit: 'km/h',
       },
+    ]
+    secondary = [
+      engine,
       displacement,
       {
         key: 'dryWeight',
         label: t('model.dryWeight'),
-        value: number(specs?.weight.dry_kg, 'kg'),
+        value: withUnit(specs?.weight.dry_kg, 'kg'),
       },
       {
         key: 'production',
@@ -162,44 +162,81 @@ export function VersionSpecStrip({ version }: VersionSpecStripProps) {
     ]
   }
 
-  // Solo i dati che esistono
-  const shown = items.filter(
-    (item): item is Item & { value: string } => item.value !== null,
-  )
+  const stars = present(primary)
+  const caption = present(secondary)
 
-  if (shown.length === 0) {
+  if (stars.length === 0 && caption.length === 0) {
     return null
   }
 
   return (
     <section
       aria-label={t('model.specsLabel')}
-      className="border-linea bg-linea border-y"
+      className="border-linea border-y"
     >
-      {/*
-        Lo spazio di un pixel tra le celle lascia vedere lo sfondo: sono le linee della griglia.
-        Le celle crescono fino a riempire ogni riga, qualunque sia il loro numero: niente buchi
-      */}
-      <dl className="mx-auto flex max-w-[1360px] flex-wrap gap-px">
-        {shown.map((item) => (
-          <div
-            key={item.key}
-            className="bg-ombra flex-1 basis-[calc(50%-1px)] px-5 py-5 md:basis-[calc(25%-1px)] md:px-6 md:py-6 lg:basis-0"
-            style={{ '--cells': shown.length } as CSSProperties}
+      {/* Telefono e tablet: i protagonisti in fila, la didascalia sotto. Dal desktop: tutto su una riga */}
+      <div className="mx-auto max-w-[1360px] px-5 md:px-10 lg:flex">
+        {stars.length > 0 && (
+          <dl
+            className="divide-linea grid grid-cols-[repeat(var(--stars),minmax(0,1fr))] divide-x"
+            // I protagonisti si dividono lo spazio: dal desktop, uno ciascuno, e la didascalia un po' di più
+            style={
+              {
+                '--stars': stars.length,
+                flex: `${stars.length} 1 0%`,
+              } as CSSProperties
+            }
           >
-            <dt
-              className={`text-[0.625rem] font-semibold tracking-[0.2em] uppercase ${
-                item.accent ? 'text-rosso-acceso' : 'text-neutral-400'
-              }`}
-            >
-              {item.label}
-            </dt>
-            <dd className="font-display mt-2 text-xl leading-tight font-extrabold tracking-[-0.02em] md:text-2xl">
-              {item.value}
-            </dd>
-          </div>
-        ))}
-      </dl>
+            {stars.map((item) => (
+              <div
+                key={item.key}
+                className="py-6 pr-3 pl-3 first:pl-0 md:py-9 md:pr-8 md:pl-8"
+              >
+                <dt className="flex items-center gap-2.5 text-[0.5625rem] font-semibold tracking-[0.16em] text-neutral-400 uppercase md:text-[0.625rem] md:tracking-[0.22em]">
+                  {/* Il segno rosso obliquo, come nella barra della Y */}
+                  <span
+                    aria-hidden="true"
+                    className="bg-rosso-acceso h-[3px] w-2.5 shrink-0 -skew-x-[28deg] shadow-[0_0_8px_rgba(255,59,48,0.6)] md:w-3.5"
+                  />
+                  {item.label}
+                </dt>
+                <dd className="font-display mt-3 text-[2rem] leading-[0.9] font-extrabold tracking-[-0.04em] md:mt-4 md:text-5xl lg:text-[4rem]">
+                  {item.value}
+                  {item.unit && (
+                    <span className="font-sans text-[0.6875rem] font-semibold tracking-[0.02em] text-neutral-400 md:text-[0.9375rem]">
+                      {' '}
+                      {item.unit}
+                    </span>
+                  )}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        )}
+
+        {caption.length > 0 && (
+          <dl
+            className={[
+              'grid grid-cols-2 content-center gap-x-5 gap-y-4 py-5 md:gap-x-7 md:py-6',
+              'lg:border-linea lg:border-l lg:py-8 lg:pl-10',
+              // Sotto i protagonisti, una linea li separa; dal desktop la linea è a sinistra
+              stars.length > 0 ? 'border-linea border-t lg:border-t-0' : '',
+            ].join(' ')}
+            style={{ flex: '1.25 1 0%' }}
+          >
+            {caption.map((item) => (
+              <div key={item.key}>
+                <dt className="text-[0.625rem] font-semibold tracking-[0.2em] text-neutral-500 uppercase">
+                  {item.label}
+                </dt>
+                <dd className="font-display mt-1.5 text-[0.9375rem] font-bold tracking-[-0.02em] md:text-lg">
+                  {item.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        )}
+      </div>
     </section>
   )
 }

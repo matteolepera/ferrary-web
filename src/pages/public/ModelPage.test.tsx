@@ -89,9 +89,11 @@ test('mostra i dati chiave della versione scelta', async () => {
   )
 
   expect(specs.getByText('V8 turbo ibrido')).toBeInTheDocument()
-  expect(specs.getByText('1000 cv')).toBeInTheDocument()
-  expect(specs.getByText('2,5 s')).toBeInTheDocument()
-  expect(specs.getByText('340 km/h')).toBeInTheDocument()
+  expect(specs.getByText('Potenza').nextSibling).toHaveTextContent('1000 cv')
+  expect(specs.getByText('0–100 km/h').nextSibling).toHaveTextContent('2,5 s')
+  expect(specs.getByText('Velocità max').nextSibling).toHaveTextContent(
+    '340 km/h',
+  )
   expect(specs.getByText('3990 cm³')).toBeInTheDocument()
   expect(specs.getByText('1570 kg')).toBeInTheDocument()
   expect(specs.getByText('Serie')).toBeInTheDocument()
