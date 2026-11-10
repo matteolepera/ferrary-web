@@ -59,18 +59,20 @@ export function ModelCard({ model }: ModelCardProps) {
           </p>
         )}
 
-        <dl className="mt-5 grid grid-cols-3 gap-3">
-          {stats.map((stat) => (
-            <div key={stat.key}>
-              <dt className="text-[0.5625rem] font-semibold tracking-[0.2em] text-neutral-400 uppercase">
-                {stat.label}
-              </dt>
-              <dd className="mt-1 text-[0.9375rem] font-semibold">
-                {stat.value}
-              </dd>
-            </div>
-          ))}
-        </dl>
+        {stats.length > 0 && (
+          <dl className="mt-5 grid grid-cols-3 gap-3">
+            {stats.map((stat) => (
+              <div key={stat.key}>
+                <dt className="text-[0.5625rem] font-semibold tracking-[0.2em] text-neutral-400 uppercase">
+                  {stat.label}
+                </dt>
+                <dd className="mt-1 text-[0.9375rem] font-semibold">
+                  {stat.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        )}
       </div>
     </Link>
   )

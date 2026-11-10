@@ -3,7 +3,8 @@ import { formatNumber } from '@/lib/format'
 import type { CarModel } from '@/types/catalog'
 
 /**
- * I tre dati chiave di un modello, con etichetta e valore già formattati nella lingua del sito.
+ * I dati chiave di un modello, con etichetta e valore già formattati nella lingua del sito.
+ * Solo quelli che esistono: un dato mancante non compare.
  */
 export function useHighlights(highlights: CarModel['highlights']) {
   const { t, i18n } = useTranslation()
@@ -14,10 +15,10 @@ export function useHighlights(highlights: CarModel['highlights']) {
     decimals = 0,
   ) =>
     number == null
-      ? t('model.notAvailable')
+      ? null
       : `${formatNumber(number, i18n.language, decimals)} ${unit}`
 
-  return [
+  const all = [
     {
       key: 'power',
       label: t('model.power'),
@@ -34,4 +35,9 @@ export function useHighlights(highlights: CarModel['highlights']) {
       value: value(highlights?.top_speed_kmh, 'km/h'),
     },
   ]
+
+  return all.filter(
+    (stat): stat is (typeof all)[number] & { value: string } =>
+      stat.value !== null,
+  )
 }
