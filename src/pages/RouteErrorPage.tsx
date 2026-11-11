@@ -1,7 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import { Link, useRouteError } from 'react-router'
 import { Logo } from '@/components/Logo'
+import { ButtonArrow } from '@/components/ui/ButtonArrow'
 import { buttonClass } from '@/components/ui/buttonClass'
+import { StatePage } from '@/components/ui/StatePage'
 
 /**
  * La pagina mostrata quando un componente si rompe durante il disegno.
@@ -11,40 +13,42 @@ export function RouteErrorPage() {
   const error = useRouteError()
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-[1360px] flex-col justify-center px-5 py-24 md:px-10">
+    <main className="relative min-h-screen">
       <title>{`${t('errors.unexpected.eyebrow')} – Ferrary`}</title>
 
-      <Link to="/" aria-label={t('nav.home')} className="self-start">
+      {/* Il logo, in alto: questa pagina sta fuori dal layout, quindi senza barra né dock */}
+      <Link
+        to="/"
+        aria-label={t('nav.home')}
+        className="absolute top-6 left-5 z-10 md:top-8 md:left-10"
+      >
         <Logo alt="" className="h-7 w-auto" />
       </Link>
 
-      <p className="text-rosso-acceso mt-16 text-[0.6875rem] font-semibold tracking-[0.22em] uppercase md:text-xs">
-        {t('errors.unexpected.eyebrow')}
-      </p>
-      <h1 className="font-display mt-3 text-[2.625rem] leading-none font-extrabold tracking-[-0.035em] md:text-6xl">
-        {t('errors.unexpected.title')}
-      </h1>
-      <p className="mt-4 max-w-[48ch] text-neutral-300 md:text-lg">
-        {t('errors.unexpected.text')}
-      </p>
-
-      <div className="mt-8 flex flex-col gap-3 md:flex-row">
+      <StatePage
+        watermark="!?"
+        eyebrow={t('errors.unexpected.eyebrow')}
+        title={t('errors.unexpected.title')}
+        text={t('errors.unexpected.text')}
+        className="min-h-screen md:min-h-screen"
+      >
         <button
           type="button"
           onClick={() => window.location.reload()}
-          className={buttonClass('primary')}
+          className={buttonClass('cta')}
         >
           {t('errors.unexpected.reload')}
         </button>
         {/* Un link "vero": ricarica tutto il sito, nel caso il problema fosse nello stato dell'app */}
-        <a href="/" className={buttonClass('secondary')}>
+        <a href="/" className={buttonClass('ctaGhost')}>
           {t('errors.unexpected.home')}
+          <ButtonArrow />
         </a>
-      </div>
+      </StatePage>
 
       {/* Solo in sviluppo: il dettaglio dell'errore, per capire cosa è successo */}
       {import.meta.env.DEV && error instanceof Error && (
-        <pre className="bg-ombra mt-12 overflow-x-auto p-4 text-xs leading-relaxed text-neutral-400">
+        <pre className="bg-ombra mx-5 mb-12 overflow-x-auto p-4 text-xs leading-relaxed text-neutral-400 md:mx-10">
           {error.stack ?? error.message}
         </pre>
       )}

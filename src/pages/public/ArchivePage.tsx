@@ -16,6 +16,7 @@ import { YPanel, YSeparator } from '@/components/ui/YPanel'
 import { useArchiveFilters } from '@/hooks/useArchiveFilters'
 import { useModels } from '@/hooks/useModels'
 import { ArchivePager } from '@/components/archive/ArchivePager'
+import { StatePanel } from '@/components/ui/StatePanel'
 
 const gridClass = 'mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3'
 
@@ -194,14 +195,20 @@ export function ArchivePage() {
       )}
 
       {data && data.data.length === 0 && (
-        <div className="py-16 text-center">
-          <p className="text-neutral-300">{t('archive.empty')}</p>
-          {hasFilters && (
-            <Button variant="secondary" onClick={clearFilters} className="mt-6">
-              {t('archive.clear')}
-            </Button>
-          )}
-        </div>
+        <StatePanel
+          tone="neutral"
+          role="status"
+          eyebrow={t('archive.emptyEyebrow')}
+          title={t('archive.empty')}
+          text={t('archive.emptyHint')}
+          action={
+            hasFilters ? (
+              <Button variant="ctaGhost" onClick={clearFilters}>
+                {t('archive.clear')}
+              </Button>
+            ) : undefined
+          }
+        />
       )}
 
       {data && data.data.length > 0 && (

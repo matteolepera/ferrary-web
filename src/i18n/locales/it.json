@@ -290,7 +290,9 @@
     },
     "countLabel_one": "modello",
     "countLabel_other": "modelli",
-    "goToPage": "Vai alla pagina {{page}}"
+    "goToPage": "Vai alla pagina {{page}}",
+    "emptyEyebrow": "Nessun risultato",
+    "emptyHint": "Prova a togliere un filtro, o a cercare un altro nome."
   },
   "catalogs": {
     "eyebrow": "Cataloghi",
@@ -337,6 +339,10 @@
       "text": "La pagina ha incontrato un problema. Ricaricala, oppure torna all'inizio.",
       "reload": "Ricarica la pagina",
       "home": "Torna all'inizio"
+    },
+    "load": {
+      "eyebrow": "Errore di caricamento",
+      "text": "Il server non ha risposto. Controlla la connessione, poi riprova."
     }
   },
   "notFound": {

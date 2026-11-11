@@ -1,5 +1,8 @@
-import { Link } from 'react-router'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
+import { ButtonArrow } from '@/components/ui/ButtonArrow'
+import { buttonClass } from '@/components/ui/buttonClass'
+import { StatePage } from '@/components/ui/StatePage'
 
 type NotFoundPageProps = {
   /** Dove riporta il pulsante: la home del sito o del pannello */
@@ -13,18 +16,24 @@ export function NotFoundPage({ backTo = '/' }: NotFoundPageProps) {
   const { t } = useTranslation()
 
   return (
-    <section className="px-5 pt-36 pb-16 text-center">
-      <p className="text-sm font-semibold tracking-wide text-neutral-500 uppercase">
-        {t('notFound.code')}
-      </p>
-      <h1 className="mt-2 text-3xl font-bold">{t('notFound.title')}</h1>
-      <p className="mt-4 text-neutral-600">{t('notFound.description')}</p>
-      <Link
-        to={backTo}
-        className="mt-8 inline-block rounded bg-neutral-900 px-4 py-2 text-white"
-      >
+    <StatePage
+      watermark="404"
+      eyebrow={t('notFound.code')}
+      title={t('notFound.title')}
+      text={t('notFound.description')}
+    >
+      <Link to={backTo} className={buttonClass('cta')}>
         {t('notFound.back')}
+        <ButtonArrow />
       </Link>
-    </section>
+
+      {/* Nel sito pubblico, chi arriva qui cercava quasi sempre un modello: l'archivio è il posto giusto */}
+      {backTo === '/' && (
+        <Link to="/modelli" className={buttonClass('ctaGhost')}>
+          {t('home.invite.cta')}
+          <ButtonArrow />
+        </Link>
+      )}
+    </StatePage>
   )
 }
