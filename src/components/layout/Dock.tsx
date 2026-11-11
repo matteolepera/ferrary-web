@@ -1,4 +1,10 @@
-import { CarFront, Hourglass, Menu, Search, X } from 'lucide-react'
+import {
+  ClockCounterClockwiseIcon,
+  GarageIcon,
+  ListIcon,
+  MagnifyingGlassIcon,
+  XIcon,
+} from '@phosphor-icons/react'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, NavLink, useLocation } from 'react-router'
@@ -31,6 +37,9 @@ const stateClass = (active: boolean) =>
     : 'text-neutral-400 hover:text-white'
 
 const iconClass = 'relative size-5 md:size-4'
+
+/** Il peso dell'icona: sottile a riposo, piena sulla voce attiva, insieme al riflettore */
+const weight = (active: boolean) => (active ? 'fill' : 'light')
 
 const menuLinkClass =
   'border-b border-linea py-3 font-display text-4xl font-extrabold tracking-[-0.035em] focus-visible:outline-2 focus-visible:outline-rosso-acceso'
@@ -134,28 +143,37 @@ export function Dock() {
           <span className="absolute right-0 bottom-0 h-px w-[31px] origin-bottom-right -rotate-45 bg-white/12" />
         </span>
 
+        {/* Archivio e La storia: il contenuto è una funzione, così l'icona sa se la voce è attiva */}
         <NavLink
           to="/modelli"
           className={({ isActive }) => `${itemClass} ${stateClass(isActive)}`}
         >
-          <CarFront
-            aria-hidden="true"
-            strokeWidth={1.75}
-            className={iconClass}
-          />
-          <span className="relative">{t('nav.archive')}</span>
+          {({ isActive }) => (
+            <>
+              <GarageIcon
+                aria-hidden="true"
+                weight={weight(isActive)}
+                className={iconClass}
+              />
+              <span className="relative">{t('nav.archive')}</span>
+            </>
+          )}
         </NavLink>
 
         <NavLink
           to="/storia"
           className={({ isActive }) => `${itemClass} ${stateClass(isActive)}`}
         >
-          <Hourglass
-            aria-hidden="true"
-            strokeWidth={1.75}
-            className={iconClass}
-          />
-          <span className="relative">{t('nav.story')}</span>
+          {({ isActive }) => (
+            <>
+              <ClockCounterClockwiseIcon
+                aria-hidden="true"
+                weight={weight(isActive)}
+                className={iconClass}
+              />
+              <span className="relative">{t('nav.story')}</span>
+            </>
+          )}
         </NavLink>
 
         {/* Il monogramma: sollevato sopra il dock, con l'angolo della Y, riporta alla home */}
@@ -181,7 +199,11 @@ export function Dock() {
           }}
           className={`${itemClass} ${stateClass(searching)}`}
         >
-          <Search aria-hidden="true" strokeWidth={1.75} className={iconClass} />
+          <MagnifyingGlassIcon
+            aria-hidden="true"
+            weight={weight(searching)}
+            className={iconClass}
+          />
           <span className="relative">{t('nav.search')}</span>
         </button>
 
@@ -195,10 +217,15 @@ export function Dock() {
           // Acceso anche sulle pagine dei cataloghi, che stanno nel menu
           className={`${itemClass} ${stateClass(open || isCatalogPath(pathname))}`}
         >
+          {/* La X resta sottile: un'icona piena per "chiudi" sarebbe troppo pesante */}
           {open ? (
-            <X aria-hidden="true" strokeWidth={1.75} className={iconClass} />
+            <XIcon aria-hidden="true" weight="light" className={iconClass} />
           ) : (
-            <Menu aria-hidden="true" strokeWidth={1.75} className={iconClass} />
+            <ListIcon
+              aria-hidden="true"
+              weight={weight(isCatalogPath(pathname))}
+              className={iconClass}
+            />
           )}
           <span className="relative">
             {open ? t('nav.close') : t('nav.menu')}
