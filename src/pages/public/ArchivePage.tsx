@@ -135,11 +135,11 @@ export function ArchivePage() {
           onReset={
             activeCount > 0
               ? () =>
-                setFilters({
-                  powertrain: undefined,
-                  year_from: undefined,
-                  year_to: undefined,
-                })
+                  setFilters({
+                    powertrain: undefined,
+                    year_from: undefined,
+                    year_to: undefined,
+                  })
               : undefined
           }
         >
@@ -216,7 +216,13 @@ export function ArchivePage() {
         </ul>
       )}
 
-      {meta && <ArchivePager page={meta.current_page} lastPage={meta.last_page} onChange={goToPage} />}
+      {meta && (
+        <ArchivePager
+          page={meta.current_page}
+          lastPage={meta.last_page}
+          onChange={goToPage}
+        />
+      )}
     </div>
   )
 }
