@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { buttonClass } from '@/components/ui/buttonClass'
+import { ButtonArrow } from '@/components/ui/ButtonArrow'
 
 /**
  * L'apertura della home: la Ferrari in copertina, il titolo e l'ingresso all'archivio.
@@ -48,11 +49,9 @@ export function HomeHero() {
           </p>
 
           <div className="mt-6 flex flex-col md:mt-8 md:flex-row md:items-center md:gap-6">
-            <Link
-              to="/modelli"
-              className={buttonClass('primary', 'w-full md:w-auto')}
-            >
+            <Link to="/modelli" className={buttonClass('cta')}>
               {t('home.hero.cta')}
+              <ButtonArrow />
             </Link>
           </div>
         </div>

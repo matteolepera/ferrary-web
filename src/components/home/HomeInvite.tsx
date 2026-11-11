@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { buttonClass } from '@/components/ui/buttonClass'
+import { ButtonArrow } from '@/components/ui/ButtonArrow'
 
 /**
  * La chiusura della home: un invito diretto all'archivio.
@@ -20,11 +21,12 @@ export function HomeInvite() {
         <Link
           to="/modelli"
           className={buttonClass(
-            'primary',
+            'cta',
             'mt-7 w-full md:mt-8 md:w-auto lg:mt-10',
           )}
         >
           {t('home.invite.cta')}
+          <ButtonArrow />
         </Link>
       </div>
     </section>
