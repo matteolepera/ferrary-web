@@ -1,49 +1,50 @@
 import { Search } from 'lucide-react'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-
-/** Quanto aspettare dopo l'ultima lettera prima di cercare */
-const DEBOUNCE_MS = 300
+import { yFocusMark } from '@/components/ui/yFocus'
+import { useDebounced } from '@/hooks/useDebounced'
 
 type ArchiveSearchProps = {
-  /** La ricerca attuale, letta dall'indirizzo */
+  /** La ricerca attiva, come è nell'indirizzo */
   value: string
-  /** Chiamata quando l'utente ha finito di scrivere */
-  onChange: (value: string) => void
+  /** Chiamata quando si smette di scrivere, con il testo senza spazi ai lati, o undefined se è vuoto */
+  onChange: (value: string | undefined) => void
   /** Mette il cursore nel campo appena la pagina si apre, come dal pulsante "Cerca" */
   autoFocus?: boolean
+  className?: string
 }
 
 /**
- * Campo di ricerca dell'archivio: aggiorna l'indirizzo solo quando si smette di scrivere.
+ * Il campo di ricerca dell'archivio, dentro la barra con la forma della Y.
+ * La ricerca parte quando si smette di scrivere, non a ogni lettera.
  */
 export function ArchiveSearch({
   value,
   onChange,
   autoFocus,
+  className = '',
 }: ArchiveSearchProps) {
   const { t } = useTranslation()
   const [text, setText] = useState(value)
-  const [lastValue, setLastValue] = useState(value)
+  const typed = text.trim()
+  const debounced = useDebounced(typed, 300)
+  const input = useRef<HTMLInputElement>(null)
 
-  // Se la ricerca cambia da fuori (Indietro, "Azzera i filtri"), il campo si allinea
-  if (value !== lastValue) {
-    setLastValue(value)
-    setText(value)
+  // Quando il filtro cambia da fuori, con "Azzera i filtri" o con Indietro, il campo si allinea.
+  // Si confronta con il valore precedente durante il disegno, senza un effetto in più
+  const [previous, setPrevious] = useState(value)
+  if (value !== previous) {
+    setPrevious(value)
+    if (value !== typed) setText(value)
   }
 
-  // Dopo l'ultima lettera, aspetta un attimo; ogni nuova lettera ricomincia l'attesa
+  // Si smette di scrivere: la ricerca parte. Solo quando l'attesa è finita, cioè quando il testo
+  // atteso è uguale a quello scritto, così un valore vecchio non rimette un filtro appena tolto
   useEffect(() => {
-    if (text === value) {
-      return
+    if (debounced === typed && debounced !== value) {
+      onChange(debounced || undefined)
     }
-
-    const timer = setTimeout(() => onChange(text.trim()), DEBOUNCE_MS)
-
-    return () => clearTimeout(timer)
-  }, [text, value, onChange])
-
-  const input = useRef<HTMLInputElement>(null)
+  }, [debounced, typed, value, onChange])
 
   // Dal pulsante "Cerca": il campo prende il cursore, e su telefono si apre la tastiera.
   // Aspettiamo un fotogramma, perché dopo un cambio di pagina il layout porta il focus sul contenuto principale
@@ -56,22 +57,21 @@ export function ArchiveSearch({
   }, [autoFocus])
 
   return (
-    <label className="relative flex flex-1 items-center">
+    <label
+      className={`${yFocusMark} flex h-14 items-center after:left-12 after:translate-x-0 lg:h-full ${className}`}
+    >
       <span className="sr-only">{t('archive.searchLabel')}</span>
       <Search
         aria-hidden="true"
-        className="pointer-events-none absolute left-4 size-4 text-neutral-400"
+        className="pointer-events-none absolute left-5 size-4 text-neutral-400"
       />
       <input
+        ref={input}
         type="search"
         value={text}
-        onChange={(event) => setText(event.target.value)}
-        ref={input}
         placeholder={t('archive.searchPlaceholder')}
-        className={[
-          'border-linea bg-ombra w-full border py-3.5 pr-4 pl-11 text-[0.9375rem] text-neutral-100',
-          'placeholder:text-neutral-500 focus:border-neutral-400 focus:outline-none',
-        ].join(' ')}
+        onChange={(event) => setText(event.target.value)}
+        className="h-full w-full bg-transparent pr-4 pl-12 text-[0.9375rem] text-neutral-100 placeholder:text-neutral-500 focus-visible:outline-none"
       />
     </label>
   )

@@ -50,9 +50,8 @@ export function ActiveFilters({ filters, onChange }: ActiveFiltersProps) {
             aria-label={t('archive.removeFilter', { name: chip.label })}
             onClick={() => onChange(chip.clear)}
             className={[
-              'border-linea inline-flex items-center gap-2 border px-3 py-1.5 text-xs text-neutral-200 transition-colors',
-              'hover:border-neutral-500 hover:text-white',
-              'focus-visible:outline-rosso-acceso focus-visible:outline-2 focus-visible:outline-offset-2',
+              'inline-flex items-center gap-2 rounded-[2px] rounded-tl-[9px] px-3 py-1.5 text-xs text-neutral-200 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.14)] transition-shadow',
+              'hover:text-white hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.3)]',
             ].join(' ')}
           >
             {chip.label}

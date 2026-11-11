@@ -285,8 +285,11 @@
       "active_other": "{{count}} active",
       "reset": "Reset",
       "periodHint": "Tap a decade, then another to widen the period.",
-      "range": "{{from}} – {{to}}"
-    }
+      "range": "{{from}} – {{to}}",
+      "sortShort": "Sort"
+    },
+    "countLabel_one": "model",
+    "countLabel_other": "models"
   },
   "catalogs": {
     "eyebrow": "Catalogues",

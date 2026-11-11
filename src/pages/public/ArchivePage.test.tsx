@@ -96,7 +96,9 @@ test("scorre le pagine dell'archivio", async () => {
   renderRoute('/modelli')
 
   expect(await screen.findByText('Pagina 1 di 3')).toBeInTheDocument()
-  expect(screen.getByText('50 modelli')).toBeInTheDocument()
+  expect(
+    screen.getByText('50', { selector: 'span' }).parentElement,
+  ).toHaveTextContent('50 modelli')
   expect(screen.getByRole('button', { name: 'Precedente' })).toBeDisabled()
 
   fireEvent.click(screen.getByRole('button', { name: 'Successiva' }))

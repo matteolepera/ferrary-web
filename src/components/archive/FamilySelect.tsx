@@ -28,7 +28,7 @@ export function FamilySelect({
   return (
     <ArchiveSelect
       label={t('archive.family')}
-      hideLabel
+      prefix={t('archive.family')}
       value={value ?? ''}
       // L'opzione vuota è "Tutte le famiglie": il filtro sparisce dall'indirizzo
       onChange={(slug) => onChange(slug || undefined)}

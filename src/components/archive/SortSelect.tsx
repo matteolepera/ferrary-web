@@ -17,7 +17,7 @@ export function SortSelect({ value, onChange, className }: SortSelectProps) {
   return (
     <ArchiveSelect
       label={t('archive.filters.sort')}
-      hideLabel
+      prefix={t('archive.filters.sortShort')}
       value={value ?? ''}
       onChange={(sort) =>
         onChange(sort === '' ? undefined : (sort as ModelFilters['sort']))
