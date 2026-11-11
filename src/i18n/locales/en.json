@@ -289,7 +289,8 @@
       "sortShort": "Sort"
     },
     "countLabel_one": "model",
-    "countLabel_other": "models"
+    "countLabel_other": "models",
+    "goToPage": "Go to page {{page}}"
   },
   "catalogs": {
     "eyebrow": "Catalogues",

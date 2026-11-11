@@ -289,7 +289,8 @@
       "sortShort": "Ordina"
     },
     "countLabel_one": "modello",
-    "countLabel_other": "modelli"
+    "countLabel_other": "modelli",
+    "goToPage": "Vai alla pagina {{page}}"
   },
   "catalogs": {
     "eyebrow": "Cataloghi",

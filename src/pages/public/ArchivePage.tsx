@@ -15,6 +15,7 @@ import { yFocusMark } from '@/components/ui/yFocus'
 import { YPanel, YSeparator } from '@/components/ui/YPanel'
 import { useArchiveFilters } from '@/hooks/useArchiveFilters'
 import { useModels } from '@/hooks/useModels'
+import { ArchivePager } from '@/components/archive/ArchivePager'
 
 const gridClass = 'mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3'
 
@@ -134,11 +135,11 @@ export function ArchivePage() {
           onReset={
             activeCount > 0
               ? () =>
-                  setFilters({
-                    powertrain: undefined,
-                    year_from: undefined,
-                    year_to: undefined,
-                  })
+                setFilters({
+                  powertrain: undefined,
+                  year_from: undefined,
+                  year_to: undefined,
+                })
               : undefined
           }
         >
@@ -215,33 +216,7 @@ export function ArchivePage() {
         </ul>
       )}
 
-      {meta && meta.last_page > 1 && (
-        <nav
-          aria-label={t('archive.pagination')}
-          className="mt-10 flex items-center justify-between gap-4"
-        >
-          <Button
-            variant="secondary"
-            disabled={meta.current_page <= 1}
-            onClick={() => goToPage(meta.current_page - 1)}
-          >
-            {t('archive.previous')}
-          </Button>
-          <p className="text-sm text-neutral-400">
-            {t('archive.page', {
-              current: meta.current_page,
-              last: meta.last_page,
-            })}
-          </p>
-          <Button
-            variant="secondary"
-            disabled={meta.current_page >= meta.last_page}
-            onClick={() => goToPage(meta.current_page + 1)}
-          >
-            {t('archive.next')}
-          </Button>
-        </nav>
-      )}
+      {meta && <ArchivePager page={meta.current_page} lastPage={meta.last_page} onChange={goToPage} />}
     </div>
   )
 }
