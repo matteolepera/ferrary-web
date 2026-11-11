@@ -1,18 +1,21 @@
+import { SlidersHorizontal } from 'lucide-react'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
+import { ActiveFilters } from '@/components/archive/ActiveFilters'
 import { ArchiveSearch } from '@/components/archive/ArchiveSearch'
 import { FamilySelect } from '@/components/archive/FamilySelect'
 import { FilterControls } from '@/components/archive/FilterControls'
 import { FiltersSheet } from '@/components/archive/FiltersSheet'
+import { SortSelect } from '@/components/archive/SortSelect'
 import { ModelCard } from '@/components/catalog/ModelCard'
 import { Button } from '@/components/ui/Button'
+import { ErrorState } from '@/components/ui/ErrorState'
+import { yFocusMark } from '@/components/ui/yFocus'
+import { YPanel, YSeparator } from '@/components/ui/YPanel'
 import { useArchiveFilters } from '@/hooks/useArchiveFilters'
 import { useModels } from '@/hooks/useModels'
-import { ErrorState } from '@/components/ui/ErrorState'
-import { SlidersHorizontal } from 'lucide-react'
-import { SortSelect } from '@/components/archive/SortSelect'
-import { ActiveFilters } from '@/components/archive/ActiveFilters'
+import { ArchivePager } from '@/components/archive/ArchivePager'
 
 const gridClass = 'mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3'
 
@@ -37,6 +40,12 @@ export function ArchivePage() {
   // Stabile tra un disegno e l'altro: il pannello non deve rifare il focus a ogni filtro scelto
   const closeSheet = useCallback(() => setSheetOpen(false), [])
 
+  // Stabile anche lei: la ricerca la usa in un effetto
+  const onSearch = useCallback(
+    (search: string | undefined) => setFilters({ search }, { replace: true }),
+    [setFilters],
+  )
+
   // I filtri del pannello attivi, per il pallino sul pulsante "Filtri"
   const panelFilters = [filters.powertrain, filters.year_from, filters.year_to]
   const activeCount = panelFilters.filter((value) => value !== undefined).length
@@ -56,37 +65,40 @@ export function ArchivePage() {
         {t('archive.text')}
       </p>
 
-      {/* La barra: ricerca, famiglia, filtri e ordinamento */}
-      <div className="mt-8 flex flex-col gap-3 md:mt-10 lg:flex-row">
+      {/*
+        La barra, con la forma della Y. Dal desktop una riga sola;
+        su telefono e tablet la ricerca sopra, e sotto famiglia, filtri e ordinamento
+      */}
+      <YPanel className="mt-8 flex flex-wrap md:mt-10 lg:h-[3.75rem] lg:flex-nowrap">
         <ArchiveSearch
           value={filters.search ?? ''}
           // Mentre si digita, l'indirizzo viene sostituito: Indietro non cancella una lettera alla volta
-          onChange={(search) => setFilters({ search }, { replace: true })}
+          onChange={onSearch}
           autoFocus={focusSearch}
+          className="basis-full lg:flex-1 lg:basis-auto"
         />
 
-        {/* Telefono: famiglia su una riga, filtri e ordinamento sotto; tablet: tutti e tre in fila */}
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-[1fr_auto_1fr] lg:flex lg:shrink-0">
+        <YSeparator className="hidden lg:block" />
+
+        <div className="flex h-12 basis-full border-t border-white/10 lg:h-auto lg:basis-auto lg:border-t-0">
           <FamilySelect
             value={filters.category}
             onChange={(category) => setFilters({ category })}
-            className="col-span-2 md:col-span-1 lg:w-60"
+            className="min-w-0 flex-1 lg:w-64 lg:flex-none"
           />
+
+          <YSeparator />
 
           <button
             type="button"
             aria-haspopup="dialog"
             aria-expanded={sheetOpen}
             onClick={() => setSheetOpen(true)}
-            className={[
-              'border-linea bg-ombra flex items-center justify-center gap-2.5 border px-5 py-3.5 text-[0.9375rem] text-neutral-100',
-              'transition-colors hover:border-neutral-500',
-              'focus-visible:outline-rosso-acceso focus-visible:outline-2 focus-visible:outline-offset-2',
-            ].join(' ')}
+            className={`${yFocusMark} flex shrink-0 items-center gap-2.5 px-4 text-sm text-neutral-100 transition-colors hover:text-white focus-visible:outline-none md:px-5 md:text-[0.9375rem]`}
           >
             <SlidersHorizontal
               aria-hidden="true"
-              className="size-4 text-neutral-400"
+              className="size-4 text-neutral-500"
             />
             {t('archive.filters.open')}
             {activeCount > 0 && (
@@ -105,13 +117,16 @@ export function ArchivePage() {
             )}
           </button>
 
+          <YSeparator />
+
+          {/* L'ultimo controllo lascia spazio al taglio in basso a destra */}
           <SortSelect
             value={filters.sort}
             onChange={(sort) => setFilters({ sort })}
-            className="lg:w-56"
+            className="shrink-0 pr-7 after:-ml-1.5 md:shrink md:pr-8 lg:w-72"
           />
         </div>
-      </div>
+      </YPanel>
 
       {sheetOpen && (
         <FiltersSheet
@@ -120,11 +135,11 @@ export function ArchivePage() {
           onReset={
             activeCount > 0
               ? () =>
-                  setFilters({
-                    powertrain: undefined,
-                    year_from: undefined,
-                    year_to: undefined,
-                  })
+                setFilters({
+                  powertrain: undefined,
+                  year_from: undefined,
+                  year_to: undefined,
+                })
               : undefined
           }
         >
@@ -135,7 +150,16 @@ export function ArchivePage() {
       <div className="border-linea mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 border-b pb-4 md:mt-10">
         {/* Il conteggio viene annunciato ai lettori di schermo quando cambia */}
         <p aria-live="polite" className="text-sm text-neutral-400">
-          {meta ? t('archive.count', { count: meta.total }) : '\u00a0'}
+          {meta ? (
+            <>
+              <span className="font-display text-lg font-extrabold tracking-[-0.02em] text-white">
+                {meta.total}
+              </span>{' '}
+              {t('archive.countLabel', { count: meta.total })}
+            </>
+          ) : (
+            '\u00a0'
+          )}
         </p>
 
         <ActiveFilters filters={filters} onChange={setFilters} />
@@ -192,33 +216,7 @@ export function ArchivePage() {
         </ul>
       )}
 
-      {meta && meta.last_page > 1 && (
-        <nav
-          aria-label={t('archive.pagination')}
-          className="mt-10 flex items-center justify-between gap-4"
-        >
-          <Button
-            variant="secondary"
-            disabled={meta.current_page <= 1}
-            onClick={() => goToPage(meta.current_page - 1)}
-          >
-            {t('archive.previous')}
-          </Button>
-          <p className="text-sm text-neutral-400">
-            {t('archive.page', {
-              current: meta.current_page,
-              last: meta.last_page,
-            })}
-          </p>
-          <Button
-            variant="secondary"
-            disabled={meta.current_page >= meta.last_page}
-            onClick={() => goToPage(meta.current_page + 1)}
-          >
-            {t('archive.next')}
-          </Button>
-        </nav>
-      )}
+      {meta && <ArchivePager page={meta.current_page} lastPage={meta.last_page} onChange={goToPage} />}
     </div>
   )
 }

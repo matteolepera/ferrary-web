@@ -96,7 +96,9 @@ test("scorre le pagine dell'archivio", async () => {
   renderRoute('/modelli')
 
   expect(await screen.findByText('Pagina 1 di 3')).toBeInTheDocument()
-  expect(screen.getByText('50 modelli')).toBeInTheDocument()
+  expect(
+    screen.getByText('50', { selector: 'span' }).parentElement,
+  ).toHaveTextContent('50 modelli')
   expect(screen.getByRole('button', { name: 'Precedente' })).toBeDisabled()
 
   fireEvent.click(screen.getByRole('button', { name: 'Successiva' }))
@@ -267,4 +269,28 @@ test('mostra i filtri della scheda come etichette, e li toglie uno alla volta', 
 
   await waitFor(() => expect(received.params.get('powertrain')).toBeNull())
   expect(received.params.get('year_from')).toBe('1960')
+})
+
+test('salta direttamente a una pagina con il suo numero', async () => {
+  server.use(
+    http.get('http://localhost:8000/api/models', ({ request }) => {
+      const page = Number(new URL(request.url).searchParams.get('page') ?? 1)
+
+      return HttpResponse.json({
+        ...modelsPage,
+        meta: { ...modelsPage.meta, current_page: page, last_page: 9, total: 208 },
+      })
+    }),
+  )
+
+  renderRoute('/modelli')
+  const pages = within(await screen.findByRole('navigation', { name: "Pagine dell'archivio" }))
+
+  // Dalla prima pagina si vedono le prime due e l'ultima: le altre sono "…"
+  expect(pages.getByRole('button', { name: 'Vai alla pagina 1' })).toHaveAttribute('aria-current', 'page')
+  expect(pages.queryByRole('button', { name: 'Vai alla pagina 5' })).not.toBeInTheDocument()
+
+  fireEvent.click(pages.getByRole('button', { name: 'Vai alla pagina 9' }))
+
+  expect(await screen.findByText('Pagina 9 di 9')).toBeInTheDocument()
 })

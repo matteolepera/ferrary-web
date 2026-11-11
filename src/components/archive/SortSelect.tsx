@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import type { ModelFilters } from '@/api/models'
 import { ArchiveSelect } from '@/components/archive/ArchiveSelect'
+import { ArrowUpDown } from 'lucide-react'
 
 type SortSelectProps = {
   value: ModelFilters['sort']
@@ -17,12 +18,13 @@ export function SortSelect({ value, onChange, className }: SortSelectProps) {
   return (
     <ArchiveSelect
       label={t('archive.filters.sort')}
-      hideLabel
+      prefix={t('archive.filters.sortShort')}
       value={value ?? ''}
       onChange={(sort) =>
         onChange(sort === '' ? undefined : (sort as ModelFilters['sort']))
       }
       className={className}
+      icon={<ArrowUpDown className="size-4" />}
     >
       {/* Il valore vuoto è il predefinito dell'API: nome dalla A alla Z */}
       <option value="">{t('archive.filters.sorts.nameAsc')}</option>

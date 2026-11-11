@@ -285,8 +285,12 @@
       "active_other": "{{count}} attivi",
       "reset": "Azzera",
       "periodHint": "Tocca un decennio, poi un altro per allargare il periodo.",
-      "range": "{{from}} – {{to}}"
-    }
+      "range": "{{from}} – {{to}}",
+      "sortShort": "Ordina"
+    },
+    "countLabel_one": "modello",
+    "countLabel_other": "modelli",
+    "goToPage": "Vai alla pagina {{page}}"
   },
   "catalogs": {
     "eyebrow": "Cataloghi",
