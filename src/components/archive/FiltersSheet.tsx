@@ -1,6 +1,7 @@
 import { X } from 'lucide-react'
 import { useEffect, useRef, type ReactNode } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { Button } from '@/components/ui/Button'
 
 type FiltersSheetProps = {
   /** Quanti risultati danno i filtri scelti, per il pulsante in fondo */
@@ -113,17 +114,7 @@ export function FiltersSheet({
           )}
 
           {/* Il pulsante rosso, con la forma della Y e il numero in Sora */}
-          <button
-            type="button"
-            onClick={onClose}
-            className={[
-              'flex h-13 items-center rounded-[3px] rounded-tl-[16px] pr-9 pl-7 text-xs font-semibold tracking-[0.18em] text-white uppercase',
-              '[clip-path:polygon(0_0,100%_0,100%_calc(100%-16px),calc(100%-16px)_100%,0_100%)]',
-              'bg-linear-to-b from-[#E00000] to-[#B80000] shadow-[inset_0_1px_0_rgba(255,255,255,0.25)] hover:from-[#F01010] hover:to-[#C80000]',
-              // Il contorno del focus disegnato dentro: il ritaglio taglierebbe quello di fuori
-              'focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-white',
-            ].join(' ')}
-          >
+          <Button variant="cta" onClick={onClose}>
             {count === undefined ? (
               t('archive.filters.title')
             ) : (
@@ -137,7 +128,7 @@ export function FiltersSheet({
                 }}
               />
             )}
-          </button>
+          </Button>
         </div>
       </div>
     </>
