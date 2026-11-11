@@ -83,7 +83,7 @@ export function ArchivePage() {
           <FamilySelect
             value={filters.category}
             onChange={(category) => setFilters({ category })}
-            className="flex-1 lg:w-64 lg:flex-none"
+            className="min-w-0 flex-1 lg:w-64 lg:flex-none"
           />
 
           <YSeparator />
@@ -122,7 +122,7 @@ export function ArchivePage() {
           <SortSelect
             value={filters.sort}
             onChange={(sort) => setFilters({ sort })}
-            className="pr-7 md:pr-8 lg:w-72"
+            className="shrink-0 pr-7 after:-ml-1.5 md:shrink md:pr-8 lg:w-72"
           />
         </div>
       </YPanel>
