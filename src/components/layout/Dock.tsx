@@ -121,8 +121,7 @@ export function Dock() {
         className={[
           'fixed inset-x-0 bottom-[calc(1rem+env(safe-area-inset-bottom))] z-50 mx-auto',
           'grid h-[4.25rem] w-[calc(100%-1.75rem)] max-w-sm grid-cols-[1fr_1fr_auto_1fr_1fr] items-center px-2',
-          // L'ombra segue la forma ritagliata: drop-shadow, non box-shadow
-          'drop-shadow-[0_12px_28px_rgba(0,0,0,0.55)] md:max-w-xl lg:hidden',
+          'md:max-w-xl lg:hidden',
         ].join(' ')}
       >
         {/*
