@@ -13,12 +13,11 @@ export function HomeHero() {
   const heroLarge = '/images/home/sf90-stradale-2400.webp'
 
   return (
-    <section className="relative flex flex-col items-center overflow-hidden lg:min-h-[54rem] lg:items-stretch">
+    <section className="relative flex flex-col items-center overflow-hidden lg:min-h-[min(88svh,48rem)] lg:items-stretch lg:pt-36">
       <div aria-hidden="true" className="riflettore absolute inset-0" />
 
       {/* L'auto: a tutta larghezza su mobile e tablet, a destra dal desktop */}
-      <div className="relative mt-24 w-full px-2 md:mt-28 md:w-[92%] md:px-0 lg:absolute lg:top-1/2 lg:right-0 lg:mt-0 lg:w-[60%] lg:-translate-y-[42%]">
-        {/* L'ombra sul pavimento, sotto le ruote */}
+      <div className="relative mt-6 w-full px-2 md:mt-10 md:w-[92%] md:px-0 lg:absolute lg:top-1/2 lg:right-0 lg:mt-0 lg:w-[60%] lg:-translate-y-[42%]">
         <div
           aria-hidden="true"
           className="ombra-pavimento absolute inset-x-[6%] -bottom-[7%] h-[20%]"

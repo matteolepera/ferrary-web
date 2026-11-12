@@ -8,6 +8,22 @@ export function formatNumber(value: number, language: string, maxDecimals = 0) {
 }
 
 /**
+ * Il nome di un Paese dal suo codice ISO, nella lingua del sito: "CA" diventa "Canada".
+ * Se il codice non è valido, restituisce il codice così com'è, invece di rompere la pagina.
+ */
+export function countryName(code: string, language: string) {
+  try {
+    return (
+      new Intl.DisplayNames([language], { type: 'region' }).of(
+        code.toUpperCase(),
+      ) ?? code
+    )
+  } catch {
+    return code
+  }
+}
+
+/**
  * Un tempo sul giro in secondi, nel formato dei cronometri: 79 → "1:19", 79.5 → "1:19,5".
  */
 export function formatLap(seconds: number, language: string) {

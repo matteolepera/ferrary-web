@@ -205,6 +205,8 @@ test('propone altri modelli della stessa famiglia', async () => {
     related.queryByRole('link', { name: /SF90 Stradale/ }),
   ).not.toBeInTheDocument()
   expect(received.params.get('category')).toBe('stradali')
+  expect(received.params.get('year_from')).toBe('2004')
+  expect(received.params.get('year_to')).toBe('2034')
 })
 
 test('mostra la scheda tecnica con i valori leggibili', async () => {

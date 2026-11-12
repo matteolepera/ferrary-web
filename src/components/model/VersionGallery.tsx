@@ -2,6 +2,7 @@ import { ChevronLeft, ChevronRight, X } from 'lucide-react'
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Version } from '@/types/catalog'
+import { Eyebrow } from '@/components/ui/Eyebrow'
 
 type VersionGalleryProps = {
   version: Version | undefined
@@ -66,13 +67,9 @@ export function VersionGallery({ version }: VersionGalleryProps) {
       aria-labelledby="galleria-titolo"
       className="mx-auto max-w-[1360px] px-5 pb-18 md:px-10 md:pb-24 lg:pb-32"
     >
-      <h2
-        id="galleria-titolo"
-        className="text-rosso-acceso text-[0.6875rem] font-semibold tracking-[0.22em] uppercase md:text-xs"
-      >
+      <Eyebrow as="h2" id="galleria-titolo">
         {t('model.gallery')}
-      </h2>
-
+      </Eyebrow>
       <ul className="mt-6 grid grid-cols-2 gap-3 md:mt-8 md:gap-4 lg:grid-cols-3">
         {images.map((image, index) => (
           <li

@@ -290,7 +290,9 @@
     },
     "countLabel_one": "model",
     "countLabel_other": "models",
-    "goToPage": "Go to page {{page}}"
+    "goToPage": "Go to page {{page}}",
+    "emptyEyebrow": "No results",
+    "emptyHint": "Try removing a filter, or searching for another name."
   },
   "catalogs": {
     "eyebrow": "Catalogues",
@@ -337,6 +339,10 @@
       "text": "This page ran into a problem. Reload it, or go back to the start.",
       "reload": "Reload the page",
       "home": "Back to the start"
+    },
+    "load": {
+      "eyebrow": "Loading error",
+      "text": "The server did not respond. Check your connection, then try again."
     }
   },
   "notFound": {

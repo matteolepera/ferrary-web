@@ -8,12 +8,13 @@ import { CatalogsMenu } from '@/components/layout/CatalogsMenu'
 import { HeaderSearch } from '@/components/layout/HeaderSearch'
 import { YBar } from '@/components/layout/YBar'
 import { useScrolled } from '@/hooks/useScrolled'
+import { yFocusMark } from '@/components/ui/yFocus'
 
 /** Una voce della barra: si accende di bianco, il riflettore e il segno rosso le danno la luce */
 const itemClass = (active: boolean) =>
   [
     'relative z-10 h-11 px-5 text-[0.6875rem] font-semibold tracking-[0.18em] uppercase transition-colors duration-300',
-    'focus-visible:outline-rosso-acceso focus-visible:outline-2',
+    `${yFocusMark} focus-visible:outline-none`,
     active ? 'text-white' : 'text-neutral-400 hover:text-white',
   ].join(' ')
 
@@ -42,13 +43,35 @@ export function SiteHeader() {
   }, [])
 
   useLayoutEffect(() => {
-    const active = list.current?.querySelector<HTMLElement>(
-      '[aria-current="page"], [data-active]',
-    )
-    setSpot(
-      active ? { left: active.offsetLeft, width: active.offsetWidth } : null,
-    )
-    // Anche cambiando lingua, e quando le voci tornano dopo la ricerca: vanno rimisurate
+    let cancelled = false
+
+    function measure() {
+      const container = list.current
+      // Solo le voci della barra: i link dentro la tendina dei cataloghi non contano
+      const active = container?.querySelector<HTMLElement>(
+        ':scope > li > [aria-current="page"], [data-active]',
+      )
+
+      if (cancelled) return
+      if (!container || !active) {
+        setSpot(null)
+        return
+      }
+
+      // Le posizioni sullo schermo, e la differenza tra la voce e l'elenco:
+      // offsetLeft misurerebbe dal contenitore più vicino, che per "Cataloghi" è quello del suo menu
+      const box = container.getBoundingClientRect()
+      const item = active.getBoundingClientRect()
+      setSpot({ left: item.left - box.left, width: item.width })
+    }
+
+    measure()
+    // I caratteri del sito arrivano dopo la prima misura: con loro le voci cambiano larghezza, e si rimisura
+    document.fonts?.ready.then(measure)
+
+    return () => {
+      cancelled = true
+    }
   }, [pathname, i18n.language, searching])
 
   return (
