@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@testing-library/react'
+import { fireEvent, screen, within } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
 import { designers } from '@/test/fixtures'
 import { server } from '@/test/server'
@@ -10,7 +10,9 @@ test('elenca i designer con il tipo e il numero di Ferrari', async () => {
   const link = await screen.findByRole('link', { name: /Centro Stile Ferrari/ })
 
   expect(link).toHaveAttribute('href', '/designer/centro-stile-ferrari')
-  expect(link).toHaveTextContent('Studio · Italia · 3 Ferrari')
+  expect(link).toHaveTextContent('Studio')
+  expect(link).toHaveTextContent('Italia')
+  expect(link).toHaveTextContent('3 Ferrari')
 })
 
 test('mostra le Ferrari di un designer, con il link alla versione esatta', async () => {
@@ -54,4 +56,49 @@ test("se l'elenco non arriva, permette di riprovare", async () => {
   expect(
     await screen.findByRole('link', { name: /Centro Stile Ferrari/ }),
   ).toBeInTheDocument()
+})
+
+test('filtra i designer per tipo', async () => {
+  server.use(
+    http.get('http://localhost:8000/api/designers', () =>
+      HttpResponse.json({
+        data: [
+          {
+            id: 1,
+            name: 'Pininfarina',
+            slug: 'pininfarina',
+            type: 'studio',
+            country: 'IT',
+            versions_count: 40,
+          },
+          {
+            id: 2,
+            name: 'Flavio Manzoni',
+            slug: 'flavio-manzoni',
+            type: 'persona',
+            country: 'IT',
+            versions_count: 12,
+          },
+        ],
+      }),
+    ),
+  )
+
+  renderRoute('/designer')
+  expect(
+    await screen.findByRole('link', { name: /Pininfarina/ }),
+  ).toBeInTheDocument()
+
+  fireEvent.click(
+    within(screen.getByRole('group', { name: 'Tipo' })).getByRole('button', {
+      name: 'Designer',
+    }),
+  )
+
+  expect(
+    screen.getByRole('link', { name: /Flavio Manzoni/ }),
+  ).toBeInTheDocument()
+  expect(
+    screen.queryByRole('link', { name: /Pininfarina/ }),
+  ).not.toBeInTheDocument()
 })

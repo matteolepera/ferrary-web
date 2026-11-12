@@ -296,6 +296,7 @@
   },
   "catalogs": {
     "eyebrow": "Cataloghi",
+    "all": "Tutti",
     "count_one": "{{count}} Ferrari",
     "count_other": "{{count}} Ferrari",
     "works": "Le Ferrari",
@@ -306,17 +307,39 @@
       "types": {
         "studio": "Studio",
         "persona": "Designer"
-      }
+      },
+      "type": "Tipo",
+      "count_one": "designer",
+      "count_other": "designer"
     },
     "drivers": {
       "title": "Piloti",
       "text": "Chi ha portato in gara le Ferrari, con le auto guidate e le loro stagioni.",
-      "birthDate": "Data di nascita"
+      "birthDate": "Data di nascita",
+      "country": "Paese",
+      "allCountries": "Tutti i Paesi",
+      "count_one": "pilota",
+      "count_other": "piloti"
     },
     "engines": {
       "title": "Motori",
-      "text": "Dal V12 Colombo ai V6 ibridi: architettura, cilindrata e le Ferrari che li hanno montati."
-    }
+      "text": "Dal V12 Colombo ai V6 ibridi: architettura, cilindrata e le Ferrari che li hanno montati.",
+      "architecture": "Architettura",
+      "count_one": "motore",
+      "count_other": "motori",
+      "flat": "Boxer",
+      "inline": "In linea"
+    },
+    "searchLabel": "Cerca nel catalogo",
+    "lettersLabel": "Indice alfabetico",
+    "searchPlaceholder": "Cerca per nome",
+    "resultsLabel_one": "risultato",
+    "resultsLabel_other": "risultati",
+    "ferrari_one": "Ferrari",
+    "ferrari_other": "Ferrari",
+    "empty": "Nessun risultato per questa ricerca.",
+    "emptyHint": "Prova con un altro nome, o togli un filtro.",
+    "clearSearch": "Cancella la ricerca"
   },
   "history": {
     "eyebrow": "La storia",

@@ -295,6 +295,7 @@
     "emptyHint": "Try removing a filter, or searching for another name."
   },
   "catalogs": {
+    "all": "All",
     "eyebrow": "Catalogues",
     "count_one": "{{count}} Ferrari",
     "count_other": "{{count}} Ferraris",
@@ -306,17 +307,39 @@
       "types": {
         "studio": "Studio",
         "persona": "Designer"
-      }
+      },
+      "type": "Type",
+      "count_one": "designer",
+      "count_other": "designers"
     },
     "drivers": {
       "title": "Drivers",
       "text": "The people who raced Ferraris, with the cars they drove and their seasons.",
-      "birthDate": "Date of birth"
+      "birthDate": "Date of birth",
+      "country": "Country",
+      "allCountries": "All countries",
+      "count_one": "driver",
+      "count_other": "drivers"
     },
     "engines": {
       "title": "Engines",
-      "text": "From the Colombo V12 to the hybrid V6s: layout, displacement and the Ferraris that used them."
-    }
+      "text": "From the Colombo V12 to the hybrid V6s: layout, displacement and the Ferraris that used them.",
+      "architecture": "Layout",
+      "count_one": "engine",
+      "count_other": "engines",
+      "flat": "Flat",
+      "inline": "Inline"
+    },
+    "searchLabel": "Search the catalogue",
+    "lettersLabel": "Alphabetical index",
+    "searchPlaceholder": "Search by name",
+    "resultsLabel_one": "result",
+    "resultsLabel_other": "results",
+    "ferrari_one": "Ferrari",
+    "ferrari_other": "Ferraris",
+    "empty": "No results for this search.",
+    "emptyHint": "Try another name, or remove a filter.",
+    "clearSearch": "Clear the search"
   },
   "history": {
     "eyebrow": "History",
