@@ -31,13 +31,13 @@ export function ModelLineage({ model }: ModelLineageProps) {
   const steps = [
     ...(model.predecessor
       ? [
-        {
-          model: model.predecessor,
-          label: t('model.predecessor'),
-          current: false,
-          arrow: '←',
-        },
-      ]
+          {
+            model: model.predecessor,
+            label: t('model.predecessor'),
+            current: false,
+            arrow: '←',
+          },
+        ]
       : []),
     { model, label: t('model.thisModel'), current: true, arrow: '' },
     ...successors.map((successor) => ({
