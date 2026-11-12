@@ -306,7 +306,11 @@
       "types": {
         "studio": "Studio",
         "persona": "Designer"
-      }
+      },
+      "type": "Type",
+      "allTypes": "All",
+      "count_one": "designer",
+      "count_other": "designers"
     },
     "drivers": {
       "title": "Drivers",

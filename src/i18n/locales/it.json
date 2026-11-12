@@ -306,7 +306,11 @@
       "types": {
         "studio": "Studio",
         "persona": "Designer"
-      }
+      },
+      "type": "Tipo",
+      "allTypes": "Tutti",
+      "count_one": "designer",
+      "count_other": "designer"
     },
     "drivers": {
       "title": "Piloti",
