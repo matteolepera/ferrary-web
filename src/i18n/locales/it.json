@@ -315,7 +315,11 @@
     "drivers": {
       "title": "Piloti",
       "text": "Chi ha portato in gara le Ferrari, con le auto guidate e le loro stagioni.",
-      "birthDate": "Data di nascita"
+      "birthDate": "Data di nascita",
+      "country": "Paese",
+      "allCountries": "Tutti i Paesi",
+      "count_one": "pilota",
+      "count_other": "piloti"
     },
     "engines": {
       "title": "Motori",
@@ -326,6 +330,7 @@
       "count_other": "motori"
     },
     "searchLabel": "Cerca nel catalogo",
+    "lettersLabel": "Indice alfabetico",
     "searchPlaceholder": "Cerca per nome",
     "resultsLabel_one": "risultato",
     "resultsLabel_other": "risultati",

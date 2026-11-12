@@ -20,6 +20,8 @@ export type CatalogItem = {
   meta?: string
   /** Quante Ferrari: in fondo alla scheda, con il numero in evidenza */
   count?: number
+  /** La lettera del gruppo, per l'indice alfabetico: "L" per Lauda */
+  initial?: string
 }
 
 type CatalogIndexProps = {
@@ -33,11 +35,17 @@ type CatalogIndexProps = {
   countLabel?: (count: number) => string
   /** Altri controlli nella barra, dopo la ricerca: un filtro della pagina */
   controls?: ReactNode
+  /** Raggruppa gli elementi per iniziale, con l'indice dalla A alla Z */
+  alphabetical?: boolean
 }
+
+const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
+
+const gridClass = 'grid gap-3.5 md:grid-cols-2 lg:grid-cols-3'
 
 /** La scheda di un elemento, con la forma della Y */
 const plateClass = [
-  'group relative flex min-h-36 flex-col rounded-[3px] rounded-tl-[18px] bg-neutral-950 px-6 py-5',
+  'group relative flex min-h-36 flex-1 flex-col rounded-[3px] rounded-tl-[18px] bg-neutral-950 px-6 py-5',
   '[clip-path:polygon(0_0,100%_0,100%_calc(100%-18px),calc(100%-18px)_100%,0_100%)]',
   'shadow-[inset_0_0_0_1px_rgba(255,255,255,0.09)] transition duration-300',
   // Passando il mouse: il bordo si schiarisce e il riflettore si accende
@@ -46,9 +54,61 @@ const plateClass = [
   'focus-visible:outline-rosso-acceso focus-visible:outline-2 focus-visible:-outline-offset-4',
 ].join(' ')
 
+/** La scheda: il codice, il nome, i dettagli e le Ferrari in fondo */
+function Plate({ item }: { item: CatalogItem }) {
+  const { t } = useTranslation()
+
+  return (
+    <li className="flex">
+      <Link to={item.to} className={plateClass}>
+        {item.code && (
+          <span className="font-display text-rosso-acceso flex items-center gap-2.5 text-[0.8125rem] font-extrabold tracking-[0.06em]">
+            <span
+              aria-hidden="true"
+              className="bg-rosso-acceso h-[3px] w-3 -skew-x-[28deg]"
+            />
+            {item.code}
+          </span>
+        )}
+        <span
+          className={`font-display text-xl leading-tight font-extrabold tracking-[-0.025em] md:text-[1.375rem] ${item.code ? 'mt-2.5' : ''}`}
+        >
+          {item.name}
+        </span>
+        {item.meta && (
+          <span className="mt-2 text-[0.8125rem] leading-relaxed text-neutral-400">
+            {item.meta}
+          </span>
+        )}
+
+        {/* In fondo: quante Ferrari, e la freccia che si accende di rosso */}
+        <span className="mt-auto flex items-center justify-between pt-4 text-xs text-neutral-400">
+          <span>
+            {item.count !== undefined && (
+              <>
+                <span className="font-display text-[0.9375rem] font-extrabold text-white">
+                  {item.count}
+                </span>{' '}
+                {t('catalogs.ferrari', { count: item.count })}
+              </>
+            )}
+          </span>
+          <span
+            aria-hidden="true"
+            className="group-hover:text-rosso-acceso text-[0.9375rem] text-neutral-600 transition duration-300 group-hover:translate-x-0.5"
+          >
+            →
+          </span>
+        </span>
+      </Link>
+    </li>
+  )
+}
+
 /**
  * L'elenco di un catalogo, designer, piloti o motori: la barra della Y con la ricerca,
- * il conteggio e le schede in tre colonne. La ricerca filtra nel browser: sono al massimo qualche centinaio.
+ * il conteggio e le schede in tre colonne, anche raggruppate per iniziale.
+ * La ricerca filtra nel browser: sono al massimo qualche centinaio.
  */
 export function CatalogIndex({
   title,
@@ -59,6 +119,7 @@ export function CatalogIndex({
   onRetry,
   countLabel,
   controls,
+  alphabetical = false,
 }: CatalogIndexProps) {
   const { t } = useTranslation()
   const [search, setSearch] = useState('')
@@ -73,6 +134,15 @@ export function CatalogIndex({
   )
   const label =
     countLabel ?? ((count: number) => t('catalogs.resultsLabel', { count }))
+
+  // I gruppi per iniziale, nell'ordine in cui arrivano gli elementi: la pagina li ha già ordinati
+  const groups = new Map<string, CatalogItem[]>()
+  if (alphabetical) {
+    for (const item of visible) {
+      const letter = item.initial ?? '#'
+      groups.set(letter, [...(groups.get(letter) ?? []), item])
+    }
+  }
 
   return (
     <div className="mx-auto max-w-[1360px] px-5 pt-10 pb-18 md:px-10 md:pt-14 md:pb-24 lg:pt-40">
@@ -115,6 +185,33 @@ export function CatalogIndex({
         )}
       </YPanel>
 
+      {/* L'indice: le lettere con almeno un elemento portano al loro gruppo, le altre sono spente */}
+      {alphabetical && items && (
+        <nav aria-label={t('catalogs.lettersLabel')} className="mt-5">
+          <ul className="flex flex-wrap gap-1">
+            {LETTERS.map((letter) => (
+              <li key={letter}>
+                {groups.has(letter) ? (
+                  <a
+                    href={`#lettera-${letter}`}
+                    className="font-display focus-visible:outline-rosso-acceso flex size-8 items-center justify-center rounded-[2px] rounded-tl-[9px] text-[0.8125rem] font-bold text-neutral-300 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.14)] transition hover:text-white hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.35)] focus-visible:outline-2 focus-visible:-outline-offset-2"
+                  >
+                    {letter}
+                  </a>
+                ) : (
+                  <span
+                    aria-hidden="true"
+                    className="font-display flex size-8 items-center justify-center text-[0.8125rem] font-bold text-neutral-800"
+                  >
+                    {letter}
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )}
+
       {/* Il conteggio, annunciato quando cambia con la ricerca */}
       <p
         aria-live="polite"
@@ -137,10 +234,7 @@ export function CatalogIndex({
       )}
 
       {isPending && (
-        <ul
-          aria-busy="true"
-          className="mt-8 grid gap-3.5 md:grid-cols-2 lg:grid-cols-3"
-        >
+        <ul aria-busy="true" className={`mt-8 ${gridClass}`}>
           {[1, 2, 3, 4, 5, 6].map((placeholder) => (
             <li
               key={placeholder}
@@ -168,55 +262,42 @@ export function CatalogIndex({
         />
       )}
 
-      {visible.length > 0 && (
-        <ul className="mt-8 grid gap-3.5 md:grid-cols-2 lg:grid-cols-3">
+      {/* Senza indice: una griglia sola. Con l'indice: un gruppo per lettera, con la lettera come segnalibro */}
+      {visible.length > 0 && !alphabetical && (
+        <ul className={`mt-8 ${gridClass}`}>
           {visible.map((item) => (
-            <li key={item.id} className="flex">
-              <Link to={item.to} className={`${plateClass} flex-1`}>
-                {item.code && (
-                  <span className="font-display text-rosso-acceso flex items-center gap-2.5 text-[0.8125rem] font-extrabold tracking-[0.06em]">
-                    <span
-                      aria-hidden="true"
-                      className="bg-rosso-acceso h-[3px] w-3 -skew-x-[28deg]"
-                    />
-                    {item.code}
-                  </span>
-                )}
-                <span
-                  className={`font-display text-xl leading-tight font-extrabold tracking-[-0.025em] md:text-[1.375rem] ${item.code ? 'mt-2.5' : ''}`}
-                >
-                  {item.name}
-                </span>
-                {item.meta && (
-                  <span className="mt-2 text-[0.8125rem] leading-relaxed text-neutral-400">
-                    {item.meta}
-                  </span>
-                )}
-
-                {/* In fondo: quante Ferrari, e la freccia che si accende di rosso */}
-                <span className="mt-auto flex items-center justify-between pt-4 text-xs text-neutral-400">
-                  <span>
-                    {item.count !== undefined && (
-                      <>
-                        <span className="font-display text-[0.9375rem] font-extrabold text-white">
-                          {item.count}
-                        </span>{' '}
-                        {t('catalogs.ferrari', { count: item.count })}
-                      </>
-                    )}
-                  </span>
-                  <span
-                    aria-hidden="true"
-                    className="group-hover:text-rosso-acceso text-[0.9375rem] text-neutral-600 transition duration-300 group-hover:translate-x-0.5"
-                  >
-                    →
-                  </span>
-                </span>
-              </Link>
-            </li>
+            <Plate key={item.id} item={item} />
           ))}
         </ul>
       )}
+
+      {visible.length > 0 &&
+        alphabetical &&
+        [...groups].map(([letter, members]) => (
+          <section
+            key={letter}
+            id={`lettera-${letter}`}
+            aria-labelledby={`lettera-${letter}-titolo`}
+            className="mt-10 scroll-mt-8 lg:scroll-mt-32"
+          >
+            <h2
+              id={`lettera-${letter}-titolo`}
+              className="flex items-baseline gap-4"
+            >
+              <span className="font-display text-5xl leading-none font-extrabold text-neutral-800 md:text-6xl">
+                {letter}
+              </span>
+              <span className="text-xs tracking-[0.16em] text-neutral-500 uppercase">
+                {label(members.length)}
+              </span>
+            </h2>
+            <ul className={`mt-4 ${gridClass}`}>
+              {members.map((item) => (
+                <Plate key={item.id} item={item} />
+              ))}
+            </ul>
+          </section>
+        ))}
     </div>
   )
 }

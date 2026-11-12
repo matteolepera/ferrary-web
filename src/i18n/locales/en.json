@@ -315,7 +315,11 @@
     "drivers": {
       "title": "Drivers",
       "text": "The people who raced Ferraris, with the cars they drove and their seasons.",
-      "birthDate": "Date of birth"
+      "birthDate": "Date of birth",
+      "country": "Country",
+      "allCountries": "All countries",
+      "count_one": "driver",
+      "count_other": "drivers"
     },
     "engines": {
       "title": "Engines",
@@ -326,6 +330,7 @@
       "count_other": "engines"
     },
     "searchLabel": "Search the catalogue",
+    "lettersLabel": "Alphabetical index",
     "searchPlaceholder": "Search by name",
     "resultsLabel_one": "result",
     "resultsLabel_other": "results",
