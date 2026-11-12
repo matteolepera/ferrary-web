@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import type { Version } from '@/types/catalog'
+import { countryName } from '@/lib/format'
 
 type VersionPeopleProps = {
   version: Version | undefined
@@ -17,7 +18,7 @@ const rowClass = [
  * Chi ha disegnato, carrozzato e guidato la versione: ogni nome porta alla sua pagina.
  */
 export function VersionPeople({ version }: VersionPeopleProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const designers = version?.designers ?? []
   const drivers = version?.drivers ?? []
 
@@ -73,7 +74,7 @@ export function VersionPeople({ version }: VersionPeopleProps) {
                       </span>
                       {driver.nationality && (
                         <span className="text-sm text-neutral-400">
-                          {driver.nationality}
+                          {countryName(driver.nationality, i18n.language)}
                         </span>
                       )}
                     </Link>
