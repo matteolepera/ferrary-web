@@ -316,7 +316,16 @@
     "engines": {
       "title": "Engines",
       "text": "From the Colombo V12 to the hybrid V6s: layout, displacement and the Ferraris that used them."
-    }
+    },
+    "searchLabel": "Search the catalogue",
+    "searchPlaceholder": "Search by name",
+    "resultsLabel_one": "result",
+    "resultsLabel_other": "results",
+    "ferrari_one": "Ferrari",
+    "ferrari_other": "Ferraris",
+    "empty": "No results for this search.",
+    "emptyHint": "Try another name, or remove a filter.",
+    "clearSearch": "Clear the search"
   },
   "history": {
     "eyebrow": "History",
