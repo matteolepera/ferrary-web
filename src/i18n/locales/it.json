@@ -315,7 +315,11 @@
     },
     "engines": {
       "title": "Motori",
-      "text": "Dal V12 Colombo ai V6 ibridi: architettura, cilindrata e le Ferrari che li hanno montati."
+      "text": "Dal V12 Colombo ai V6 ibridi: architettura, cilindrata e le Ferrari che li hanno montati.",
+      "architecture": "Architettura",
+      "allArchitectures": "Tutte le architetture",
+      "count_one": "motore",
+      "count_other": "motori"
     },
     "searchLabel": "Cerca nel catalogo",
     "searchPlaceholder": "Cerca per nome",
