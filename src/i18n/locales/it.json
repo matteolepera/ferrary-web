@@ -296,6 +296,7 @@
   },
   "catalogs": {
     "eyebrow": "Cataloghi",
+    "all": "Tutti",
     "count_one": "{{count}} Ferrari",
     "count_other": "{{count}} Ferrari",
     "works": "Le Ferrari",
@@ -308,7 +309,6 @@
         "persona": "Designer"
       },
       "type": "Tipo",
-      "allTypes": "Tutti",
       "count_one": "designer",
       "count_other": "designer"
     },
@@ -325,9 +325,10 @@
       "title": "Motori",
       "text": "Dal V12 Colombo ai V6 ibridi: architettura, cilindrata e le Ferrari che li hanno montati.",
       "architecture": "Architettura",
-      "allArchitectures": "Tutte le architetture",
       "count_one": "motore",
-      "count_other": "motori"
+      "count_other": "motori",
+      "flat": "Boxer",
+      "inline": "In linea"
     },
     "searchLabel": "Cerca nel catalogo",
     "lettersLabel": "Indice alfabetico",

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ArchiveSelect } from '@/components/archive/ArchiveSelect'
+import { YSegments } from '@/components/ui/YSegments'
 import { CatalogIndex } from '@/components/catalog/CatalogIndex'
 import { useDesigners } from '@/hooks/useDesigners'
 import { countryName } from '@/lib/format'
@@ -37,20 +37,19 @@ export function DesignersPage() {
       onRetry={() => refetch()}
       countLabel={(count) => t('catalogs.designers.count', { count })}
       controls={
-        <ArchiveSelect
+        <YSegments
           label={t('catalogs.designers.type')}
-          prefix={t('catalogs.designers.type')}
           value={type}
           onChange={setType}
-          className="min-w-0 flex-1 pr-7 md:pr-8 lg:w-64 lg:flex-none"
-        >
-          <option value="">{t('catalogs.designers.allTypes')}</option>
-          {TYPES.map((value) => (
-            <option key={value} value={value}>
-              {t(`catalogs.designers.types.${value}`)}
-            </option>
-          ))}
-        </ArchiveSelect>
+          options={[
+            { value: '', label: t('catalogs.all') },
+            ...TYPES.map((value) => ({
+              value,
+              label: t(`catalogs.designers.types.${value}`),
+            })),
+          ]}
+          className="pr-6 md:pr-7"
+        />
       }
     />
   )

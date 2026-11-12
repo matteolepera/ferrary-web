@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ArchiveSelect } from '@/components/archive/ArchiveSelect'
+import { YSegments } from '@/components/ui/YSegments'
 import { CatalogIndex } from '@/components/catalog/CatalogIndex'
 import { useEngines } from '@/hooks/useEngines'
 import { formatNumber } from '@/lib/format'
 import type { Engine } from '@/types/catalog'
 
-/** La chiave dell'architettura di un motore, per il filtro: "V-12", "piatto-12" */
-const layoutKey = (engine: Engine) =>
-  `${engine.architecture}-${engine.cylinders}`
+/** Il gruppo di un motore, per il filtro: "V12", "V8" per i motori a V, "piatto" e "in_linea" per gli altri */
+const groupOf = (engine: Engine) =>
+  engine.architecture === 'V' ? `V${engine.cylinders}` : engine.architecture
 
 export function EnginesPage() {
   const { t, i18n } = useTranslation()
@@ -19,18 +19,27 @@ export function EnginesPage() {
   const layoutLabel = (engine: Engine) =>
     t(`model.layouts.${engine.architecture}`, { cylinders: engine.cylinders })
 
-  // Le architetture presenti nel catalogo, una volta sola, dai cilindri più numerosi ai meno
-  const layouts = [
+  // I gruppi presenti nel catalogo: prima i motori a V, dai cilindri più numerosi ai meno, poi boxer e in linea
+  const groups = [
     ...new Map(
-      (data ?? []).map((engine) => [layoutKey(engine), engine]),
+      (data ?? []).map((engine) => [groupOf(engine), engine]),
     ).values(),
   ].sort(
     (a, b) =>
-      b.cylinders - a.cylinders || a.architecture.localeCompare(b.architecture),
+      Number(b.architecture === 'V') - Number(a.architecture === 'V') ||
+      b.cylinders - a.cylinders ||
+      a.architecture.localeCompare(b.architecture),
   )
 
+  const groupLabel = (engine: Engine) =>
+    engine.architecture === 'V'
+      ? `V${engine.cylinders}`
+      : engine.architecture === 'piatto'
+        ? t('catalogs.engines.flat')
+        : t('catalogs.engines.inline')
+
   const items = data
-    ?.filter((engine) => !layout || layoutKey(engine) === layout)
+    ?.filter((engine) => !layout || groupOf(engine) === layout)
     .map((engine) => ({
       id: engine.id,
       to: `/motori/${engine.id}`,
@@ -64,20 +73,19 @@ export function EnginesPage() {
       onRetry={() => refetch()}
       countLabel={(count) => t('catalogs.engines.count', { count })}
       controls={
-        <ArchiveSelect
+        <YSegments
           label={t('catalogs.engines.architecture')}
-          prefix={t('catalogs.engines.architecture')}
           value={layout}
           onChange={setLayout}
-          className="min-w-0 flex-1 pr-7 md:pr-8 lg:w-80 lg:flex-none"
-        >
-          <option value="">{t('catalogs.engines.allArchitectures')}</option>
-          {layouts.map((engine) => (
-            <option key={layoutKey(engine)} value={layoutKey(engine)}>
-              {layoutLabel(engine)}
-            </option>
-          ))}
-        </ArchiveSelect>
+          options={[
+            { value: '', label: t('catalogs.all') },
+            ...groups.map((engine) => ({
+              value: groupOf(engine),
+              label: groupLabel(engine),
+            })),
+          ]}
+          className="pr-6 md:pr-7"
+        />
       }
     />
   )

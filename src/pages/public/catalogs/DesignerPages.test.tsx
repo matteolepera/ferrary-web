@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@testing-library/react'
+import { fireEvent, screen, within } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
 import { designers } from '@/test/fixtures'
 import { server } from '@/test/server'
@@ -89,9 +89,11 @@ test('filtra i designer per tipo', async () => {
     await screen.findByRole('link', { name: /Pininfarina/ }),
   ).toBeInTheDocument()
 
-  fireEvent.change(screen.getByRole('combobox', { name: 'Tipo' }), {
-    target: { value: 'persona' },
-  })
+  fireEvent.click(
+    within(screen.getByRole('group', { name: 'Tipo' })).getByRole('button', {
+      name: 'Designer',
+    }),
+  )
 
   expect(
     screen.getByRole('link', { name: /Flavio Manzoni/ }),

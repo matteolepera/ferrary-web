@@ -83,9 +83,12 @@ test('filtra i motori per architettura', async () => {
   renderRoute('/motori')
   expect(await screen.findByRole('link', { name: /F140B/ })).toBeInTheDocument()
 
-  fireEvent.change(screen.getByRole('combobox', { name: 'Architettura' }), {
-    target: { value: 'V-8' },
-  })
+  fireEvent.click(
+    within(screen.getByRole('group', { name: 'Architettura' })).getByRole(
+      'button',
+      { name: 'V8' },
+    ),
+  )
 
   expect(screen.getByRole('link', { name: /F120A/ })).toBeInTheDocument()
   expect(screen.queryByRole('link', { name: /F140B/ })).not.toBeInTheDocument()

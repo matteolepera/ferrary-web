@@ -295,6 +295,7 @@
     "emptyHint": "Try removing a filter, or searching for another name."
   },
   "catalogs": {
+    "all": "All",
     "eyebrow": "Catalogues",
     "count_one": "{{count}} Ferrari",
     "count_other": "{{count}} Ferraris",
@@ -308,7 +309,6 @@
         "persona": "Designer"
       },
       "type": "Type",
-      "allTypes": "All",
       "count_one": "designer",
       "count_other": "designers"
     },
@@ -325,9 +325,10 @@
       "title": "Engines",
       "text": "From the Colombo V12 to the hybrid V6s: layout, displacement and the Ferraris that used them.",
       "architecture": "Layout",
-      "allArchitectures": "All layouts",
       "count_one": "engine",
-      "count_other": "engines"
+      "count_other": "engines",
+      "flat": "Flat",
+      "inline": "Inline"
     },
     "searchLabel": "Search the catalogue",
     "lettersLabel": "Alphabetical index",
