@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { ModelCard } from '@/components/catalog/ModelCard'
 import { useModels } from '@/hooks/useModels'
 import type { CarModel } from '@/types/catalog'
+import { Eyebrow } from '@/components/ui/Eyebrow'
 
 type RelatedModelsProps = {
   model: CarModel
@@ -57,9 +58,7 @@ export function RelatedModels({ model }: RelatedModelsProps) {
       aria-labelledby="famiglia-titolo"
       className="mx-auto max-w-[1360px] px-5 pb-18 md:px-10 md:pb-24 lg:pb-32"
     >
-      <p className="text-rosso-acceso text-[0.6875rem] font-semibold tracking-[0.22em] uppercase md:text-xs">
-        {model.category.name}
-      </p>
+      <Eyebrow>{model.category.name}</Eyebrow>
       <h2
         id="famiglia-titolo"
         className="font-display mt-2.5 text-[2.125rem] leading-none font-extrabold tracking-[-0.035em] md:text-[2.75rem] lg:text-[3.5rem]"

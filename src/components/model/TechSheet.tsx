@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { formatLap, formatNumber } from '@/lib/format'
 import type { Version } from '@/types/catalog'
 import { Link } from 'react-router'
+import { Eyebrow } from '@/components/ui/Eyebrow'
 
 type TechSheetProps = {
   version: Version | undefined
@@ -326,12 +327,9 @@ export function TechSheet({ version }: TechSheetProps) {
   return (
     <section aria-labelledby="scheda-titolo" className="border-linea border-t">
       <div className="mx-auto max-w-[1360px] px-5 py-18 md:px-10 md:py-24">
-        <h2
-          id="scheda-titolo"
-          className="text-rosso-acceso text-[0.6875rem] font-semibold tracking-[0.22em] uppercase md:text-xs"
-        >
+        <Eyebrow as="h2" id="scheda-titolo">
           {t('model.sheet.title')}
-        </h2>
+        </Eyebrow>
 
         {/* Le colonne si riempiono a cascata, come in una rivista: i gruppi corti salgono a coprire i vuoti */}
         <div className="mt-8 gap-x-12 md:columns-2 lg:columns-3">

@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import type { CarModel } from '@/types/catalog'
+import { Eyebrow } from '@/components/ui/Eyebrow'
 
 type ModelLineageProps = {
   model: CarModel
@@ -54,16 +55,9 @@ export function ModelLineage({ model }: ModelLineageProps) {
       className="border-linea border-t"
     >
       <div className="mx-auto max-w-[1360px] px-5 py-18 md:px-10 md:py-24">
-        <h2
-          id="discendenza-titolo"
-          className="text-rosso-acceso flex items-center gap-3 text-[0.6875rem] font-semibold tracking-[0.22em] uppercase md:text-xs"
-        >
-          <span
-            aria-hidden="true"
-            className="bg-rosso-acceso h-[3px] w-3.5 -skew-x-[28deg] shadow-[0_0_8px_rgba(255,59,48,0.6)]"
-          />
+        <Eyebrow as="h2" id="discendenza-titolo">
           {t('model.lineage')}
-        </h2>
+        </Eyebrow>
 
         {/* Una lista ordinata: l'ordine qui è il significato, dal più vecchio al più nuovo */}
         <ol className="mt-8 flex flex-col md:flex-row md:items-stretch">
