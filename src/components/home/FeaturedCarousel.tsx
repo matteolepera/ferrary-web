@@ -87,7 +87,7 @@ export function FeaturedCarousel() {
           */}
           <div
             className={[
-              'group bg-notte riflettore relative isolate mt-6 flex h-[28rem] flex-col justify-end overflow-hidden p-6 md:mt-8 md:h-[32rem] md:p-10 lg:mt-10 lg:h-[clamp(32rem,40vw,38rem)] lg:p-12',
+              'group bg-notte riflettore relative isolate mt-6 flex h-[24rem] flex-col justify-end overflow-hidden p-6 md:mt-8 md:h-[28rem] md:p-10 lg:mt-10 lg:h-[clamp(26rem,32vw,31rem)] lg:p-12',
               slideShape,
               // Il bordo sottile, sopra tutto: un'ombra interna, che il ritaglio non taglia
               "after:pointer-events-none after:absolute after:inset-0 after:z-20 after:rounded-[inherit] after:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)] after:content-['']",
@@ -107,7 +107,7 @@ export function FeaturedCarousel() {
                 <img
                   src={current.cover.url}
                   alt=""
-                  className="absolute inset-0 size-full object-cover brightness-[.72] contrast-[1.1] transition-transform duration-[1400ms] ease-out group-hover:scale-[1.03]"
+                  className="absolute inset-0 size-full object-cover brightness-[.92] contrast-[1.05] transition-transform duration-[1400ms] ease-out group-hover:scale-[1.03]"
                 />
               ) : (
                 <span className="font-display absolute inset-x-0 top-[18%] text-center text-[8rem] leading-none font-extrabold tracking-[-0.05em] whitespace-nowrap text-neutral-900 md:text-[13rem] lg:text-[clamp(14rem,22vw,20rem)]">
@@ -115,7 +115,7 @@ export function FeaturedCarousel() {
                 </span>
               )}
               {/* La sfumatura verso il nero, dove stanno i testi */}
-              <div className="from-notte via-notte/55 absolute inset-0 bg-linear-to-t from-[4%] via-40% to-transparent" />
+              <div className="from-notte via-notte/40 absolute inset-0 bg-linear-to-t from-[2%] via-30% to-transparent to-60%" />
             </div>
 
             {/* I testi e il pulsante: annunciati a ogni cambio di modello */}

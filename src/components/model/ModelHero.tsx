@@ -60,7 +60,7 @@ export function ModelHero({
           src={cover.url}
           alt={cover.alt_text}
           fetchPriority="high"
-          className="absolute inset-0 size-full object-cover brightness-[.62] contrast-[1.12] saturate-[1.05]"
+          className="absolute inset-0 size-full object-cover brightness-[.9] contrast-[1.05]"
         />
       ) : (
         // Senza foto: il riflettore e il nome del modello in filigrana, come una targa sul muro della sala
@@ -70,9 +70,10 @@ export function ModelHero({
           </p>
         </div>
       )}
+      {/* Il nero in basso per i testi, e un velo leggero in alto per la barra e il percorso */}
       <div
         aria-hidden="true"
-        className="from-notte via-notte/40 to-notte/60 absolute inset-0 bg-linear-to-t"
+        className="from-notte via-notte/30 to-notte/45 absolute inset-0 bg-linear-to-t from-[3%] via-45%"
       />
 
       {/* Il percorso: l'archivio e la famiglia, in una targhetta con l'angolo della Y */}
