@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react'
+import { screen, within, fireEvent } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
 import { server } from '@/test/server'
 import { renderRoute } from '@/test/utils'
@@ -67,4 +67,35 @@ test('mette le Ferrari nella riga del loro anno, anche con gli anni vuoti in mez
     'href',
     '/modelli/125-f1',
   )
+})
+
+test("l'indice porta a ogni decennio", async () => {
+  renderRoute('/storia')
+
+  const index = within(
+    await screen.findByRole('navigation', { name: 'Decenni' }),
+  )
+  // L'indice c'è subito, i decenni arrivano con i dati: findBy aspetta
+  expect(await index.findByRole('link', { name: "Anni '50" })).toHaveAttribute(
+    'href',
+    '#decennio-1950',
+  )
+})
+
+test('il filtro mostra solo le Ferrari della famiglia scelta', async () => {
+  renderRoute('/storia')
+  expect(
+    await screen.findByRole('link', { name: '166 Inter' }),
+  ).toBeInTheDocument()
+
+  fireEvent.click(
+    within(
+      screen.getByRole('group', { name: 'Famiglie da mostrare' }),
+    ).getByRole('button', { name: 'Corsa' }),
+  )
+
+  expect(
+    screen.queryByRole('link', { name: '166 Inter' }),
+  ).not.toBeInTheDocument()
+  expect(screen.getByRole('link', { name: '125 F1' })).toBeInTheDocument()
 })

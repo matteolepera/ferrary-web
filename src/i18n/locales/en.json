@@ -301,6 +301,8 @@
     "title": "Since 1947, one Ferrari after another.",
     "text": "Eighty years of Ferrari, decade by decade: road cars, racing cars and concepts, year after year.",
     "undated": "Undated",
+    "decadesLabel": "Decades",
+    "filterLabel": "Families to show",
     "error": "Unable to load the history.",
     "decades": {
       "1940": "The first step: in 1947 the first car bearing the Ferrari name is born, soon followed by the first grand tourers for private customers.",

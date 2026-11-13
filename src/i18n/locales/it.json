@@ -301,6 +301,8 @@
     "title": "Dal 1947, una Ferrari dopo l'altra.",
     "text": "Ottant'anni di Ferrari, decennio per decennio: le stradali, le auto da corsa e i concept, anno dopo anno.",
     "undated": "Senza data",
+    "decadesLabel": "Decenni",
+    "filterLabel": "Famiglie da mostrare",
     "error": "Impossibile caricare la storia.",
     "decades": {
       "1940": "Il primo passo: nel 1947 nasce la prima auto con il nome Ferrari, e subito dopo arrivano le prime gran turismo per i clienti.",
