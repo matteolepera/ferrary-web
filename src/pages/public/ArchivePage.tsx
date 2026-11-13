@@ -198,7 +198,7 @@ export function ArchivePage() {
         <StatePanel
           tone="neutral"
           role="status"
-          eyebrow={t('archive.emptyEyebrow')}
+          eyebrow={t('common.noResults')}
           title={t('archive.empty')}
           text={t('archive.emptyHint')}
           action={

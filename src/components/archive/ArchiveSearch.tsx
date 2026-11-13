@@ -69,7 +69,7 @@ export function ArchiveSearch({
         ref={input}
         type="search"
         value={text}
-        placeholder={t('archive.searchPlaceholder')}
+        placeholder={t('nav.searchPlaceholder')}
         onChange={(event) => setText(event.target.value)}
         className="h-full w-full bg-transparent pr-4 pl-12 text-[0.9375rem] text-neutral-100 placeholder:text-neutral-500 focus-visible:outline-none"
       />

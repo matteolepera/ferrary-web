@@ -1,15 +1,23 @@
 {
+  "common": {
+    "retry": "Try again",
+    "backHome": "Back to the start",
+    "noResults": "No results"
+  },
+  "language": {
+    "label": "Language"
+  },
   "nav": {
+    "main": "Main",
+    "quick": "Quick navigation",
+    "skip": "Skip to content",
+    "home": "Ferrary, back to home",
     "archive": "Archive",
     "families": "Families",
     "story": "History",
-    "main": "Main",
-    "home": "Ferrary, back to home",
-    "search": "Search",
     "menu": "Menu",
     "close": "Close",
-    "quick": "Quick navigation",
-    "skip": "Skip to content",
+    "search": "Search",
     "searchLabel": "Search the archive",
     "searchPlaceholder": "Search for a Ferrari, for example F40",
     "searchAll": "All results for “{{term}}”",
@@ -32,9 +40,19 @@
       "titleStart": "Every Ferrari,",
       "titleEnd": "from the first to the latest.",
       "text": "Road cars, racing cars, Formula 1 and concepts: an archive that tells the story of the Prancing Horse, model by model.",
+      "imageAlt": "Red Ferrari SF90 Stradale",
       "cta": "Explore the archive",
-      "families": "Families",
-      "imageAlt": "Red Ferrari SF90 Stradale"
+      "families": "Families"
+    },
+    "featured": {
+      "label": "Featured models",
+      "eyebrow": "Featured",
+      "title": "Models",
+      "discover": "Discover the model",
+      "previous": "Previous model",
+      "next": "Next model",
+      "goTo": "Go to {{name}}",
+      "error": "Unable to load the featured models."
     },
     "manifesto": {
       "eyebrow": "The project",
@@ -42,25 +60,13 @@
       "titleEnd": "A museum, lit in the dark.",
       "text": "From grand tourers built for the road to racing prototypes and the concepts that imagine the future. Every page is a showcase: light, shadow, technical data and story."
     },
-    "featured": {
-      "label": "Featured models",
-      "eyebrow": "Featured",
-      "title": "Models",
-      "all": "Full archive",
-      "discover": "Discover the model",
-      "previous": "Previous model",
-      "next": "Next model",
-      "noPhoto": "Photo coming soon",
-      "error": "Unable to load the featured models.",
-      "goTo": "Go to {{name}}"
-    },
     "families": {
       "eyebrow": "Families",
       "title": "Where do you want to start?",
       "models_one": "{{count}} model",
       "models_other": "{{count}} models",
-      "error": "Unable to load the families.",
-      "showing": "On display"
+      "showing": "On display",
+      "error": "Unable to load the families."
     },
     "invite": {
       "titleStart": "The whole archive,",
@@ -68,18 +74,77 @@
       "cta": "Open the archive"
     }
   },
+  "archive": {
+    "eyebrow": "Archive",
+    "title": "Every Ferrari",
+    "text": "Browse the whole collection: search a model by name, pick a family or a period, and open its page.",
+    "searchLabel": "Search by name",
+    "family": "Family",
+    "allFamilies": "All families",
+    "groups": {
+      "road": "Road cars",
+      "racing": "Racing",
+      "concept": "Concepts",
+      "other": "Other"
+    },
+    "filters": {
+      "open": "Filters",
+      "title": "Filters",
+      "close": "Close filters",
+      "active_one": "{{count}} active",
+      "active_other": "{{count}} active",
+      "powertrain": "Powertrain",
+      "any": "All",
+      "powertrains": {
+        "termico": "Combustion",
+        "ibrido": "Hybrid",
+        "elettrico": "Electric"
+      },
+      "period": "Period",
+      "periodHint": "Tap a decade, then another to widen the period.",
+      "anyYear": "Any",
+      "decade": "{{full}}s",
+      "range": "{{from}} – {{to}}",
+      "sort": "Sort by",
+      "sortShort": "Sort",
+      "sorts": {
+        "nameAsc": "Name, A to Z",
+        "nameDesc": "Name, Z to A",
+        "newest": "Newest first",
+        "oldest": "Oldest first"
+      },
+      "reset": "Reset",
+      "show_one": "Show <n>{{count}}</n> result",
+      "show_other": "Show <n>{{count}}</n> results"
+    },
+    "countLabel_one": "model",
+    "countLabel_other": "models",
+    "activeFilters": "Active filters",
+    "removeFilter": "Remove the {{name}} filter",
+    "clear": "Clear filters",
+    "loading": "Loading the models…",
+    "error": "Unable to load the archive.",
+    "empty": "No Ferrari matches these filters.",
+    "emptyHint": "Try removing a filter, or searching for another name.",
+    "pagination": "Archive pages",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {{current}} of {{last}}",
+    "goToPage": "Go to page {{page}}"
+  },
   "model": {
-    "power": "Power",
-    "acceleration": "0–100 km/h",
-    "topSpeed": "Top speed",
-    "noPhoto": "Photo coming soon",
     "loading": "Loading the model…",
     "error": "Unable to load this model.",
+    "noPhoto": "Photo coming soon",
+    "breadcrumb": "Breadcrumb",
     "versions": "Versions",
     "since": "Since {{start}}",
     "range": "{{start}}–{{end}}",
     "specsLabel": "Technical data",
     "engine": "Engine",
+    "power": "Power",
+    "acceleration": "0–100 km/h",
+    "topSpeed": "Top speed",
     "displacement": "Displacement",
     "dryWeight": "Dry weight",
     "production": "Production",
@@ -102,17 +167,6 @@
     "units_one": "{{count}} unit",
     "units_other": "{{count}} units",
     "story": "The story",
-    "gallery": "Gallery",
-    "enlarge": "Enlarge photo: {{alt}}",
-    "closeGallery": "Close the gallery",
-    "previousImage": "Previous photo",
-    "nextImage": "Next photo",
-    "counter": "{{current}} of {{total}}",
-    "lineage": "Lineage",
-    "predecessor": "Predecessor",
-    "successor": "Successor",
-    "thisModel": "This model",
-    "related": "In the same family",
     "sheet": {
       "title": "Technical sheet",
       "sections": {
@@ -217,6 +271,9 @@
     "racing": {
       "title": "Racing results",
       "caption": "Results by championship and season",
+      "totalWins": "Total wins",
+      "totalPodiums": "Total podiums",
+      "totalTitles": "Titles won",
       "championship": "Championship",
       "season": "Season",
       "races": "Races",
@@ -225,121 +282,19 @@
       "podiums": "Podiums",
       "fastestLaps": "Fastest laps",
       "driversTitles": "Drivers' titles",
-      "constructorsTitles": "Constructors' titles",
-      "totalWins": "Total wins",
-      "totalPodiums": "Total podiums",
-      "totalTitles": "Titles won"
+      "constructorsTitles": "Constructors' titles"
     },
-    "breadcrumb": "Breadcrumb"
-  },
-  "archive": {
-    "eyebrow": "Archive",
-    "title": "Every Ferrari",
-    "text": "Browse the whole collection: search a model by name, pick a family or a period, and open its page.",
-    "loading": "Loading the models…",
-    "count_one": "{{count}} model",
-    "count_other": "{{count}} models",
-    "error": "Unable to load the archive.",
-    "empty": "No Ferrari matches these filters.",
-    "clear": "Clear filters",
-    "pagination": "Archive pages",
-    "previous": "Previous",
-    "next": "Next",
-    "page": "Page {{current}} of {{last}}",
-    "searchLabel": "Search by name",
-    "searchPlaceholder": "Search a Ferrari, e.g. F40",
-    "family": "Family",
-    "allFamilies": "All families",
-    "groups": {
-      "road": "Road cars",
-      "racing": "Racing",
-      "concept": "Concepts",
-      "other": "Other"
-    },
-    "activeFilters": "Active filters",
-    "removeFilter": "Remove the {{name}} filter",
-    "filters": {
-      "open": "Filters",
-      "title": "Filters",
-      "close": "Close filters",
-      "show_one": "Show {{count}} result",
-      "show_other": "Show {{count}} results",
-      "powertrain": "Powertrain",
-      "any": "All",
-      "powertrains": {
-        "termico": "Combustion",
-        "ibrido": "Hybrid",
-        "elettrico": "Electric"
-      },
-      "period": "Period",
-      "anyYear": "Any",
-      "decade": "{{full}}s",
-      "sort": "Sort by",
-      "sorts": {
-        "nameAsc": "Name, A to Z",
-        "nameDesc": "Name, Z to A",
-        "newest": "Newest first",
-        "oldest": "Oldest first"
-      },
-      "active_one": "{{count}} active",
-      "active_other": "{{count}} active",
-      "reset": "Reset",
-      "periodHint": "Tap a decade, then another to widen the period.",
-      "range": "{{from}} – {{to}}",
-      "sortShort": "Sort"
-    },
-    "countLabel_one": "model",
-    "countLabel_other": "models",
-    "goToPage": "Go to page {{page}}",
-    "emptyEyebrow": "No results",
-    "emptyHint": "Try removing a filter, or searching for another name."
-  },
-  "catalogs": {
-    "all": "All",
-    "eyebrow": "Catalogues",
-    "count_one": "{{count}} Ferrari",
-    "count_other": "{{count}} Ferraris",
-    "works": "The Ferraris",
-    "error": "Unable to load this catalogue.",
-    "designers": {
-      "title": "Designers",
-      "text": "The studios and people who designed and built the bodies of Ferrari cars.",
-      "types": {
-        "studio": "Studio",
-        "persona": "Designer"
-      },
-      "type": "Type",
-      "count_one": "designer",
-      "count_other": "designers"
-    },
-    "drivers": {
-      "title": "Drivers",
-      "text": "The people who raced Ferraris, with the cars they drove and their seasons.",
-      "birthDate": "Date of birth",
-      "country": "Country",
-      "allCountries": "All countries",
-      "count_one": "driver",
-      "count_other": "drivers"
-    },
-    "engines": {
-      "title": "Engines",
-      "text": "From the Colombo V12 to the hybrid V6s: layout, displacement and the Ferraris that used them.",
-      "architecture": "Layout",
-      "count_one": "engine",
-      "count_other": "engines",
-      "flat": "Flat",
-      "inline": "Inline"
-    },
-    "searchLabel": "Search the catalogue",
-    "lettersLabel": "Alphabetical index",
-    "searchPlaceholder": "Search by name",
-    "resultsLabel_one": "result",
-    "resultsLabel_other": "results",
-    "ferrari_one": "Ferrari",
-    "ferrari_other": "Ferraris",
-    "empty": "No results for this search.",
-    "emptyHint": "Try another name, or remove a filter.",
-    "clearSearch": "Clear the search"
+    "gallery": "Gallery",
+    "enlarge": "Enlarge photo: {{alt}}",
+    "closeGallery": "Close the gallery",
+    "previousImage": "Previous photo",
+    "nextImage": "Next photo",
+    "counter": "{{current}} of {{total}}",
+    "lineage": "Lineage",
+    "predecessor": "Predecessor",
+    "thisModel": "This model",
+    "successor": "Successor",
+    "related": "In the same family"
   },
   "history": {
     "eyebrow": "History",
@@ -347,21 +302,64 @@
     "text": "Every Ferrari in the archive in chronological order, decade by decade.",
     "count_one": "{{count}} model in chronological order",
     "count_other": "{{count}} models in chronological order",
+    "undated": "Undated",
     "loadMore": "Load more Ferraris",
     "loadingMore": "Loading…",
-    "error": "Unable to load the history.",
-    "undated": "Undated"
+    "error": "Unable to load the history."
   },
-  "common": {
-    "retry": "Try again"
+  "catalogs": {
+    "eyebrow": "Catalogues",
+    "searchLabel": "Search the catalogue",
+    "searchPlaceholder": "Search by name",
+    "all": "All",
+    "lettersLabel": "Alphabetical index",
+    "resultsLabel_one": "result",
+    "resultsLabel_other": "results",
+    "ferrari_one": "Ferrari",
+    "ferrari_other": "Ferraris",
+    "count_one": "{{count}} Ferrari",
+    "count_other": "{{count}} Ferraris",
+    "works": "The Ferraris",
+    "error": "Unable to load this catalogue.",
+    "empty": "No results for this search.",
+    "emptyHint": "Try another name, or remove a filter.",
+    "clearSearch": "Clear the search",
+    "engines": {
+      "title": "Engines",
+      "text": "From the Colombo V12 to the hybrid V6s: layout, displacement and the Ferraris that used them.",
+      "architecture": "Layout",
+      "flat": "Flat",
+      "inline": "Inline",
+      "count_one": "engine",
+      "count_other": "engines"
+    },
+    "designers": {
+      "title": "Designers",
+      "text": "The studios and people who designed and built the bodies of Ferrari cars.",
+      "type": "Type",
+      "types": {
+        "studio": "Studio",
+        "persona": "Designer"
+      },
+      "count_one": "designer",
+      "count_other": "designers"
+    },
+    "drivers": {
+      "title": "Drivers",
+      "text": "The people who raced Ferraris, with the cars they drove and their seasons.",
+      "country": "Country",
+      "allCountries": "All countries",
+      "birthDate": "Date of birth",
+      "count_one": "driver",
+      "count_other": "drivers"
+    }
   },
   "errors": {
     "unexpected": {
       "eyebrow": "Unexpected error",
       "title": "Something went wrong.",
       "text": "This page ran into a problem. Reload it, or go back to the start.",
-      "reload": "Reload the page",
-      "home": "Back to the start"
+      "reload": "Reload the page"
     },
     "load": {
       "eyebrow": "Loading error",
@@ -371,10 +369,6 @@
   "notFound": {
     "code": "Error 404",
     "title": "Page not found",
-    "description": "The address you opened does not exist, or it has been moved.",
-    "back": "Back to the start"
-  },
-  "language": {
-    "label": "Language"
+    "description": "The address you opened does not exist, or it has been moved."
   }
 }

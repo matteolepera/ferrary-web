@@ -41,7 +41,7 @@ export function RouteErrorPage() {
         </button>
         {/* Un link "vero": ricarica tutto il sito, nel caso il problema fosse nello stato dell'app */}
         <a href="/" className={buttonClass('ctaGhost')}>
-          {t('errors.unexpected.home')}
+          {t('common.backHome')}
           <ButtonArrow />
         </a>
       </StatePage>

@@ -249,7 +249,7 @@ export function CatalogIndex({
         <StatePanel
           tone="neutral"
           role="status"
-          eyebrow={t('archive.emptyEyebrow')}
+          eyebrow={t('common.noResults')}
           title={t('catalogs.empty')}
           text={t('catalogs.emptyHint')}
           action={

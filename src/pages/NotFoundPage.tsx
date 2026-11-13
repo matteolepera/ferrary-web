@@ -23,7 +23,7 @@ export function NotFoundPage({ backTo = '/' }: NotFoundPageProps) {
       text={t('notFound.description')}
     >
       <Link to={backTo} className={buttonClass('cta')}>
-        {t('notFound.back')}
+        {t('common.backHome')}
         <ButtonArrow />
       </Link>
 
