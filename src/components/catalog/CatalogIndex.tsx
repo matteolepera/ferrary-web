@@ -178,7 +178,7 @@ export function CatalogIndex({
         {controls && (
           <>
             <YSeparator className="hidden lg:block" />
-            <div className="flex h-12 basis-full border-t border-white/10 lg:h-auto lg:basis-auto lg:border-t-0">
+            <div className="flex h-12 min-w-0 basis-full border-t border-white/10 lg:h-auto lg:basis-auto lg:border-t-0">
               {controls}
             </div>
           </>

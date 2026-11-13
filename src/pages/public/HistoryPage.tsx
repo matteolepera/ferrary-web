@@ -157,14 +157,14 @@ export function HistoryPage() {
         <YPanel className="flex flex-wrap lg:h-[3.75rem] lg:flex-nowrap">
           <nav
             aria-label={t('history.decadesLabel')}
-            className="basis-full lg:min-w-0 lg:flex-1 lg:basis-auto"
+            className="min-w-0 basis-full lg:flex-1 lg:basis-auto"
           >
-            <ul className="senza-barra flex h-14 overflow-x-auto pl-2 lg:h-full">
+            <ul className="senza-barra flex h-14 w-full overflow-x-auto pl-2 lg:h-full">
               {decades.map(({ decade, models }) => {
                 const active = decade === current
 
                 return (
-                  <li key={decade} className="flex min-w-14 flex-1">
+                  <li key={decade} className="flex min-w-14 flex-1 shrink-0">
                     <a
                       href={`#decennio-${decade}`}
                       aria-label={decadeLabel(t, decade)}
@@ -197,7 +197,7 @@ export function HistoryPage() {
 
           <YSeparator className="hidden lg:block" />
 
-          <div className="flex h-12 basis-full border-t border-white/10 lg:h-auto lg:basis-auto lg:border-t-0">
+          <div className="flex h-12 min-w-0 basis-full border-t border-white/10 lg:h-auto lg:basis-auto lg:border-t-0">
             <YSegments
               label={t('history.filterLabel')}
               value={filter}
