@@ -13,7 +13,7 @@ test('ha le voci della barra del desktop, con la ricerca', async () => {
     'aria-current',
     'page',
   )
-  expect(nav.getByRole('link', { name: 'La storia' })).toHaveAttribute(
+  expect(nav.getByRole('link', { name: 'Storia' })).toHaveAttribute(
     'href',
     '/storia',
   )

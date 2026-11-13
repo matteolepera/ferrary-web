@@ -14,7 +14,7 @@
     "home": "Ferrary, torna alla home",
     "archive": "Archivio",
     "families": "Famiglie",
-    "story": "La storia",
+    "story": "Storia",
     "menu": "Menu",
     "close": "Chiudi",
     "search": "Cerca",
@@ -297,7 +297,7 @@
     "related": "Nella stessa famiglia"
   },
   "history": {
-    "eyebrow": "La storia",
+    "eyebrow": "Storia",
     "title": "Dal 1947, una Ferrari dopo l'altra.",
     "text": "Tutte le Ferrari dell'archivio in ordine cronologico, decennio per decennio.",
     "count_one": "{{count}} modello in ordine cronologico",
