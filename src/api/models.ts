@@ -1,6 +1,11 @@
 import { api } from '@/api/client'
 import type { ApiResource, Paginated } from '@/types/api'
-import type { CarModel, PowertrainType, VehicleType } from '@/types/catalog'
+import type {
+  CarModel,
+  PowertrainType,
+  VehicleType,
+  TimelineModel,
+} from '@/types/catalog'
 
 /**
  * Filtri dell'archivio, gli stessi accettati dall'endpoint GET /models.
@@ -34,6 +39,15 @@ export async function fetchModels(
  */
 export async function fetchModel(slug: string): Promise<CarModel> {
   const response = await api.get<ApiResource<CarModel>>(`/models/${slug}`)
+
+  return response.data.data
+}
+
+/**
+ * Tutte le Ferrari visibili in ordine di anno, leggere e senza paginazione: per la storia.
+ */
+export async function fetchTimeline(): Promise<TimelineModel[]> {
+  const response = await api.get<{ data: TimelineModel[] }>('/models/timeline')
 
   return response.data.data
 }

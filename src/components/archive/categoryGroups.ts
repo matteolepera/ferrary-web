@@ -27,7 +27,7 @@ const GROUPS: Record<Exclude<CategoryGroupKey, 'other'>, string[]> = {
 const ORDER: CategoryGroupKey[] = ['road', 'racing', 'concept', 'other']
 
 /** Il gruppo di una categoria; quelle che non conosciamo vanno in "Altre" */
-function groupOf(slug: string): CategoryGroupKey {
+export function groupOf(slug: string): CategoryGroupKey {
   const keys = Object.keys(GROUPS) as Exclude<CategoryGroupKey, 'other'>[]
 
   return keys.find((key) => GROUPS[key].includes(slug)) ?? 'other'

@@ -13,7 +13,7 @@ test('segna la pagina attiva nella barra', async () => {
     'aria-current',
     'page',
   )
-  expect(nav.getByRole('link', { name: 'La storia' })).not.toHaveAttribute(
+  expect(nav.getByRole('link', { name: 'Storia' })).not.toHaveAttribute(
     'aria-current',
   )
 })

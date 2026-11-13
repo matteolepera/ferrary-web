@@ -299,13 +299,22 @@
   "history": {
     "eyebrow": "History",
     "title": "Since 1947, one Ferrari after another.",
-    "text": "Every Ferrari in the archive in chronological order, decade by decade.",
-    "count_one": "{{count}} model in chronological order",
-    "count_other": "{{count}} models in chronological order",
+    "text": "Eighty years of Ferrari, decade by decade: road cars, racing cars and concepts, year after year.",
     "undated": "Undated",
-    "loadMore": "Load more Ferraris",
-    "loadingMore": "Loading…",
-    "error": "Unable to load the history."
+    "decadesLabel": "Decades",
+    "filterLabel": "Families to show",
+    "error": "Unable to load the history.",
+    "decades": {
+      "1940": "The first step: in 1947 the first car bearing the Ferrari name is born, soon followed by the first grand tourers for private customers.",
+      "1950": "Ferraris are born to race: single-seaters, sports prototypes and the first grand tourers, built in small numbers for those who wanted to drive them on the road too.",
+      "1960": "The golden age of the grand tourers, from the 250 GTO to the Daytona, while Ferrari wins Le Mans six times in a row. The Dino arrives, with the first six-cylinder for the road.",
+      "1970": "The flat-twelve conquers Formula 1 with the 312 T and Niki Lauda, and the road with the Berlinetta Boxer. Ferrari leaves sports prototypes to focus on Formula 1.",
+      "1980": "The turbo era, in Formula 1 and on the road, up to the 288 GTO and the F40, the last car commissioned by Enzo Ferrari.",
+      "1990": "The return of the front-mounted V12 with the 550 Maranello, berlinettas like the F355, and in Formula 1 the arrival of Michael Schumacher.",
+      "2000": "The record years: five drivers' titles in a row in Formula 1, and on the road the Enzo and the F430, with racing electronics.",
+      "2010": "Hybrid arrives: the LaFerrari, then the SF90 Stradale, the first series-production plug-in hybrid, while Formula 1 moves to turbo-hybrid engines.",
+      "2020": "The present: the Purosangue, the first four-door Ferrari, the 499P that brings Ferrari back to victory at Le Mans, and the F80, heir to the great supercars."
+    }
   },
   "catalogs": {
     "eyebrow": "Catalogues",
