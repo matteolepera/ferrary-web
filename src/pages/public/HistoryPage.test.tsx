@@ -1,120 +1,70 @@
-import { fireEvent, screen, waitFor, within, act } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
-import { f40, modelsPage, sf90 } from '@/test/fixtures'
 import { server } from '@/test/server'
 import { renderRoute } from '@/test/utils'
 
-/** Due pagine: prima la F40, poi la SF90 */
-function useTwoPages() {
+const formula1 = { slug: 'formula-1', name: 'Formula 1' }
+const sportive = { slug: 'sportive', name: 'Sportive' }
+
+beforeEach(() => {
   server.use(
-    http.get('http://localhost:8000/api/models', ({ request }) => {
-      const page = Number(new URL(request.url).searchParams.get('page') ?? 1)
-      const meta = {
-        ...modelsPage.meta,
-        current_page: page,
-        last_page: 2,
-        total: 2,
-      }
-
-      return HttpResponse.json({
-        ...modelsPage,
-        data: page === 1 ? [f40] : [sf90],
-        meta,
-      })
-    }),
-  )
-}
-
-test('raggruppa le Ferrari per decennio, in ordine di anno', async () => {
-  const received = { params: new URLSearchParams() }
-
-  server.use(
-    http.get('http://localhost:8000/api/models', ({ request }) => {
-      received.params = new URL(request.url).searchParams
-
-      return HttpResponse.json(modelsPage)
-    }),
-  )
-
-  renderRoute('/storia')
-
-  const eighties = within(
-    await screen.findByRole('region', { name: "Anni '80" }),
-  )
-  expect(eighties.getByRole('link', { name: /F40/ })).toHaveAttribute(
-    'href',
-    '/modelli/f40',
-  )
-
-  const twentyTens = within(screen.getByRole('region', { name: 'Anni 2010' }))
-  expect(
-    twentyTens.getByRole('link', { name: /SF90 Stradale/ }),
-  ).toBeInTheDocument()
-
-  expect(received.params.get('sort')).toBe('year')
-})
-
-test('carica le pagine successive in coda', async () => {
-  useTwoPages()
-
-  renderRoute('/storia')
-
-  expect(await screen.findByRole('link', { name: /F40/ })).toBeInTheDocument()
-  expect(
-    screen.queryByRole('link', { name: /SF90 Stradale/ }),
-  ).not.toBeInTheDocument()
-
-  fireEvent.click(screen.getByRole('button', { name: 'Carica altre Ferrari' }))
-
-  // La seconda pagina si aggiunge alla prima, senza sostituirla
-  expect(
-    await screen.findByRole('link', { name: /SF90 Stradale/ }),
-  ).toBeInTheDocument()
-  expect(screen.getByRole('link', { name: /F40/ })).toBeInTheDocument()
-
-  // Arrivati all'ultima pagina, il pulsante sparisce
-  await waitFor(() =>
-    expect(
-      screen.queryByRole('button', { name: 'Carica altre Ferrari' }),
-    ).not.toBeInTheDocument(),
-  )
-})
-
-test('carica da sola la pagina successiva, arrivando in fondo', async () => {
-  // Un osservatore finto che ci lascia decidere quando la sentinella "diventa visibile"
-  const observer = {
-    notify: undefined as IntersectionObserverCallback | undefined,
-  }
-  vi.stubGlobal(
-    'IntersectionObserver',
-    class {
-      constructor(callback: IntersectionObserverCallback) {
-        observer.notify = callback
-      }
-      observe() {}
-      unobserve() {}
-      disconnect() {}
-      takeRecords() {
-        return []
-      }
-    },
-  )
-  useTwoPages()
-
-  renderRoute('/storia')
-  await screen.findByRole('link', { name: /F40/ })
-
-  // Simuliamo l'arrivo in fondo alla pagina
-  act(() =>
-    observer.notify?.(
-      [{ isIntersecting: true } as IntersectionObserverEntry],
-      {} as IntersectionObserver,
+    http.get('http://localhost:8000/api/models/timeline', () =>
+      HttpResponse.json({
+        data: [
+          {
+            id: 1,
+            slug: '125-f1',
+            name: '125 F1',
+            first_year: 1950,
+            category: formula1,
+          },
+          {
+            id: 2,
+            slug: '166-inter',
+            name: '166 Inter',
+            first_year: 1950,
+            category: sportive,
+          },
+          {
+            id: 3,
+            slug: '553-f1',
+            name: '553 F1',
+            first_year: 1953,
+            category: formula1,
+          },
+        ],
+      }),
     ),
   )
+})
 
-  expect(
-    await screen.findByRole('link', { name: /SF90 Stradale/ }),
-  ).toBeInTheDocument()
+test('divide le Ferrari per decennio, con il racconto e i numeri', async () => {
+  renderRoute('/storia')
 
-  vi.unstubAllGlobals()
+  const decade = within(await screen.findByRole('region', { name: "Anni '50" }))
+  expect(decade.getByText(/Le Ferrari nascono per correre/)).toBeInTheDocument()
+  // Tre Ferrari, una stradale e due da corsa
+  expect(decade.getByText('Stradali').nextSibling).toHaveTextContent('1')
+  expect(decade.getByText('Corsa').nextSibling).toHaveTextContent('2')
+})
+
+test('mette le Ferrari nella riga del loro anno, anche con gli anni vuoti in mezzo', async () => {
+  renderRoute('/storia')
+
+  const decade = within(await screen.findByRole('region', { name: "Anni '50" }))
+  const rows = decade
+    .getAllByRole('listitem')
+    .filter((row) => /^\d{4}/.test(row.textContent ?? ''))
+
+  // Dal 1950 al 1953: quattro righe, con il 1951 e il 1952 vuoti
+  expect(rows.map((row) => row.textContent?.slice(0, 4))).toEqual([
+    '1950',
+    '1951',
+    '1952',
+    '1953',
+  ])
+  expect(decade.getByRole('link', { name: '125 F1' })).toHaveAttribute(
+    'href',
+    '/modelli/125-f1',
+  )
 })

@@ -189,3 +189,12 @@ export type CarModel = {
   versions_count?: number
   first_year?: number | null
 }
+
+/** Una Ferrari nella linea del tempo della storia: solo i campi della targhetta */
+export type TimelineModel = {
+  id: number
+  slug: string
+  name: string
+  first_year: number | null
+  category?: { slug: string; name: string }
+}

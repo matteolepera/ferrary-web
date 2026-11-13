@@ -299,13 +299,20 @@
   "history": {
     "eyebrow": "Storia",
     "title": "Dal 1947, una Ferrari dopo l'altra.",
-    "text": "Tutte le Ferrari dell'archivio in ordine cronologico, decennio per decennio.",
-    "count_one": "{{count}} modello in ordine cronologico",
-    "count_other": "{{count}} modelli in ordine cronologico",
+    "text": "Ottant'anni di Ferrari, decennio per decennio: le stradali, le auto da corsa e i concept, anno dopo anno.",
     "undated": "Senza data",
-    "loadMore": "Carica altre Ferrari",
-    "loadingMore": "Caricamento…",
-    "error": "Impossibile caricare la storia."
+    "error": "Impossibile caricare la storia.",
+    "decades": {
+      "1940": "Il primo passo: nel 1947 nasce la prima auto con il nome Ferrari, e subito dopo arrivano le prime gran turismo per i clienti.",
+      "1950": "Le Ferrari nascono per correre: monoposto, sport prototipi e le prime gran turismo, costruite in pochi esemplari per chi voleva guidarle anche su strada.",
+      "1960": "L'epoca d'oro delle gran turismo, dalla 250 GTO alla Daytona, mentre a Le Mans Ferrari vince sei edizioni di fila. Arriva la Dino, con il primo sei cilindri per la strada.",
+      "1970": "Il dodici cilindri piatto conquista la Formula 1 con la 312 T e Niki Lauda, e la strada con la Berlinetta Boxer. Ferrari lascia i prototipi per concentrarsi sulla Formula 1.",
+      "1980": "L'era del turbo, in Formula 1 e su strada, fino alla 288 GTO e alla F40, l'ultima voluta da Enzo Ferrari.",
+      "1990": "Il ritorno al V12 anteriore con la 550 Maranello, le berlinette come la F355, e in Formula 1 l'arrivo di Michael Schumacher.",
+      "2000": "Gli anni dei record: cinque titoli piloti di fila in Formula 1, e su strada l'Enzo e la F430, con l'elettronica delle corse.",
+      "2010": "Arriva l'ibrido: la LaFerrari, poi la SF90 Stradale, la prima ibrida plug-in di serie, mentre in Formula 1 iniziano i motori turbo ibridi.",
+      "2020": "Il presente: la Purosangue, la prima Ferrari a quattro porte, la 499P che riporta Ferrari alla vittoria a Le Mans, e la F80, erede delle grandi supercar."
+    }
   },
   "catalogs": {
     "eyebrow": "Cataloghi",
