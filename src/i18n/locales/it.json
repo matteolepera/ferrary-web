@@ -329,12 +329,14 @@
     "count_one": "{{count}} Ferrari",
     "count_other": "{{count}} Ferrari",
     "works": "Le Ferrari",
+    "byYear": "In ordine di anno",
     "error": "Impossibile caricare questo catalogo.",
     "empty": "Nessun risultato per questa ricerca.",
     "emptyHint": "Prova con un altro nome, o togli un filtro.",
     "clearSearch": "Cancella la ricerca",
     "engines": {
       "title": "Motori",
+      "kind": "Motore",
       "text": "Dal V12 Colombo ai V6 ibridi: architettura, cilindrata e le Ferrari che li hanno montati.",
       "architecture": "Architettura",
       "flat": "Boxer",
@@ -355,6 +357,7 @@
     },
     "drivers": {
       "title": "Piloti",
+      "kind": "Pilota",
       "text": "Chi ha portato in gara le Ferrari, con le auto guidate e le loro stagioni.",
       "country": "Paese",
       "allCountries": "Tutti i Paesi",

@@ -80,7 +80,8 @@ export function EnginePage() {
   return (
     <CatalogDetail
       back={{ to: '/motori', label: t('catalogs.engines.title') }}
-      eyebrow={engine.name ?? undefined}
+      kind={t('catalogs.engines.kind')}
+      detail={engine.name}
       name={engine.code}
       versions={engine.versions ?? []}
     >

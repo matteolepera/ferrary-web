@@ -3,7 +3,7 @@ import { useParams } from 'react-router'
 import { isNotFound } from '@/api/errors'
 import { CatalogDetail } from '@/components/catalog/CatalogDetail'
 import { useDriver } from '@/hooks/useDrivers'
-import { formatDate } from '@/lib/format'
+import { countryName, formatDate } from '@/lib/format'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { ErrorState } from '@/components/ui/ErrorState'
 
@@ -38,7 +38,12 @@ export function DriverPage() {
   return (
     <CatalogDetail
       back={{ to: '/piloti', label: t('catalogs.drivers.title') }}
-      eyebrow={driver.nationality ?? undefined}
+      kind={t('catalogs.drivers.kind')}
+      detail={
+        driver.nationality
+          ? countryName(driver.nationality, i18n.language)
+          : null
+      }
       name={`${driver.first_name} ${driver.last_name}`}
       versions={driver.versions ?? []}
       // Nella card, il campionato in cui ha corso quella Ferrari

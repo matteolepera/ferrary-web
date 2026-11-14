@@ -5,9 +5,10 @@ import { CatalogDetail } from '@/components/catalog/CatalogDetail'
 import { useDesigner } from '@/hooks/useDesigners'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { ErrorState } from '@/components/ui/ErrorState'
+import { countryName } from '@/lib/format'
 
 export function DesignerPage() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { slug = '' } = useParams()
   const {
     data: designer,
@@ -43,12 +44,10 @@ export function DesignerPage() {
   return (
     <CatalogDetail
       back={{ to: '/designer', label: t('catalogs.designers.title') }}
-      eyebrow={[
-        t(`catalogs.designers.types.${designer.type}`),
-        designer.country,
-      ]
-        .filter(Boolean)
-        .join(' · ')}
+      kind={t(`catalogs.designers.types.${designer.type}`)}
+      detail={
+        designer.country ? countryName(designer.country, i18n.language) : null
+      }
       name={designer.name}
       versions={designer.versions ?? []}
       metaFor={(version) =>
