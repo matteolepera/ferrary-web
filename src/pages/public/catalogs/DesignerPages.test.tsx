@@ -102,3 +102,16 @@ test('filtra i designer per tipo', async () => {
     screen.queryByRole('link', { name: /Pininfarina/ }),
   ).not.toBeInTheDocument()
 })
+
+test('un designer ha i dati brevi sotto il nome, senza la fascia', async () => {
+  renderRoute('/designer/flavio-manzoni')
+
+  const works = await screen.findByText('Ferrari disegnate')
+
+  expect(works.nextSibling).toHaveTextContent('1')
+  expect(screen.getByText('Anni').nextSibling).toHaveTextContent('2019')
+  // La fascia grande resta solo al motore
+  expect(
+    screen.queryByRole('region', { name: 'In breve' }),
+  ).not.toBeInTheDocument()
+})
