@@ -6,6 +6,7 @@ import { useEngine } from '@/hooks/useEngines'
 import { formatNumber } from '@/lib/format'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { ErrorState } from '@/components/ui/ErrorState'
+import type { Fact } from '@/components/ui/FactStrip'
 
 export function EnginePage() {
   const { t, i18n } = useTranslation()
@@ -39,8 +40,30 @@ export function EnginePage() {
     cylinders: engine.cylinders,
   })
 
-  // Le caratteristiche del motore; quelle senza dato non compaiono
-  const facts = [
+  const versions = engine.versions ?? []
+
+  // I numeri protagonisti; quelli senza dato non compaiono
+  const stars: Fact[] = [
+    {
+      key: 'displacement',
+      label: t('model.displacement'),
+      value: formatNumber(engine.displacement_cc, i18n.language),
+      unit: 'cm³',
+    },
+    {
+      key: 'cylinders',
+      label: t('catalogs.engines.cylinders'),
+      value: String(engine.cylinders),
+    },
+    {
+      key: 'versions',
+      label: t('catalogs.ferrari', { count: versions.length }),
+      value: String(versions.length),
+    },
+  ]
+
+  // La didascalia accanto
+  const caption: Fact[] = [
     {
       key: 'architecture',
       label: t('model.sheet.rows.architecture'),
@@ -53,11 +76,6 @@ export function EnginePage() {
       key: 'aspiration',
       label: t('model.sheet.rows.aspiration'),
       value: t(`model.sheet.aspirations.${engine.aspiration}`),
-    },
-    {
-      key: 'displacement',
-      label: t('model.displacement'),
-      value: `${formatNumber(engine.displacement_cc, i18n.language)} cm³`,
     },
     {
       key: 'boreStroke',
@@ -75,7 +93,7 @@ export function EnginePage() {
           ? String(engine.valves_per_cylinder)
           : null,
     },
-  ].filter((fact) => fact.value !== null)
+  ]
 
   return (
     <CatalogDetail
@@ -83,26 +101,9 @@ export function EnginePage() {
       kind={t('catalogs.engines.kind')}
       detail={engine.name}
       name={engine.code}
-      versions={engine.versions ?? []}
-    >
-      <dl className="border-linea bg-linea mt-8 grid max-w-3xl grid-cols-2 gap-px border md:grid-cols-3">
-        {facts.map((fact) => (
-          <div key={fact.key} className="bg-notte px-4 py-4">
-            <dt className="text-[0.625rem] font-semibold tracking-[0.2em] text-neutral-400 uppercase">
-              {fact.label}
-            </dt>
-            <dd className="mt-1.5 font-medium text-neutral-100">
-              {fact.value}
-            </dd>
-          </div>
-        ))}
-      </dl>
-
-      {engine.description && (
-        <p className="mt-8 max-w-[62ch] text-[1.0625rem] leading-[1.75] text-neutral-300">
-          {engine.description}
-        </p>
-      )}
-    </CatalogDetail>
+      description={engine.description}
+      facts={{ stars, caption }}
+      versions={versions}
+    />
   )
 }

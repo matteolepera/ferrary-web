@@ -6,6 +6,8 @@ import { useDriver } from '@/hooks/useDrivers'
 import { countryName, formatDate } from '@/lib/format'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { ErrorState } from '@/components/ui/ErrorState'
+import { yearsSpan } from '@/components/catalog/yearsSpan'
+import type { Fact } from '@/components/ui/FactStrip'
 
 export function DriverPage() {
   const { t, i18n } = useTranslation()
@@ -35,30 +37,42 @@ export function DriverPage() {
     )
   }
 
+  const versions = driver.versions ?? []
+  const country = driver.nationality
+    ? countryName(driver.nationality, i18n.language)
+    : null
+
+  // Il Paese è già nell'etichetta: qui le Ferrari, gli anni e la data di nascita
+  const highlights: Fact[] = [
+    {
+      key: 'versions',
+      label: t('catalogs.drivers.works'),
+      value: String(versions.length),
+    },
+    {
+      key: 'years',
+      label: t('catalogs.drivers.years'),
+      value: yearsSpan(versions),
+    },
+    {
+      key: 'birthDate',
+      label: t('catalogs.drivers.birthDate'),
+      value: driver.birth_date
+        ? formatDate(driver.birth_date, i18n.language)
+        : null,
+    },
+  ]
+
   return (
     <CatalogDetail
       back={{ to: '/piloti', label: t('catalogs.drivers.title') }}
       kind={t('catalogs.drivers.kind')}
-      detail={
-        driver.nationality
-          ? countryName(driver.nationality, i18n.language)
-          : null
-      }
+      detail={country}
       name={`${driver.first_name} ${driver.last_name}`}
-      versions={driver.versions ?? []}
-      // Nella card, il campionato in cui ha corso quella Ferrari
+      highlights={highlights}
+      versions={versions}
+      // Nella carta, il campionato in cui ha corso quella Ferrari
       metaFor={(version) => version.racing?.[0]?.championship}
-    >
-      {driver.birth_date && (
-        <dl className="mt-5 flex gap-3 text-sm">
-          <dt className="text-neutral-400">
-            {t('catalogs.drivers.birthDate')}
-          </dt>
-          <dd className="text-neutral-100">
-            {formatDate(driver.birth_date, i18n.language)}
-          </dd>
-        </dl>
-      )}
-    </CatalogDetail>
+    />
   )
 }

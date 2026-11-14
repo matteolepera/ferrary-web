@@ -6,6 +6,8 @@ import { useDesigner } from '@/hooks/useDesigners'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { ErrorState } from '@/components/ui/ErrorState'
 import { countryName } from '@/lib/format'
+import { yearsSpan } from '@/components/catalog/yearsSpan'
+import type { Fact } from '@/components/ui/FactStrip'
 
 export function DesignerPage() {
   const { t, i18n } = useTranslation()
@@ -41,15 +43,34 @@ export function DesignerPage() {
     )
   }
 
+  const versions = designer.versions ?? []
+  const country = designer.country
+    ? countryName(designer.country, i18n.language)
+    : null
+  const type = t(`catalogs.designers.types.${designer.type}`)
+
+  // Il tipo e il Paese sono già nell'etichetta: qui solo quante Ferrari e in che anni
+  const highlights: Fact[] = [
+    {
+      key: 'versions',
+      label: t('catalogs.designers.works'),
+      value: String(versions.length),
+    },
+    {
+      key: 'years',
+      label: t('catalogs.designers.years'),
+      value: yearsSpan(versions),
+    },
+  ]
+
   return (
     <CatalogDetail
       back={{ to: '/designer', label: t('catalogs.designers.title') }}
-      kind={t(`catalogs.designers.types.${designer.type}`)}
-      detail={
-        designer.country ? countryName(designer.country, i18n.language) : null
-      }
+      kind={type}
+      detail={country}
       name={designer.name}
-      versions={designer.versions ?? []}
+      highlights={highlights}
+      versions={versions}
       metaFor={(version) =>
         version.designer_role
           ? t(`model.people.roles.${version.designer_role}`)

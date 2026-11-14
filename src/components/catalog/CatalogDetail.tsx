@@ -1,10 +1,11 @@
-import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { ArrowLeft } from 'lucide-react'
 import { VersionCard } from '@/components/catalog/VersionCard'
 import { Eyebrow } from '@/components/ui/Eyebrow'
+import { type Fact, FactStrip } from '@/components/ui/FactStrip'
 import type { Version } from '@/types/catalog'
+import { FactLine } from '@/components/catalog/FactLine'
 
 type CatalogDetailProps = {
   /** Il link di ritorno all'elenco del catalogo */
@@ -14,8 +15,12 @@ type CatalogDetailProps = {
   /** Il dettaglio accanto, in grigio: il nome del motore, il Paese */
   detail?: string | null
   name: string
-  /** Dettagli sotto il nome, come la data di nascita di un pilota */
-  children?: ReactNode
+  /** Il testo sotto il nome, come la storia di un motore */
+  description?: string | null
+  /** La fascia grande dei dati, per il motore che ne ha tanti */
+  facts?: { stars: Fact[]; caption: Fact[] }
+  /** I pochi dati brevi in riga sotto il nome, per designer e piloti */
+  highlights?: Fact[]
   versions: Version[]
   /** Il dettaglio in alto a sinistra di ogni carta, come il ruolo del designer */
   metaFor?: (version: Version) => string | undefined
@@ -30,7 +35,9 @@ export function CatalogDetail({
   kind,
   detail,
   name,
-  children,
+  description,
+  facts,
+  highlights,
   versions,
   metaFor,
 }: CatalogDetailProps) {
@@ -73,9 +80,22 @@ export function CatalogDetail({
           >
             {name}
           </h1>
-          {children}
+          {description && (
+            <p className="mt-5 max-w-[60ch] text-[0.9375rem] leading-relaxed text-neutral-300 md:mt-6 md:text-[1.0625rem] md:leading-[1.7]">
+              {description}
+            </p>
+          )}
+          {highlights && <FactLine facts={highlights} />}
         </div>
       </section>
+
+      {facts && (
+        <FactStrip
+          label={t('catalogs.factsLabel')}
+          stars={facts.stars}
+          caption={facts.caption}
+        />
+      )}
 
       <section
         aria-labelledby="opere-titolo"

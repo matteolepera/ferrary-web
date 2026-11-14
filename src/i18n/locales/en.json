@@ -330,6 +330,7 @@
     "count_other": "{{count}} Ferraris",
     "works": "The Ferraris",
     "byYear": "By year",
+    "factsLabel": "At a glance",
     "error": "Unable to load this catalogue.",
     "empty": "No results for this search.",
     "emptyHint": "Try another name, or remove a filter.",
@@ -337,6 +338,7 @@
     "engines": {
       "title": "Engines",
       "kind": "Engine",
+      "cylinders": "Cylinders",
       "text": "From the Colombo V12 to the hybrid V6s: layout, displacement and the Ferraris that used them.",
       "architecture": "Layout",
       "flat": "Flat",
@@ -348,6 +350,8 @@
       "title": "Designers",
       "text": "The studios and people who designed and built the bodies of Ferrari cars.",
       "type": "Type",
+      "works": "Ferraris designed",
+      "years": "Years",
       "types": {
         "studio": "Studio",
         "persona": "Designer"
@@ -358,6 +362,8 @@
     "drivers": {
       "title": "Drivers",
       "kind": "Driver",
+      "works": "Ferraris driven",
+      "years": "With Ferrari",
       "text": "The people who raced Ferraris, with the cars they drove and their seasons.",
       "country": "Country",
       "allCountries": "All countries",
