@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react'
+import { type Fact, FactStrip } from '@/components/ui/FactStrip'
 import { useTranslation } from 'react-i18next'
 import { formatNumber } from '@/lib/format'
 import type { Powertrain, Version, VehicleType } from '@/types/catalog'
@@ -10,13 +10,6 @@ type VersionSpecStripProps = {
 
 /** Le auto da corsa: per loro contano i risultati, non la velocità di punta */
 const RACING_TYPES: VehicleType[] = ['f1', 'prototipo', 'gt_corsa']
-
-/** Un dato: il valore, e per i numeri protagonisti l'unità a parte, più piccola */
-type Item = { key: string; label: string; value: string | null; unit?: string }
-
-/** Solo i dati che esistono */
-const present = (items: Item[]) =>
-  items.filter((item): item is Item & { value: string } => item.value !== null)
 
 /**
  * I dati chiave della versione, come la didascalia di un'opera:
@@ -60,19 +53,19 @@ export function VersionSpecStrip({ version }: VersionSpecStripProps) {
   }
 
   const { specs, powertrain, years, production } = version
-  const engine: Item = {
+  const engine: Fact = {
     key: 'engine',
     label: t('model.engine'),
     value: engineLabel(powertrain),
   }
-  const displacement: Item = {
+  const displacement: Fact = {
     key: 'displacement',
     label: t('model.displacement'),
     value: withUnit(powertrain?.engine?.displacement_cc, 'cm³'),
   }
 
-  let primary: Item[]
-  let secondary: Item[]
+  let primary: Fact[]
+  let secondary: Fact[]
 
   if (RACING_TYPES.includes(version.vehicle_type)) {
     // Le auto da corsa: protagonisti i risultati, sommati sui campionati
@@ -89,7 +82,7 @@ export function VersionSpecStrip({ version }: VersionSpecStripProps) {
     const single = years.end === null || years.end === years.start
 
     // I risultati: protagonisti se maggiori di zero, nella didascalia se zero
-    const results: Item[] = [
+    const results: Fact[] = [
       {
         key: 'wins',
         label: t('model.racing.wins'),
@@ -106,7 +99,7 @@ export function VersionSpecStrip({ version }: VersionSpecStripProps) {
         value: figure(total('races')),
       },
     ]
-    const counts = (item: Item) => item.value !== null && item.value !== '0'
+    const counts = (item: Fact) => item.value !== null && item.value !== '0'
 
     primary = results.filter(counts)
     secondary = [
@@ -167,81 +160,11 @@ export function VersionSpecStrip({ version }: VersionSpecStripProps) {
     ]
   }
 
-  const stars = present(primary)
-  const caption = present(secondary)
-
-  if (stars.length === 0 && caption.length === 0) {
-    return null
-  }
-
   return (
-    <section
-      aria-label={t('model.specsLabel')}
-      className="border-linea border-y"
-    >
-      {/* Telefono e tablet: i protagonisti in fila, la didascalia sotto. Dal desktop: tutto su una riga */}
-      <div className="mx-auto max-w-[1360px] px-5 md:px-10 lg:flex">
-        {stars.length > 0 && (
-          <dl
-            className="divide-linea grid grid-cols-[repeat(var(--stars),minmax(0,1fr))] divide-x"
-            // I protagonisti si dividono lo spazio: dal desktop, uno ciascuno, e la didascalia un po' di più
-            style={
-              {
-                '--stars': stars.length,
-                flex: `${stars.length} 1 0%`,
-              } as CSSProperties
-            }
-          >
-            {stars.map((item) => (
-              <div
-                key={item.key}
-                className="py-6 pr-3 pl-3 first:pl-0 md:py-9 md:pr-8 md:pl-8"
-              >
-                <dt className="flex items-center gap-2.5 text-[0.5625rem] font-semibold tracking-[0.16em] text-neutral-400 uppercase md:text-[0.625rem] md:tracking-[0.22em]">
-                  {/* Il segno rosso obliquo, come nella barra della Y */}
-                  <span
-                    aria-hidden="true"
-                    className="bg-rosso-acceso h-[3px] w-2.5 shrink-0 -skew-x-[28deg] shadow-[0_0_8px_rgba(255,59,48,0.6)] md:w-3.5"
-                  />
-                  {item.label}
-                </dt>
-                <dd className="font-display mt-3 text-[2rem] leading-[0.9] font-extrabold tracking-[-0.04em] md:mt-4 md:text-5xl lg:text-[4rem]">
-                  {item.value}
-                  {item.unit && (
-                    <span className="font-sans text-[0.6875rem] font-semibold tracking-[0.02em] text-neutral-400 md:text-[0.9375rem]">
-                      {' '}
-                      {item.unit}
-                    </span>
-                  )}
-                </dd>
-              </div>
-            ))}
-          </dl>
-        )}
-
-        {caption.length > 0 && (
-          <dl
-            className={[
-              'grid grid-cols-2 content-center gap-x-5 gap-y-4 py-5 md:gap-x-7 md:py-6',
-              'lg:border-linea lg:border-l lg:py-8 lg:pl-10',
-              // Sotto i protagonisti, una linea li separa; dal desktop la linea è a sinistra
-              stars.length > 0 ? 'border-linea border-t lg:border-t-0' : '',
-            ].join(' ')}
-            style={{ flex: '1.25 1 0%' }}
-          >
-            {caption.map((item) => (
-              <div key={item.key}>
-                <dt className="text-[0.625rem] font-semibold tracking-[0.2em] text-neutral-500 uppercase">
-                  {item.label}
-                </dt>
-                <dd className="font-display mt-1.5 text-[0.9375rem] font-bold tracking-[-0.02em] md:text-lg">
-                  {item.value}
-                </dd>
-              </div>
-            ))}
-          </dl>
-        )}
-      </div>
-    </section>
+    <FactStrip
+      label={t('model.specsLabel')}
+      stars={primary}
+      caption={secondary}
+    />
   )
 }

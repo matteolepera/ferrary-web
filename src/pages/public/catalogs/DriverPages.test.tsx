@@ -23,6 +23,9 @@ test('mostra un pilota con la data di nascita e le Ferrari guidate', async () =>
     }),
   ).toBeInTheDocument()
   expect(screen.getByText('3 gennaio 1969')).toBeInTheDocument()
+  expect(screen.getByText('Con la Ferrari').nextSibling).toHaveTextContent(
+    '2004',
+  )
 
   const card = screen.getByRole('link', { name: /F2004/ })
   expect(card).toHaveAttribute('href', '/modelli/f2004?versione=f2004')

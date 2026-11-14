@@ -93,3 +93,14 @@ test('filtra i motori per architettura', async () => {
   expect(screen.getByRole('link', { name: /F120A/ })).toBeInTheDocument()
   expect(screen.queryByRole('link', { name: /F140B/ })).not.toBeInTheDocument()
 })
+
+test('il motore ha la fascia dei dati, con cilindrata e cilindri', async () => {
+  renderRoute('/motori/1')
+
+  const strip = within(await screen.findByRole('region', { name: 'In breve' }))
+
+  expect(strip.getByText('Cilindrata').nextSibling).toHaveTextContent(
+    '3990 cm³',
+  )
+  expect(strip.getByText('Cilindri').nextSibling).toHaveTextContent('8')
+})
