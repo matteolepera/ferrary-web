@@ -45,14 +45,12 @@
       "families": "Families"
     },
     "featured": {
-      "label": "Featured models",
       "eyebrow": "Featured",
-      "title": "Models",
-      "discover": "Discover the model",
-      "previous": "Previous model",
-      "next": "Next model",
-      "goTo": "Go to {{name}}",
-      "error": "Unable to load the featured models."
+      "titleStart": "The latest",
+      "titleEnd": "arrivals.",
+      "text": "The Ferraris most recently added to the archive, from single-seaters to grand tourers.",
+      "all": "The whole archive",
+      "error": "Unable to load the latest arrivals."
     },
     "manifesto": {
       "eyebrow": "The project",
