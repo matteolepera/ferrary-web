@@ -2,6 +2,17 @@ import type { Category } from '@/types/catalog'
 
 export type CategoryGroupKey = 'road' | 'racing' | 'concept' | 'other'
 
+/**
+ * Il colore del segno di ogni gruppo: rosso le stradali, bianco le auto da corsa, grigio i concept.
+ * Lo stesso nella legenda della Storia e nelle famiglie della home
+ */
+export const GROUP_MARK: Record<CategoryGroupKey, string> = {
+  road: 'bg-rosso-acceso',
+  racing: 'bg-neutral-100',
+  concept: 'bg-neutral-500',
+  other: 'bg-neutral-700',
+}
+
 /** Le categorie di ogni gruppo, per slug, nell'ordine del menu */
 const GROUPS: Record<Exclude<CategoryGroupKey, 'other'>, string[]> = {
   road: [
