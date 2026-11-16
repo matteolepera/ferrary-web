@@ -4,6 +4,7 @@ import { Link } from 'react-router'
 import {
   groupOf,
   type CategoryGroupKey,
+  GROUP_MARK,
 } from '@/components/archive/categoryGroups'
 import { decadeLabel, shortDecade } from '@/components/archive/decades'
 import { ErrorState } from '@/components/ui/ErrorState'
@@ -16,14 +17,6 @@ import type { TimelineModel } from '@/types/catalog'
 type Year = { year: number; models: TimelineModel[] }
 type Decade = { decade: number; models: TimelineModel[]; years: Year[] }
 type Filter = '' | Exclude<CategoryGroupKey, 'other'>
-
-/** Il colore del segno davanti al nome: la famiglia a colpo d'occhio */
-const MARK: Record<CategoryGroupKey, string> = {
-  road: 'bg-rosso-acceso',
-  racing: 'bg-neutral-100',
-  concept: 'bg-neutral-500',
-  other: 'bg-neutral-700',
-}
 
 const GROUPS = ['road', 'racing', 'concept'] as const
 
@@ -76,7 +69,7 @@ function Chip({ model }: { model: TimelineModel }) {
       >
         <span
           aria-hidden="true"
-          className={`h-[3px] w-2.5 shrink-0 -skew-x-[28deg] ${MARK[groupOfModel(model)]}`}
+          className={`h-[3px] w-2.5 shrink-0 -skew-x-[28deg] ${GROUP_MARK[groupOfModel(model)]}`}
         />
         {model.name}
       </Link>
@@ -221,7 +214,7 @@ export function HistoryPage() {
           <li key={group} className="flex items-center gap-2">
             <span
               aria-hidden="true"
-              className={`h-[3px] w-3 -skew-x-[28deg] ${MARK[group]}`}
+              className={`h-[3px] w-3 -skew-x-[28deg] ${GROUP_MARK[group]}`}
             />
             {t(`archive.groups.${group}`)}
           </li>
