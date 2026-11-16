@@ -133,6 +133,7 @@ export function HomeFamilies() {
                 value: group.key,
                 label: t(`archive.groups.${group.key}`),
               }))}
+              itemClassName="flex-1 md:flex-none"
               value={activeGroup ?? groups[0].key}
               onChange={goToGroup}
               // L'ultimo gruppo lascia spazio al taglio in basso a destra
