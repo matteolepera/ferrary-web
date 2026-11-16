@@ -60,10 +60,10 @@
     },
     "families": {
       "eyebrow": "Families",
-      "title": "Where do you want to start?",
+      "titleStart": "Every family,",
+      "titleEnd": "one archive.",
       "models_one": "{{count}} model",
       "models_other": "{{count}} models",
-      "showing": "On display",
       "error": "Unable to load the families."
     },
     "invite": {
