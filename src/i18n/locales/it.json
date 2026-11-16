@@ -62,6 +62,9 @@
       "eyebrow": "Le famiglie",
       "titleStart": "Tutte le famiglie,",
       "titleEnd": "un solo archivio.",
+      "groupsLabel": "Gruppi di famiglie",
+      "previous": "Famiglie precedenti",
+      "next": "Famiglie successive",
       "models_one": "{{count}} modello",
       "models_other": "{{count}} modelli",
       "error": "Impossibile caricare le famiglie."

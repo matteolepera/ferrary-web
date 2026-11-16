@@ -62,6 +62,9 @@
       "eyebrow": "Families",
       "titleStart": "Every family,",
       "titleEnd": "one archive.",
+      "groupsLabel": "Family groups",
+      "previous": "Previous families",
+      "next": "Next families",
       "models_one": "{{count}} model",
       "models_other": "{{count}} models",
       "error": "Unable to load the families."

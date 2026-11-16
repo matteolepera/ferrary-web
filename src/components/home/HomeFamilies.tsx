@@ -6,6 +6,8 @@ import {
   groupCategories,
 } from '@/components/archive/categoryGroups'
 import { Eyebrow } from '@/components/ui/Eyebrow'
+import { YPanel } from '@/components/ui/YPanel'
+import { YSegments } from '@/components/ui/YSegments'
 import { useCategories } from '@/hooks/useCategories'
 
 /** La forma della Y per le carte, come nell'archivio */
@@ -19,7 +21,7 @@ const rowInset =
 /**
  * Le famiglie della home: una galleria che scorre di lato, divisa nei gruppi dell'archivio
  * (Stradali, Corsa, Concept). Ogni gruppo si apre con la sua targa; ogni carta porta
- * all'archivio filtrato su quella famiglia.
+ * all'archivio filtrato su quella famiglia. La barra della Y porta da un gruppo all'altro.
  */
 export function HomeFamilies() {
   const { t } = useTranslation()
@@ -27,11 +29,18 @@ export function HomeFamilies() {
   // La fila che scorre, e quale parte se ne vede: inizio e larghezza, in frazioni da 0 a 1
   const row = useRef<HTMLDivElement>(null)
   const [view, setView] = useState({ start: 0, size: 1 })
+  // Il gruppo in vista: cambia scorrendo, o scegliendolo nella barra
+  const [activeGroup, setActiveGroup] = useState<string | null>(null)
 
-  // La traccia sotto la fila segue lo scorrimento e le misure della finestra
+  // Il gruppo appena scelto nella barra: finché la fila scorre per arrivarci,
+  // il calcolo del gruppo in vista resta fermo, così gli altri gruppi non si accendono di passaggio
+  const chosen = useRef<string | null>(null)
+
+  // La traccia e il gruppo acceso seguono lo scorrimento e le misure della finestra
   useEffect(() => {
     const element = row.current
     if (!element) return
+    let settle: ReturnType<typeof setTimeout> | undefined
 
     const update = () => {
       const { scrollLeft, scrollWidth, clientWidth } = element
@@ -39,6 +48,27 @@ export function HomeFamilies() {
         start: scrollLeft / scrollWidth,
         size: clientWidth / scrollWidth,
       })
+
+      // Il gruppo acceso è l'ultimo il cui inizio ha superato un terzo della fila.
+      // In fondo alla fila vince l'ultimo gruppo, anche se è corto e non arriva fin lì
+      const starts = [...element.querySelectorAll<HTMLElement>('[data-group]')]
+      const edge = scrollLeft + clientWidth * 0.35
+      const atEnd = scrollLeft + clientWidth >= scrollWidth - 2
+      const current = atEnd
+        ? starts.at(-1)
+        : starts.filter((start) => start.offsetLeft <= edge).at(-1)
+
+      // Dopo un clic nella barra: si aspetta che la fila si fermi (nessuno scorrimento per 150 ms)
+      // e si lascia acceso il gruppo scelto. Poi il calcolo riprende, al prossimo scorrimento a mano
+      if (chosen.current) {
+        clearTimeout(settle)
+        settle = setTimeout(() => {
+          chosen.current = null
+        }, 150)
+        return
+      }
+
+      if (current?.dataset.group) setActiveGroup(current.dataset.group)
     }
 
     // La prima misura al fotogramma dopo, quando le carte hanno già la loro larghezza
@@ -50,6 +80,7 @@ export function HomeFamilies() {
       cancelAnimationFrame(frame)
       element.removeEventListener('scroll', update)
       window.removeEventListener('resize', update)
+      clearTimeout(settle)
     }
   }, [families])
 
@@ -60,30 +91,65 @@ export function HomeFamilies() {
 
   const groups = families ? groupCategories(families) : []
 
+  /** Porta la fila all'inizio di un gruppo: lo scorrimento morbido lo fa "scroll-smooth" */
+  function goToGroup(key: string) {
+    const element = row.current
+    const start = element?.querySelector<HTMLElement>(`[data-group="${key}"]`)
+    if (!element || !start) return
+
+    chosen.current = key
+    setActiveGroup(key)
+    // Il margine a sinistra della fila, per fermarsi allineati al contenuto della pagina
+    element.scrollLeft =
+      start.offsetLeft - parseFloat(getComputedStyle(element).paddingLeft)
+  }
+
   return (
     <section
       id="famiglie"
       aria-labelledby="famiglie-titolo"
       className="pb-18 md:pb-24 lg:pb-32"
     >
-      <div className="mx-auto max-w-[1360px] px-5 md:px-10">
-        <Eyebrow>{t('home.families.eyebrow')}</Eyebrow>
-        <h2
-          id="famiglie-titolo"
-          className="font-display mt-4 text-[2.625rem] leading-[0.98] font-extrabold tracking-[-0.04em] md:text-6xl lg:mt-5"
-        >
-          <span className="block">{t('home.families.titleStart')}</span>{' '}
-          <span className="block text-neutral-600">
-            {t('home.families.titleEnd')}
-          </span>
-        </h2>
+      <div className="mx-auto max-w-[1360px] px-5 md:flex md:items-end md:justify-between md:gap-10 md:px-10">
+        <div>
+          <Eyebrow>{t('home.families.eyebrow')}</Eyebrow>
+          <h2
+            id="famiglie-titolo"
+            className="font-display mt-4 text-[2.625rem] leading-[0.98] font-extrabold tracking-[-0.04em] md:text-6xl lg:mt-5"
+          >
+            <span className="block">{t('home.families.titleStart')}</span>{' '}
+            <span className="block text-neutral-600">
+              {t('home.families.titleEnd')}
+            </span>
+          </h2>
+        </div>
 
-        {isError && (
-          <p role="alert" className="text-errore mt-8">
-            {t('home.families.error')}
-          </p>
+        {/* La barra: i gruppi, che portano la fila al loro inizio */}
+        {groups.length > 1 && (
+          <YPanel className="mt-6 flex h-12 items-stretch md:mt-0 md:h-13 md:shrink-0">
+            <YSegments
+              label={t('home.families.groupsLabel')}
+              options={groups.map((group) => ({
+                value: group.key,
+                label: t(`archive.groups.${group.key}`),
+              }))}
+              value={activeGroup ?? groups[0].key}
+              onChange={goToGroup}
+              // L'ultimo gruppo lascia spazio al taglio in basso a destra
+              className="flex-1 pr-3"
+            />
+          </YPanel>
         )}
       </div>
+
+      {isError && (
+        <p
+          role="alert"
+          className="text-errore mx-auto mt-8 max-w-[1360px] px-5 md:px-10"
+        >
+          {t('home.families.error')}
+        </p>
+      )}
 
       {isPending && (
         <div
@@ -101,10 +167,13 @@ export function HomeFamilies() {
 
       {groups.length > 0 && (
         <>
-          {/* La fila: scorre di lato con il dito, il trackpad o la rotella, e si aggancia a ogni carta */}
+          {/*
+            La fila: scorre di lato con il dito, il trackpad, la rotella o le frecce, e si aggancia a ogni carta.
+            "relative": i gruppi misurano la loro posizione da qui
+          */}
           <div
             ref={row}
-            className={`senza-barra mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto pt-1 pb-2 md:mt-12 ${rowInset}`}
+            className={`senza-barra relative mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pt-1 pb-2 md:mt-12 ${rowInset}`}
           >
             {groups.map((group) => (
               <div
@@ -112,6 +181,7 @@ export function HomeFamilies() {
                 role="group"
                 aria-labelledby={`famiglie-${group.key}`}
                 data-group={group.key}
+                // Sul telefono l'etichetta sta sopra le carte; dal tablet la targa sta di fianco
                 className="flex shrink-0 flex-col gap-3 md:flex-row md:gap-4"
               >
                 {/*
