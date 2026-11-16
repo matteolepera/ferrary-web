@@ -45,14 +45,12 @@
       "families": "Le famiglie"
     },
     "featured": {
-      "label": "Modelli in evidenza",
       "eyebrow": "In evidenza",
-      "title": "Modelli",
-      "discover": "Scopri il modello",
-      "previous": "Modello precedente",
-      "next": "Modello successivo",
-      "goTo": "Vai a {{name}}",
-      "error": "Impossibile caricare i modelli in evidenza."
+      "titleStart": "Le ultime",
+      "titleEnd": "arrivate.",
+      "text": "Le Ferrari entrate per ultime nell'archivio, dalle monoposto alle granturismo.",
+      "all": "Tutto l'archivio",
+      "error": "Impossibile caricare le ultime arrivate."
     },
     "manifesto": {
       "eyebrow": "Il progetto",
