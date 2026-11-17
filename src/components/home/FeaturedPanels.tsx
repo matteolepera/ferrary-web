@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { useModels } from '@/hooks/useModels'
+import { Eyebrow } from '@/components/ui/Eyebrow'
 
 /** Quanti modelli mostra la sezione: i più recenti dell'archivio */
 const FEATURED_COUNT = 3
@@ -31,13 +32,7 @@ export function FeaturedPanels() {
       <div className="lg:grid lg:grid-cols-[22rem_minmax(0,1fr)] lg:items-center lg:gap-12">
         {/* Il testo: l'etichetta, il titolo su due righe con la seconda rossa, la frase e il link all'archivio */}
         <div>
-          <p className="text-rosso-acceso flex items-center gap-3 text-[0.6875rem] font-semibold tracking-[0.22em] uppercase md:text-xs">
-            <span
-              aria-hidden="true"
-              className="bg-rosso-acceso h-[3px] w-3.5 shrink-0 -skew-x-[28deg] shadow-[0_0_8px_rgba(255,59,48,0.6)]"
-            />
-            {t('home.featured.eyebrow')}
-          </p>
+          <Eyebrow>{t('home.featured.eyebrow')}</Eyebrow>
           <h2
             id="ultime-titolo"
             className="font-display mt-4 text-[2.625rem] leading-[0.98] font-extrabold tracking-[-0.04em] md:text-6xl lg:mt-5"

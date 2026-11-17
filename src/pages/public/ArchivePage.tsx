@@ -17,6 +17,7 @@ import { useArchiveFilters } from '@/hooks/useArchiveFilters'
 import { useModels } from '@/hooks/useModels'
 import { ArchivePager } from '@/components/archive/ArchivePager'
 import { StatePanel } from '@/components/ui/StatePanel'
+import { Eyebrow } from '@/components/ui/Eyebrow'
 
 const gridClass = 'mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3'
 
@@ -56,9 +57,7 @@ export function ArchivePage() {
 
   return (
     <div className="mx-auto max-w-[1360px] px-5 pt-28 pb-18 md:px-10 md:pt-36 md:pb-24 lg:pt-40">
-      <p className="text-rosso-acceso text-[0.6875rem] font-semibold tracking-[0.22em] uppercase md:text-xs">
-        {t('archive.eyebrow')}
-      </p>
+      <Eyebrow>{t('archive.eyebrow')}</Eyebrow>
       <h1 className="font-display mt-3 text-[2.625rem] leading-none font-extrabold tracking-[-0.035em] md:text-6xl lg:text-[clamp(3.5rem,6vw,5.5rem)]">
         {t('archive.title')}
       </h1>
