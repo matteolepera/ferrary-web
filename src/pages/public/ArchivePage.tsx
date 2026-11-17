@@ -56,7 +56,7 @@ export function ArchivePage() {
     setFilters({ page }, { preventScrollReset: false })
 
   return (
-    <div className="mx-auto max-w-[1360px] px-5 pt-28 pb-18 md:px-10 md:pt-36 md:pb-24 lg:pt-40">
+    <div className="mx-auto max-w-[1360px] px-5 pt-10 pb-18 md:px-10 md:pt-14 md:pb-24 lg:pt-40">
       <Eyebrow>{t('archive.eyebrow')}</Eyebrow>
       <h1 className="font-display mt-3 text-[2.625rem] leading-none font-extrabold tracking-[-0.035em] md:text-6xl lg:text-[clamp(3.5rem,6vw,5.5rem)]">
         {t('archive.title')}
