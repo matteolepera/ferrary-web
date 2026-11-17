@@ -12,6 +12,7 @@ import monogram from '@/assets/brand/ferrary-y-rosso.svg'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { MobileSearch } from '@/components/layout/MobileSearch'
 import { catalogLinks, isCatalogPath } from '@/components/layout/publicNav'
+import { Eyebrow } from '@/components/ui/Eyebrow'
 
 // Su mobile icona sopra e etichetta sotto; dal tablet in su sulla stessa riga
 const itemClass = [
@@ -91,9 +92,7 @@ export function Dock() {
         >
           {/* Il menu: quello che nel dock non entra, cioè i cataloghi e la lingua */}
           <nav aria-label={t('catalogs.eyebrow')} className="flex flex-col">
-            <p className="text-rosso-acceso mb-3 text-[0.6875rem] font-semibold tracking-[0.22em] uppercase">
-              {t('catalogs.eyebrow')}
-            </p>
+            <Eyebrow className="mb-3">{t('catalogs.eyebrow')}</Eyebrow>
             {catalogLinks.map((link, place) => (
               <Link
                 key={link.to}

@@ -43,7 +43,7 @@ export function ModelPage() {
       <ErrorState
         message={t('model.error')}
         onRetry={() => refetch()}
-        className="px-5 pt-36 pb-16"
+        className="px-5 pt-10 pb-16 md:pt-14 lg:pt-36"
       />
     )
   }

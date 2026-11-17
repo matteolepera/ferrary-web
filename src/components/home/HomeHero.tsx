@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { buttonClass } from '@/components/ui/buttonClass'
 import { ButtonArrow } from '@/components/ui/ButtonArrow'
+import { Eyebrow } from '@/components/ui/Eyebrow'
 
 /**
  * L'apertura della home: la Ferrari in copertina, il titolo e l'ingresso all'archivio.
@@ -34,9 +35,7 @@ export function HomeHero() {
 
       <div className="relative mx-auto mt-10 w-full max-w-[1360px] px-5 pb-8 md:mt-14 md:px-10 md:pb-14 lg:mt-auto lg:pb-20">
         <div className="lg:max-w-[36rem]">
-          <p className="text-rosso-acceso text-[0.6875rem] font-semibold tracking-[0.22em] uppercase md:text-xs">
-            {t('home.hero.eyebrow')}
-          </p>
+          <Eyebrow>{t('home.hero.eyebrow')}</Eyebrow>
 
           <h1 className="font-display mt-3.5 text-[2.625rem] leading-none font-extrabold tracking-[-0.035em] text-balance md:mt-4 md:text-[4.25rem] md:leading-[0.98] lg:text-[clamp(3rem,5vw,5rem)]">
             <span className="lg:block">{t('home.hero.titleStart')}</span>{' '}
