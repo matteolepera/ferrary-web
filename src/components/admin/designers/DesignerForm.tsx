@@ -5,7 +5,7 @@ import { AdminButton } from '@/components/admin/ui/AdminButton'
 import { AdminField } from '@/components/admin/ui/AdminField'
 import { AdminSelect } from '@/components/admin/ui/AdminSelect'
 import { useDesignerActions } from '@/hooks/useAdminDesigners'
-import { countryName } from '@/lib/countryName'
+import { countryName } from '@/lib/format'
 import { slugify } from '@/lib/slugify'
 import type { AdminDesigner, DesignerType } from '@/types/admin'
 

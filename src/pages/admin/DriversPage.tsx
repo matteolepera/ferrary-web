@@ -6,7 +6,7 @@ import { AdminCard } from '@/components/admin/ui/AdminCard'
 import { Icon } from '@/components/admin/ui/Icon'
 import { useAdminDrivers, useDriverActions } from '@/hooks/useAdminDrivers'
 import { birthDate } from '@/lib/birthDate'
-import { countryName } from '@/lib/countryName'
+import { countryName } from '@/lib/format'
 
 const iconButton =
   'flex size-8 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-white/10 hover:text-white'

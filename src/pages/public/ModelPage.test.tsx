@@ -274,7 +274,7 @@ test('mostra i piloti di una versione da corsa', async () => {
               first_name: 'Michael',
               last_name: 'Schumacher',
               slug: 'michael-schumacher',
-              nationality: 'Germania',
+              nationality: 'DE',
               birth_date: '1969-01-03',
             },
           ],

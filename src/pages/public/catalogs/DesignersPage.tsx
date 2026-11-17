@@ -21,9 +21,7 @@ export function DesignersPage() {
       // Il tipo in rosso sopra il nome, dove i motori hanno il codice
       code: t(`catalogs.designers.types.${designer.type}`),
       name: designer.name,
-      meta: designer.country
-        ? countryName(designer.country, i18n.language)
-        : undefined,
+      meta: countryName(designer.country, i18n.language) ?? undefined,
       count: designer.versions_count,
     }))
 

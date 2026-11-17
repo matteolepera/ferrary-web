@@ -1,11 +1,16 @@
 import { countryName } from '@/lib/format'
 
-test('scrive il nome del Paese nella lingua del sito', () => {
-  expect(countryName('CA', 'it')).toBe('Canada')
-  expect(countryName('FR', 'it')).toBe('Francia')
-  expect(countryName('FR', 'en')).toBe('France')
+test('con un codice di due lettere che non esiste restituisce il codice', () => {
+  expect(countryName('QQ', 'it')).toBe('QQ')
 })
 
-test('con un codice non valido restituisce il codice', () => {
-  expect(countryName('XYZ', 'it')).toBe('XYZ')
+test('senza codice, o con un codice scritto a metà, non restituisce niente', () => {
+  expect(countryName(null)).toBeNull()
+  expect(countryName('')).toBeNull()
+  expect(countryName('I')).toBeNull()
+  expect(countryName('XYZ', 'it')).toBeNull()
+})
+
+test("senza lingua scrive in italiano, come nell'admin", () => {
+  expect(countryName('DE')).toBe('Germania')
 })

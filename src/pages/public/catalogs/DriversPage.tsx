@@ -33,7 +33,7 @@ export function DriversPage() {
         .filter((code): code is string => Boolean(code)),
     ),
   ]
-    .map((code) => ({ code, name: countryName(code, i18n.language) }))
+    .map((code) => ({ code, name: countryName(code, i18n.language) ?? code }))
     .sort((a, b) => a.name.localeCompare(b.name, i18n.language))
 
   const items = data
@@ -43,9 +43,7 @@ export function DriversPage() {
           id: driver.id,
           to: `/piloti/${driver.slug}`,
           name: `${driver.first_name} ${driver.last_name}`,
-          meta: driver.nationality
-            ? countryName(driver.nationality, i18n.language)
-            : undefined,
+          meta: countryName(driver.nationality, i18n.language) ?? undefined,
           count: driver.versions_count,
           initial: initialOf(driver.last_name),
         }))
