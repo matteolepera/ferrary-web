@@ -8,10 +8,17 @@ export function formatNumber(value: number, language: string, maxDecimals = 0) {
 }
 
 /**
- * Il nome di un Paese dal suo codice ISO, nella lingua del sito: "CA" diventa "Canada".
- * Se il codice non è valido, restituisce il codice così com'è, invece di rompere la pagina.
+ * Il nome di un Paese dal suo codice di due lettere: "CA" diventa "Canada".
+ * In italiano se non si sceglie la lingua, come nell'admin; nel sito, nella lingua scelta.
+ * Senza codice, o con un codice che non è di due lettere (un campo scritto a metà, "I"),
+ * restituisce null. Un codice di due lettere che non esiste resta com'è, invece di rompere la pagina.
  */
-export function countryName(code: string, language: string) {
+export function countryName(
+  code: string | null | undefined,
+  language = 'it',
+): string | null {
+  if (!code || code.length !== 2) return null
+
   try {
     return (
       new Intl.DisplayNames([language], { type: 'region' }).of(

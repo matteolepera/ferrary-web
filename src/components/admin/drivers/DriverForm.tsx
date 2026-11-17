@@ -4,7 +4,7 @@ import { AdminButton } from '@/components/admin/ui/AdminButton'
 import { AdminField } from '@/components/admin/ui/AdminField'
 import { useDriverActions } from '@/hooks/useAdminDrivers'
 import { todayInput } from '@/lib/birthDate'
-import { countryName } from '@/lib/countryName'
+import { countryName } from '@/lib/format'
 import { slugify } from '@/lib/slugify'
 import type { AdminDriver } from '@/types/admin'
 

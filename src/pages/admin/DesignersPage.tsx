@@ -10,7 +10,7 @@ import {
   useAdminDesigners,
   useDesignerActions,
 } from '@/hooks/useAdminDesigners'
-import { countryName } from '@/lib/countryName'
+import { countryName } from '@/lib/format'
 
 const iconButton =
   'flex size-8 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-white/10 hover:text-white'
