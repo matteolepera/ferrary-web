@@ -90,10 +90,12 @@ export function ModelCard({ model }: ModelCardProps) {
                 </dt>
                 <dd className="font-display text-lg font-extrabold tracking-[-0.02em]">
                   {stat.figure}
-                  <span className="font-sans text-[0.6875rem] font-semibold text-neutral-400">
-                    {' '}
-                    {stat.unit}
-                  </span>
+                  {stat.unit && (
+                    <span className="font-sans text-[0.6875rem] font-semibold text-neutral-400">
+                      {' '}
+                      {stat.unit}
+                    </span>
+                  )}
                 </dd>
               </div>
             ))}

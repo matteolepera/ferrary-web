@@ -182,6 +182,12 @@ export type CarModel = {
     power_cv: number | null
     zero_to_100_sec: number | null
     top_speed_kmh: number | null
+    /** I risultati in gara della versione principale, sommati sui campionati; null se non ha mai corso */
+    racing?: {
+      races: number | null
+      wins: number | null
+      titles: number
+    } | null
   } | null
   predecessor?: CarModel | null
   successors?: CarModel[]
