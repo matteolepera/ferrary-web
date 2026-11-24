@@ -45,7 +45,7 @@ export function AdminRail() {
   return (
     <nav
       aria-label="Area staff"
-      className="sticky top-0 hidden h-dvh shrink-0 p-4 min-[700px]:block"
+      className="sticky top-0 z-20 hidden h-dvh shrink-0 p-4 min-[700px]:block"
     >
       <div className="border-linea bg-ombra flex h-full w-[4.5rem] flex-col items-center rounded-[2.5rem] border py-[1.125rem]">
         <Link
