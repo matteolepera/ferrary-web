@@ -199,6 +199,7 @@ export function GalleryCard({
                       </p>
                       <div className="mt-2.5 flex gap-2">
                         <AdminButton
+                          variant="danger"
                           disabled={busy}
                           onClick={() =>
                             remove.mutate(image.id, {

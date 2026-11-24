@@ -45,7 +45,7 @@ export function TrashRow({
         {!confirming && (
           <div className="flex gap-2">
             <AdminButton
-              variant="light"
+              variant="primary"
               disabled={busy}
               onClick={() =>
                 restore.mutate(id, {
@@ -59,7 +59,7 @@ export function TrashRow({
             </AdminButton>
             {canPurge && (
               <AdminButton
-                variant="outline"
+                variant="dangerSoft"
                 onClick={() => {
                   purge.reset()
                   setConfirming(true)
@@ -85,6 +85,7 @@ export function TrashRow({
               : `Eliminare per sempre ${name}, con i suoi dati e le foto? Non si può annullare.`}
           </p>
           <AdminButton
+            variant="danger"
             disabled={busy}
             onClick={() =>
               purge.mutate(id, {

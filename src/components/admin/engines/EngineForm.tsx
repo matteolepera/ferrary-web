@@ -259,6 +259,7 @@ export function EngineForm({ engine }: { engine?: AdminEngine }) {
                 </p>
                 <div className="flex gap-2.5">
                   <AdminButton
+                    variant="danger"
                     disabled={remove.isPending}
                     onClick={() =>
                       remove.mutate(engine.id, {
@@ -279,7 +280,7 @@ export function EngineForm({ engine }: { engine?: AdminEngine }) {
               </div>
             ) : (
               <AdminButton
-                variant="outline"
+                variant="dangerSoft"
                 onClick={() => {
                   remove.reset()
                   setConfirming(true)

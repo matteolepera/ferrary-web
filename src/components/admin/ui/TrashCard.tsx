@@ -54,7 +54,11 @@ export function TrashCard({
           <p id="sposta-domanda" className="text-sm text-neutral-200">
             {question}
           </p>
-          <AdminButton disabled={isPending} onClick={onConfirm}>
+          <AdminButton
+            variant="dangerSoft"
+            disabled={isPending}
+            onClick={onConfirm}
+          >
             {isPending ? 'Spostamento…' : 'Sì, sposta nel cestino'}
           </AdminButton>
           <AdminButton variant="outline" onClick={() => setConfirming(false)}>
@@ -63,7 +67,7 @@ export function TrashCard({
         </div>
       ) : (
         <AdminButton
-          variant="outline"
+          variant="dangerSoft"
           onClick={() => setConfirming(true)}
           className="mt-5"
         >

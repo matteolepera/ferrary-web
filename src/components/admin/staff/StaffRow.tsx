@@ -213,6 +213,7 @@ export function StaffRow({ person, me, onMessage }: StaffRowProps) {
             si può annullare.
           </p>
           <AdminButton
+            variant="danger"
             disabled={remove.isPending}
             onClick={() =>
               remove.mutate(person.id, {

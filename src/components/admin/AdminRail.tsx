@@ -1,8 +1,8 @@
 import { Link, NavLink } from 'react-router'
 import { Monogram } from './Monogram'
 import { LogoutButton } from '@/components/admin/LogoutButton'
-import { Icon } from '@/components/admin/ui/Icon'
-import { logoutIcon, navFor, roleLabels } from '@/components/admin/adminNav'
+import { SignOutIcon } from '@phosphor-icons/react'
+import { navFor, roleLabels } from '@/components/admin/adminNav'
 import { useCurrentUser } from '@/hooks/useAuth'
 import { initials } from '@/lib/initials'
 
@@ -45,7 +45,7 @@ export function AdminRail() {
   return (
     <nav
       aria-label="Area staff"
-      className="sticky top-0 hidden h-dvh shrink-0 p-4 min-[700px]:block"
+      className="sticky top-0 z-20 hidden h-dvh shrink-0 p-4 min-[700px]:block"
     >
       <div className="border-linea bg-ombra flex h-full w-[4.5rem] flex-col items-center rounded-[2.5rem] border py-[1.125rem]">
         <Link
@@ -56,24 +56,40 @@ export function AdminRail() {
           <Monogram />
         </Link>
 
-        <ul className="senza-barra flex min-h-0 flex-col gap-1.5 overflow-y-auto [@media(max-height:800px)]:gap-1">
-          {navFor(user.role).map((item) => (
-            <li key={item.to}>
-              <NavLink
-                to={item.to}
-                end={item.end}
-                className={({ isActive }) => itemClass(isActive)}
-              >
-                <Icon path={item.icon} />
-                <Tooltip>{item.label}</Tooltip>
-              </NavLink>
-            </li>
-          ))}
+        {/*
+          Le voci non scorrono: un elenco che scorre taglia quello che esce dai suoi bordi,
+          e l'etichetta accanto all'icona sparirebbe. Sugli schermi bassi le voci si stringono
+        */}
+        <ul className="flex flex-col gap-1.5 [@media(max-height:800px)]:gap-1">
+          {navFor(user.role).map((item) => {
+            const ItemIcon = item.icon
+
+            return (
+              <li key={item.to}>
+                <NavLink
+                  to={item.to}
+                  end={item.end}
+                  className={({ isActive }) => itemClass(isActive)}
+                >
+                  {({ isActive }) => (
+                    <>
+                      <ItemIcon
+                        aria-hidden="true"
+                        size={21}
+                        weight={isActive ? 'fill' : 'regular'}
+                      />
+                      <Tooltip>{item.label}</Tooltip>
+                    </>
+                  )}
+                </NavLink>
+              </li>
+            )
+          })}
         </ul>
 
         <div className="mt-auto flex shrink-0 flex-col items-center gap-2.5 pt-2.5">
           <LogoutButton className={itemClass()}>
-            <Icon path={logoutIcon} />
+            <SignOutIcon aria-hidden="true" size={21} />
             <Tooltip>Esci</Tooltip>
           </LogoutButton>
 

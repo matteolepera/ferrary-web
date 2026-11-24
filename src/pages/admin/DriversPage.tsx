@@ -116,6 +116,7 @@ export function DriversPage() {
                               className="flex items-center gap-2"
                             >
                               <AdminButton
+                                variant="danger"
                                 disabled={remove.isPending}
                                 onClick={() =>
                                   remove.mutate(driver.id, {
