@@ -53,8 +53,8 @@ export function GalleryCard({
 
     const ids = images.map((image) => image.id)
     const target = index + step
-      // Scambia la foto con la sua vicina
-      ;[ids[index], ids[target]] = [ids[target], ids[index]]
+    // Scambia la foto con la sua vicina
+    ;[ids[index], ids[target]] = [ids[target], ids[index]]
 
     reorder.mutate(ids)
     setAnnouncement(
@@ -199,6 +199,7 @@ export function GalleryCard({
                       </p>
                       <div className="mt-2.5 flex gap-2">
                         <AdminButton
+                          variant="danger"
                           disabled={busy}
                           onClick={() =>
                             remove.mutate(image.id, {
@@ -210,7 +211,7 @@ export function GalleryCard({
                           Sì, elimina
                         </AdminButton>
                         <AdminButton
-                          variant="danger"
+                          variant="outline"
                           onClick={() => setPanel(null)}
                           className="h-9 px-3.5 text-xs"
                         >

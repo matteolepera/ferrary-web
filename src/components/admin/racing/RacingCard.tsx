@@ -159,6 +159,7 @@ export function RacingCard({
                         className="flex gap-2"
                       >
                         <AdminButton
+                          variant="danger"
                           disabled={remove.isPending}
                           onClick={() =>
                             remove.mutate(record.id, {

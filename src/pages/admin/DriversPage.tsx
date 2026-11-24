@@ -116,6 +116,7 @@ export function DriversPage() {
                               className="flex items-center gap-2"
                             >
                               <AdminButton
+                                variant="danger"
                                 disabled={remove.isPending}
                                 onClick={() =>
                                   remove.mutate(driver.id, {
@@ -127,7 +128,7 @@ export function DriversPage() {
                                 Elimina
                               </AdminButton>
                               <AdminButton
-                                variant="danger"
+                                variant="outline"
                                 onClick={() => setConfirming(null)}
                                 className="h-8 px-3 text-xs"
                               >
