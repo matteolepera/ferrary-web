@@ -96,13 +96,13 @@ export function EngineForm({ engine }: { engine?: AdminEngine }) {
   const preview =
     values.architecture && cylinders > 0
       ? engineSummary({
-          architecture: values.architecture,
-          cylinders,
-          v_angle_deg: isV ? toNumber(values.v_angle_deg) : null,
-        }) +
-        (Number(values.displacement_cc) > 0
-          ? `, ${displacement(Number(values.displacement_cc))}`
-          : '')
+        architecture: values.architecture,
+        cylinders,
+        v_angle_deg: isV ? toNumber(values.v_angle_deg) : null,
+      }) +
+      (Number(values.displacement_cc) > 0
+        ? `, ${displacement(Number(values.displacement_cc))}`
+        : '')
       : null
 
   const numberField = (
@@ -270,7 +270,7 @@ export function EngineForm({ engine }: { engine?: AdminEngine }) {
                     Sì, elimina
                   </AdminButton>
                   <AdminButton
-                    variant="outline"
+                    variant="danger"
                     onClick={() => setConfirming(false)}
                   >
                     Annulla
@@ -279,7 +279,7 @@ export function EngineForm({ engine }: { engine?: AdminEngine }) {
               </div>
             ) : (
               <AdminButton
-                variant="outline"
+                variant="dangerSoft"
                 onClick={() => {
                   remove.reset()
                   setConfirming(true)

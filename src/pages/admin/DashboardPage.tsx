@@ -122,7 +122,7 @@ export function DashboardPage() {
                 <div className="relative z-10 mt-6 flex flex-wrap gap-2.5">
                   <Link
                     to="/admin/modelli?status=draft"
-                    className={adminButtonClass('light')}
+                    className={adminButtonClass('primary')}
                   >
                     Rivedi le bozze
                   </Link>

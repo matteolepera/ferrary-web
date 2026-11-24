@@ -225,7 +225,7 @@ export function StaffRow({ person, me, onMessage }: StaffRowProps) {
             Sì, elimina
           </AdminButton>
           <AdminButton
-            variant="outline"
+            variant="danger"
             onClick={() => setPanel(null)}
             className="h-9 px-3.5 text-xs"
           >

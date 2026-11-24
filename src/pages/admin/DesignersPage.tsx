@@ -127,7 +127,7 @@ export function DesignersPage() {
                               Elimina
                             </AdminButton>
                             <AdminButton
-                              variant="outline"
+                              variant="danger"
                               onClick={() => setConfirming(null)}
                               className="h-8 px-3 text-xs"
                             >

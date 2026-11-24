@@ -45,7 +45,7 @@ export function TrashRow({
         {!confirming && (
           <div className="flex gap-2">
             <AdminButton
-              variant="light"
+              variant="danger"
               disabled={busy}
               onClick={() =>
                 restore.mutate(id, {
@@ -59,7 +59,7 @@ export function TrashRow({
             </AdminButton>
             {canPurge && (
               <AdminButton
-                variant="outline"
+                variant="primary"
                 onClick={() => {
                   purge.reset()
                   setConfirming(true)
@@ -97,7 +97,7 @@ export function TrashRow({
             Sì, elimina per sempre
           </AdminButton>
           <AdminButton
-            variant="outline"
+            variant="dangerSoft"
             onClick={() => setConfirming(false)}
             className="h-9 px-4 text-xs"
           >
