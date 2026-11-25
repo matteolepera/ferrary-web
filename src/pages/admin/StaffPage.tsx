@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { isForbidden } from '@/api/errors'
-import { NewMemberForm } from '@/components/admin/staff/NewMemberForm'
+import { NewMemberModal } from '@/components/admin/staff/NewMemberModal'
+import { adminButtonClass } from '@/components/admin/ui/adminButtonClass'
 import { assignableRoles } from '@/components/admin/staff/permissions'
 import { AdminCard } from '@/components/admin/ui/AdminCard'
 import { useCurrentUser } from '@/hooks/useAuth'
@@ -9,13 +10,13 @@ import { StaffRow } from '@/components/admin/staff/StaffRow'
 import { TransferMasterCard } from '@/components/admin/staff/TransferMasterCard'
 
 /**
- * Le persone dello staff: l'elenco, con il Master per primo, e il form per aggiungerne una.
+ * Le persone dello staff: l'elenco, con il Master per primo, e la finestra per aggiungerne una.
  */
 export function StaffPage() {
   const { data: me } = useCurrentUser()
   const { data: staff, isPending, error } = useStaff()
-  // Cambia a ogni aggiunta: il form riparte vuoto
-  const [formKey, setFormKey] = useState(0)
+  // La finestra per aggiungere una persona
+  const [adding, setAdding] = useState(false)
   const [message, setMessage] = useState('')
 
   const roles = me ? assignableRoles(me) : []
@@ -24,16 +25,28 @@ export function StaffPage() {
     <>
       <title>Staff – Ferrary</title>
 
-      <header>
-        <p className="text-rosso-acceso text-[0.6875rem] font-semibold tracking-[0.22em] uppercase">
-          Persone
-        </p>
-        <h1 className="font-display mt-2.5 text-[2.75rem] leading-none font-extrabold tracking-[-0.035em]">
-          Staff
-        </h1>
-        <p role="status" className="mt-3 min-h-5 text-sm text-neutral-300">
-          {message}
-        </p>
+      <header className="flex flex-wrap items-end justify-between gap-5">
+        <div>
+          <p className="text-rosso-acceso text-[0.6875rem] font-semibold tracking-[0.22em] uppercase">
+            Persone
+          </p>
+          <h1 className="font-display mt-2.5 text-[2.75rem] leading-none font-extrabold tracking-[-0.035em]">
+            Staff
+          </h1>
+          <p role="status" className="mt-3 min-h-5 text-sm text-neutral-300">
+            {message}
+          </p>
+        </div>
+        {/* Solo chi può assegnare almeno un ruolo può aggiungere qualcuno */}
+        {roles.length > 0 && !isForbidden(error) && (
+          <button
+            type="button"
+            onClick={() => setAdding(true)}
+            className={adminButtonClass('primary')}
+          >
+            <span aria-hidden="true">＋</span> Nuovo membro
+          </button>
+        )}
       </header>
 
       {isForbidden(error) ? (
@@ -44,8 +57,8 @@ export function StaffPage() {
           La gestione dello staff è riservata ad Admin e Master.
         </p>
       ) : (
-        <div className="mt-5 grid grid-cols-6 gap-4 lg:grid-cols-12">
-          <AdminCard className="col-span-6 overflow-hidden lg:col-span-8">
+        <div className="mt-5 flex flex-col gap-4">
+          <AdminCard className="overflow-hidden">
             {isPending && (
               <div
                 aria-busy="true"
@@ -72,37 +85,20 @@ export function StaffPage() {
             )}
           </AdminCard>
 
-          {roles.length > 0 && (
-            <AdminCard
-              aria-labelledby="staff-nuovo"
-              delay={60}
-              className="col-span-6 self-start p-6 lg:col-span-4"
-            >
-              <h2
-                id="staff-nuovo"
-                className="font-display text-xl font-extrabold tracking-[-0.03em]"
-              >
-                Nuovo membro
-              </h2>
-              <NewMemberForm
-                key={formKey}
-                roles={roles}
-                onCreated={(name) => {
-                  setMessage(`${name} è stato aggiunto allo staff.`)
-                  setFormKey((current) => current + 1)
-                }}
-              />
-            </AdminCard>
-          )}
           {me?.role === 'master' && staff && (
-            <TransferMasterCard
-              me={me}
-              staff={staff}
-              onMessage={setMessage}
-              className="col-span-6 lg:col-span-8"
-            />
+            <TransferMasterCard me={me} staff={staff} onMessage={setMessage} />
           )}
         </div>
+      )}
+
+      {adding && (
+        <NewMemberModal
+          roles={roles}
+          onCreated={(name) =>
+            setMessage(`${name} è stato aggiunto allo staff.`)
+          }
+          onClose={() => setAdding(false)}
+        />
       )}
     </>
   )
