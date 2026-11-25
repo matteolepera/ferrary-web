@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { backendMessage } from '@/api/errors'
-import { DesignerForm } from '@/components/admin/designers/DesignerForm'
+import { DesignerModal } from '@/components/admin/designers/DesignerModal'
 import { designerTypes } from '@/components/admin/designers/options'
 import { AdminButton } from '@/components/admin/ui/AdminButton'
 import { AdminCard } from '@/components/admin/ui/AdminCard'
 import { Icon } from '@/components/admin/ui/Icon'
+import { adminButtonClass } from '@/components/admin/ui/adminButtonClass'
 import { labelOf } from '@/components/admin/versions/options'
 import {
   useAdminDesigners,
@@ -21,33 +22,46 @@ const iconButton =
 export function DesignersPage() {
   const { data: designers, isPending, isError } = useAdminDesigners()
   const { remove } = useDesignerActions()
-  const [editing, setEditing] = useState<number | null>(null)
+  // La finestra aperta: "new" per un designer nuovo, l'id per modificarne uno, null se chiusa
+  const [modal, setModal] = useState<number | 'new' | null>(null)
   const [confirming, setConfirming] = useState<number | null>(null)
 
   const sorted = [...(designers ?? [])].sort((a, b) =>
     a.name.localeCompare(b.name, 'it'),
   )
-  const current = sorted.find((designer) => designer.id === editing)
+  const current =
+    typeof modal === 'number'
+      ? sorted.find((designer) => designer.id === modal)
+      : undefined
 
   return (
     <>
       <title>Designer – Ferrary</title>
 
-      <header>
-        <p className="text-rosso-acceso text-[0.6875rem] font-semibold tracking-[0.22em] uppercase">
-          Catalogo
-        </p>
-        <h1 className="font-display mt-2.5 text-[2.75rem] leading-none font-extrabold tracking-[-0.035em]">
-          Designer
-        </h1>
-        <p className="mt-3 max-w-[60ch] text-sm leading-relaxed text-neutral-400">
-          Gli studi e le persone che hanno disegnato le Ferrari: si collegano
-          alle versioni, con il loro ruolo.
-        </p>
+      <header className="flex flex-wrap items-end justify-between gap-5">
+        <div>
+          <p className="text-rosso-acceso text-[0.6875rem] font-semibold tracking-[0.22em] uppercase">
+            Catalogo
+          </p>
+          <h1 className="font-display mt-2.5 text-[2.75rem] leading-none font-extrabold tracking-[-0.035em]">
+            Designer
+          </h1>
+          <p className="mt-3 max-w-[60ch] text-sm leading-relaxed text-neutral-400">
+            Gli studi e le persone che hanno disegnato le Ferrari: si collegano
+            alle versioni, con il loro ruolo.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setModal('new')}
+          className={adminButtonClass('primary')}
+        >
+          <span aria-hidden="true">＋</span> Nuovo designer
+        </button>
       </header>
 
-      <div className="mt-7 grid grid-cols-6 gap-4 lg:grid-cols-12">
-        <AdminCard className="col-span-6 overflow-hidden lg:col-span-8">
+      <div className="mt-7">
+        <AdminCard className="overflow-hidden">
           {isPending && (
             <div
               aria-busy="true"
@@ -83,13 +97,7 @@ export function DesignersPage() {
                   {sorted.map((designer) => (
                     <tr
                       key={designer.id}
-                      aria-current={
-                        designer.id === editing ? 'true' : undefined
-                      }
-                      className={[
-                        'border-linea border-b last:border-b-0',
-                        designer.id === editing ? 'bg-white/[0.04]' : '',
-                      ].join(' ')}
+                      className="border-linea border-b last:border-b-0"
                     >
                       <td className="py-4 pr-5 pl-6">
                         <p className="font-display font-bold">
@@ -140,7 +148,7 @@ export function DesignersPage() {
                             <button
                               type="button"
                               aria-label={`Modifica ${designer.name}`}
-                              onClick={() => setEditing(designer.id)}
+                              onClick={() => setModal(designer.id)}
                               className={iconButton}
                             >
                               <Icon
@@ -188,25 +196,16 @@ export function DesignersPage() {
             </p>
           )}
         </AdminCard>
-
-        <AdminCard
-          aria-labelledby="designer-form"
-          delay={60}
-          className="col-span-6 self-start p-6 lg:col-span-4"
-        >
-          <h2
-            id="designer-form"
-            className="font-display text-xl font-extrabold tracking-[-0.03em]"
-          >
-            {current ? `Modifica: ${current.name}` : 'Nuovo designer'}
-          </h2>
-          <DesignerForm
-            key={current?.id ?? 'nuovo'}
-            designer={current}
-            onDone={() => setEditing(null)}
-          />
-        </AdminCard>
       </div>
+
+      {/* La finestra si monta solo quando serve, e si smonta alla chiusura: riparte sempre pulita */}
+      {modal !== null && (
+        <DesignerModal
+          key={modal}
+          designer={current}
+          onClose={() => setModal(null)}
+        />
+      )}
     </>
   )
 }

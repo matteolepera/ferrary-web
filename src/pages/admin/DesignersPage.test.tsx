@@ -27,7 +27,9 @@ test('crea un designer, con il codice del paese in maiuscolo', async () => {
   signIn()
   renderRoute('/admin/designer')
 
-  fireEvent.change(await screen.findByLabelText('Nome'), {
+  fireEvent.click(await screen.findByRole('button', { name: 'Nuovo designer' }))
+
+  fireEvent.change(screen.getByLabelText('Nome'), {
     target: { value: 'Scaglietti' },
   })
   fireEvent.change(screen.getByLabelText('Tipo'), {
@@ -45,7 +47,7 @@ test('crea un designer, con il codice del paese in maiuscolo', async () => {
   )
 })
 
-test('riempie il form con il designer da modificare', async () => {
+test('apre la finestra con il designer da modificare', async () => {
   signIn()
   renderRoute('/admin/designer')
 
@@ -54,7 +56,7 @@ test('riempie il form con il designer da modificare', async () => {
   )
 
   expect(
-    screen.getByRole('heading', { name: 'Modifica: Pininfarina' }),
+    screen.getByRole('dialog', { name: 'Pininfarina' }),
   ).toBeInTheDocument()
   expect(screen.getByLabelText('Tipo')).toHaveValue('studio')
 })
