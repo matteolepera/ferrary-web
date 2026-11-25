@@ -21,6 +21,7 @@ test('elenca le famiglie nel loro ordine, e ne crea una nuova in fondo', async (
   expect(rows[1]).toHaveTextContent('Sportive')
   expect(rows[2]).toHaveTextContent('Hypercar')
 
+  fireEvent.click(screen.getByRole('button', { name: 'Nuova famiglia' }))
   fireEvent.change(screen.getByLabelText('Nome in italiano'), {
     target: { value: 'Speciali' },
   })
@@ -39,9 +40,7 @@ test('riempie il form con la famiglia da modificare', async () => {
     await screen.findByRole('button', { name: 'Modifica Hypercar' }),
   )
 
-  expect(
-    screen.getByRole('heading', { name: 'Modifica: Hypercar' }),
-  ).toBeInTheDocument()
+  expect(screen.getByRole('dialog', { name: 'Hypercar' })).toBeInTheDocument()
   expect(screen.getByLabelText('Nome in inglese')).toHaveValue('Hypercars')
   expect(
     screen.getByRole('button', { name: 'Salva modifiche' }),

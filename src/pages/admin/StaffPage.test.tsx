@@ -19,7 +19,7 @@ test('elenca lo staff con i ruoli, e riconosce chi sta guardando', async () => {
   expect(items[2]).toHaveTextContent('Moderatore')
 })
 
-test('aggiunge una persona, e il form riparte vuoto', async () => {
+test('aggiunge una persona dalla finestra, che poi si chiude', async () => {
   let sent: unknown = null
   server.use(
     http.post('http://localhost:8000/api/admin/staff', async ({ request }) => {
@@ -40,7 +40,8 @@ test('aggiunge una persona, e il form riparte vuoto', async () => {
   signIn()
   renderRoute('/admin/staff')
 
-  fireEvent.change(await screen.findByLabelText('Nome'), {
+  fireEvent.click(await screen.findByRole('button', { name: 'Nuovo membro' }))
+  fireEvent.change(screen.getByLabelText('Nome'), {
     target: { value: 'Sara Ferri' },
   })
   fireEvent.change(screen.getByLabelText('Email'), {
@@ -63,14 +64,18 @@ test('aggiunge una persona, e il form riparte vuoto', async () => {
     password: 'una-password-lunga',
     role: 'moderator',
   })
-  await waitFor(() => expect(screen.getByLabelText('Nome')).toHaveValue(''))
+  // Aggiunta la persona, la finestra si chiude
+  await waitFor(() =>
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument(),
+  )
 })
 
 test('un Admin può aggiungere solo moderatori', async () => {
   signIn({ ...staffUser, role: 'admin' })
   renderRoute('/admin/staff')
 
-  const role = await screen.findByLabelText('Ruolo')
+  fireEvent.click(await screen.findByRole('button', { name: 'Nuovo membro' }))
+  const role = screen.getByLabelText('Ruolo')
   expect(role).toHaveValue('moderator')
   expect(role.querySelectorAll('option')).toHaveLength(1)
 })
