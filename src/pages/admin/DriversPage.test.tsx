@@ -28,7 +28,8 @@ test('crea un pilota, con la nazionalità in maiuscolo e la data come la vuole i
   signIn()
   renderRoute('/admin/piloti')
 
-  fireEvent.change(await screen.findByLabelText('Nome'), {
+  fireEvent.click(await screen.findByRole('button', { name: 'Nuovo pilota' }))
+  fireEvent.change(screen.getByLabelText('Nome'), {
     target: { value: 'Niki' },
   })
   fireEvent.change(screen.getByLabelText('Cognome'), {
@@ -52,7 +53,7 @@ test('crea un pilota, con la nazionalità in maiuscolo e la data come la vuole i
   )
 })
 
-test('riempie il form con il pilota da modificare', async () => {
+test('apre la finestra con il pilota da modificare', async () => {
   signIn()
   renderRoute('/admin/piloti')
 
@@ -61,7 +62,7 @@ test('riempie il form con il pilota da modificare', async () => {
   )
 
   expect(
-    screen.getByRole('heading', { name: 'Modifica: Michael Schumacher' }),
+    screen.getByRole('dialog', { name: 'Michael Schumacher' }),
   ).toBeInTheDocument()
   expect(screen.getByLabelText('Data di nascita')).toHaveValue('1969-01-03')
 })

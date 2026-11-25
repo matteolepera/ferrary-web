@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { backendMessage } from '@/api/errors'
-import { DriverForm } from '@/components/admin/drivers/DriverForm'
+import { DriverModal } from '@/components/admin/drivers/DriverModal'
 import { AdminButton } from '@/components/admin/ui/AdminButton'
 import { AdminCard } from '@/components/admin/ui/AdminCard'
 import { Icon } from '@/components/admin/ui/Icon'
+import { adminButtonClass } from '@/components/admin/ui/adminButtonClass'
 import { useAdminDrivers, useDriverActions } from '@/hooks/useAdminDrivers'
 import { birthDate } from '@/lib/birthDate'
 import { countryName } from '@/lib/format'
@@ -17,7 +18,8 @@ const iconButton =
 export function DriversPage() {
   const { data: drivers, isPending, isError } = useAdminDrivers()
   const { remove } = useDriverActions()
-  const [editing, setEditing] = useState<number | null>(null)
+  // La finestra aperta: "new" per un pilota nuovo, l'id per modificarne uno, null se chiusa
+  const [modal, setModal] = useState<number | 'new' | null>(null)
   const [confirming, setConfirming] = useState<number | null>(null)
 
   // Per cognome, e a parità di cognome per nome: come negli annuari
@@ -26,27 +28,39 @@ export function DriversPage() {
       a.last_name.localeCompare(b.last_name, 'it') ||
       a.first_name.localeCompare(b.first_name, 'it'),
   )
-  const current = sorted.find((driver) => driver.id === editing)
+  const current =
+    typeof modal === 'number'
+      ? sorted.find((driver) => driver.id === modal)
+      : undefined
 
   return (
     <>
       <title>Piloti – Ferrary</title>
 
-      <header>
-        <p className="text-rosso-acceso text-[0.6875rem] font-semibold tracking-[0.22em] uppercase">
-          Catalogo
-        </p>
-        <h1 className="font-display mt-2.5 text-[2.75rem] leading-none font-extrabold tracking-[-0.035em]">
-          Piloti
-        </h1>
-        <p className="mt-3 max-w-[60ch] text-sm leading-relaxed text-neutral-400">
-          Chi ha guidato le Ferrari da corsa: si collegano alle versioni che
-          hanno portato in pista.
-        </p>
+      <header className="flex flex-wrap items-end justify-between gap-5">
+        <div>
+          <p className="text-rosso-acceso text-[0.6875rem] font-semibold tracking-[0.22em] uppercase">
+            Catalogo
+          </p>
+          <h1 className="font-display mt-2.5 text-[2.75rem] leading-none font-extrabold tracking-[-0.035em]">
+            Piloti
+          </h1>
+          <p className="mt-3 max-w-[60ch] text-sm leading-relaxed text-neutral-400">
+            Chi ha guidato le Ferrari da corsa: si collegano alle versioni che
+            hanno portato in pista.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setModal('new')}
+          className={adminButtonClass('primary')}
+        >
+          <span aria-hidden="true">＋</span> Nuovo pilota
+        </button>
       </header>
 
-      <div className="mt-7 grid grid-cols-6 gap-4 lg:grid-cols-12">
-        <AdminCard className="col-span-6 overflow-hidden lg:col-span-8">
+      <div className="mt-7">
+        <AdminCard className="overflow-hidden">
           {isPending && (
             <div
               aria-busy="true"
@@ -85,13 +99,7 @@ export function DriversPage() {
                     return (
                       <tr
                         key={driver.id}
-                        aria-current={
-                          driver.id === editing ? 'true' : undefined
-                        }
-                        className={[
-                          'border-linea border-b last:border-b-0',
-                          driver.id === editing ? 'bg-white/[0.04]' : '',
-                        ].join(' ')}
+                        className="border-linea border-b last:border-b-0"
                       >
                         <td className="py-4 pr-5 pl-6">
                           <p className="font-display font-bold">{name}</p>
@@ -140,7 +148,7 @@ export function DriversPage() {
                               <button
                                 type="button"
                                 aria-label={`Modifica ${name}`}
-                                onClick={() => setEditing(driver.id)}
+                                onClick={() => setModal(driver.id)}
                                 className={iconButton}
                               >
                                 <Icon
@@ -189,27 +197,16 @@ export function DriversPage() {
             </p>
           )}
         </AdminCard>
-
-        <AdminCard
-          aria-labelledby="pilota-form"
-          delay={60}
-          className="col-span-6 self-start p-6 lg:col-span-4"
-        >
-          <h2
-            id="pilota-form"
-            className="font-display text-xl font-extrabold tracking-[-0.03em]"
-          >
-            {current
-              ? `Modifica: ${current.first_name} ${current.last_name}`
-              : 'Nuovo pilota'}
-          </h2>
-          <DriverForm
-            key={current?.id ?? 'nuovo'}
-            driver={current}
-            onDone={() => setEditing(null)}
-          />
-        </AdminCard>
       </div>
+
+      {/* La finestra si monta solo quando serve, e si smonta alla chiusura: riparte sempre pulita */}
+      {modal !== null && (
+        <DriverModal
+          key={modal}
+          driver={current}
+          onClose={() => setModal(null)}
+        />
+      )}
     </>
   )
 }
