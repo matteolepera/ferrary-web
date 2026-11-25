@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { backendMessage } from '@/api/errors'
-import { CategoryForm } from '@/components/admin/categories/CategoryForm'
+import { CategoryModal } from '@/components/admin/categories/CategoryModal'
+import { adminButtonClass } from '@/components/admin/ui/adminButtonClass'
 import { AdminButton } from '@/components/admin/ui/AdminButton'
 import { AdminCard } from '@/components/admin/ui/AdminCard'
 import { Icon } from '@/components/admin/ui/Icon'
@@ -11,36 +12,51 @@ const iconButton =
   'flex size-8 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-white/10 hover:text-white'
 
 /**
- * Le famiglie dell'archivio: l'elenco a sinistra, il form a destra, per crearne una o modificare quella scelta.
+ * Le famiglie dell'archivio: l'elenco a tutta larghezza, e la finestra per crearne una o modificarla.
  */
 export function CategoriesPage() {
   const { data: categories, isPending, isError } = useAdminCategories()
   const { remove } = useCategoryActions()
-  // La famiglia nel form, e quella di cui si sta confermando l'eliminazione
-  const [editing, setEditing] = useState<number | null>(null)
+  // La finestra aperta: "new" per una famiglia nuova, l'id per modificarne una, null se chiusa
+  const [modal, setModal] = useState<number | 'new' | null>(null)
+  // La famiglia di cui si sta confermando l'eliminazione
   const [confirming, setConfirming] = useState<number | null>(null)
 
   const sorted = [...(categories ?? [])].sort(
     (a, b) => a.sort_order - b.sort_order,
   )
-  const current = sorted.find((category) => category.id === editing)
+  const current =
+    typeof modal === 'number'
+      ? sorted.find((category) => category.id === modal)
+      : undefined
   const nextPosition = (sorted.at(-1)?.sort_order ?? 0) + 1
 
   return (
     <>
       <title>Famiglie – Ferrary</title>
 
-      <header>
-        <p className="text-rosso-acceso text-[0.6875rem] font-semibold tracking-[0.22em] uppercase">
-          Catalogo
-        </p>
-        <h1 className="font-display mt-2.5 text-[2.75rem] leading-none font-extrabold tracking-[-0.035em]">
-          Famiglie
-        </h1>
-        <p className="mt-3 max-w-[60ch] text-sm leading-relaxed text-neutral-400">
-          Dividono l'archivio, come la classificazione ufficiale Ferrari: ogni
-          modello appartiene a una famiglia.
-        </p>
+      <header className="flex flex-wrap items-end justify-between gap-5">
+        <div>
+          <p className="text-rosso-acceso text-[0.6875rem] font-semibold tracking-[0.22em] uppercase">
+            Catalogo
+          </p>
+          <h1 className="font-display mt-2.5 text-[2.75rem] leading-none font-extrabold tracking-[-0.035em]">
+            Famiglie
+          </h1>
+          <p className="mt-3 max-w-[60ch] text-sm leading-relaxed text-neutral-400">
+            Dividono l'archivio, come la classificazione ufficiale Ferrari: ogni
+            modello appartiene a una famiglia.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setModal('new')}
+          // Finché le famiglie non arrivano non sappiamo la posizione da proporre
+          disabled={!categories}
+          className={adminButtonClass('primary')}
+        >
+          <span aria-hidden="true">＋</span> Nuova famiglia
+        </button>
       </header>
 
       <div className="mt-7 grid grid-cols-6 gap-4 lg:grid-cols-12">
@@ -80,13 +96,7 @@ export function CategoriesPage() {
                   {sorted.map((category) => (
                     <tr
                       key={category.id}
-                      aria-current={
-                        category.id === editing ? 'true' : undefined
-                      }
-                      className={[
-                        'border-linea border-b last:border-b-0',
-                        category.id === editing ? 'bg-white/[0.04]' : '',
-                      ].join(' ')}
+                      className="border-linea border-b last:border-b-0"
                     >
                       <td className="py-4 pr-5 pl-6">
                         <p className="font-display font-bold">
@@ -137,7 +147,7 @@ export function CategoriesPage() {
                             <button
                               type="button"
                               aria-label={`Modifica ${category.name.it}`}
-                              onClick={() => setEditing(category.id)}
+                              onClick={() => setModal(category.id)}
                               className={iconButton}
                             >
                               <Icon
@@ -179,34 +189,17 @@ export function CategoriesPage() {
             </p>
           )}
         </AdminCard>
-
-        <AdminCard
-          aria-labelledby="famiglia-form"
-          delay={60}
-          className="col-span-6 self-start p-6 lg:col-span-4"
-        >
-          <h2
-            id="famiglia-form"
-            className="font-display text-xl font-extrabold tracking-[-0.03em]"
-          >
-            {current ? `Modifica: ${current.name.it}` : 'Nuova famiglia'}
-          </h2>
-          {/* Il form si monta solo quando le famiglie sono arrivate: legge la posizione proposta una volta sola */}
-          {categories ? (
-            <CategoryForm
-              key={current?.id ?? 'nuova'}
-              category={current}
-              nextPosition={nextPosition}
-              onDone={() => setEditing(null)}
-            />
-          ) : (
-            <div
-              aria-busy="true"
-              className="mt-5 h-72 animate-pulse rounded-2xl bg-white/5"
-            />
-          )}
-        </AdminCard>
       </div>
+
+      {/* La finestra si monta solo quando serve, e si smonta alla chiusura: riparte sempre pulita */}
+      {modal !== null && categories && (
+        <CategoryModal
+          key={modal}
+          category={current}
+          nextPosition={nextPosition}
+          onClose={() => setModal(null)}
+        />
+      )}
     </>
   )
 }
