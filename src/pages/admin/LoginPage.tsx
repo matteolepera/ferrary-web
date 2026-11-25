@@ -133,9 +133,6 @@ export function LoginPage() {
             <h1 className="font-display text-[2.5rem] leading-none font-extrabold tracking-[-0.035em]">
               Accedi
             </h1>
-            <p className="mt-3 text-sm leading-relaxed text-neutral-400">
-              Inserisci le credenziali che ti ha assegnato il Master.
-            </p>
 
             <form
               onSubmit={handleSubmit}
@@ -220,10 +217,6 @@ export function LoginPage() {
               </AdminButton>
             </form>
           </div>
-
-          <p className="text-center text-xs leading-relaxed text-neutral-400">
-            Accesso riservato allo staff.
-          </p>
         </main>
       </div>
     </>
