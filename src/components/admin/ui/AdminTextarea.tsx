@@ -1,11 +1,14 @@
 import type { ComponentProps } from 'react'
 import { FieldMessages } from './FieldMessages'
 import { useFieldA11y } from './useFieldA11y'
+import { FieldLabel } from './FieldLabel'
+import { fieldBox } from './fieldBox'
 
 type AdminTextareaProps = ComponentProps<'textarea'> & {
   label: string
   hint?: string
   error?: string
+  optional?: boolean
 }
 
 /**
@@ -16,6 +19,8 @@ export function AdminTextarea({
   hint,
   error,
   id,
+  required,
+  optional,
   className = '',
   ...props
 }: AdminTextareaProps) {
@@ -27,21 +32,18 @@ export function AdminTextarea({
 
   return (
     <div className={className}>
-      <label
+      <FieldLabel
         htmlFor={fieldId}
-        className="mb-2 block text-[0.6875rem] font-semibold tracking-[0.18em] text-neutral-400 uppercase"
-      >
-        {label}
-      </label>
+        label={label}
+        required={required}
+        optional={optional}
+      />
       <textarea
         id={fieldId}
         aria-invalid={invalid}
         aria-describedby={describedBy}
-        className={[
-          'bg-notte block max-h-96 min-h-36 w-full resize-y rounded-2xl border px-4 py-3.5 text-[0.9375rem] leading-relaxed text-neutral-100',
-          '[field-sizing:content] transition-colors outline-none placeholder:text-neutral-600 focus:border-neutral-300',
-          error ? 'border-errore' : 'border-white/10',
-        ].join(' ')}
+        aria-required={required || undefined}
+        className={`block [field-sizing:content] max-h-96 min-h-32 w-full resize-y px-3.5 py-3 leading-relaxed placeholder:text-neutral-600 ${fieldBox(error)}`}
         {...props}
       />
       <FieldMessages

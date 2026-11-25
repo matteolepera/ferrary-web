@@ -36,3 +36,11 @@ window.IntersectionObserver = class {
 // jsdom non crea indirizzi temporanei per i file: li simuliamo per le anteprime delle foto
 URL.createObjectURL = vi.fn(() => 'blob:anteprima')
 URL.revokeObjectURL = vi.fn()
+
+// jsdom non ha showModal() e close() del <dialog>: li simuliamo aprendo e chiudendo l'attributo "open"
+HTMLDialogElement.prototype.showModal ??= function (this: HTMLDialogElement) {
+  this.setAttribute('open', '')
+}
+HTMLDialogElement.prototype.close ??= function (this: HTMLDialogElement) {
+  this.removeAttribute('open')
+}

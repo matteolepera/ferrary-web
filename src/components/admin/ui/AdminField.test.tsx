@@ -54,3 +54,14 @@ test("il menu e l'area di testo collegano etichetta ed errore, come il campo", (
     'true',
   )
 })
+
+test("l'obbligo si vede e si sente, l'unità sta nel campo ma il nome la dice", () => {
+  render(<AdminField label="Lunghezza" unit="mm" required />)
+
+  // Il nome comprende l'unità (dal testo nascosto), non l'asterisco
+  const field = screen.getByLabelText('Lunghezza (mm)')
+  expect(field).toHaveAttribute('aria-required', 'true')
+  // L'input non ha il "required" nativo: niente fumetti di errore del browser
+  expect(field).not.toHaveAttribute('required')
+  expect(screen.getByText('mm')).toBeInTheDocument()
+})

@@ -1,5 +1,7 @@
 import { type ComponentProps, type ReactNode } from 'react'
+import { FieldLabel } from './FieldLabel'
 import { FieldMessages } from './FieldMessages'
+import { fieldBox } from './fieldBox'
 import { useFieldA11y } from './useFieldA11y'
 
 type AdminFieldProps = ComponentProps<'input'> & {
@@ -8,6 +10,10 @@ type AdminFieldProps = ComponentProps<'input'> & {
   hint?: string
   /** Messaggio d'errore: se presente, il campo risulta non valido */
   error?: string
+  /** L'unità di misura, dentro il campo a destra: "mm", "km/h" */
+  unit?: string
+  /** Scrive "facoltativo" accanto all'etichetta */
+  optional?: boolean
   /** Icona decorativa a sinistra, dentro il campo */
   icon?: ReactNode
   /** Un elemento a destra, dentro il campo: ad esempio il pulsante per mostrare la password */
@@ -15,16 +21,19 @@ type AdminFieldProps = ComponentProps<'input'> & {
 }
 
 /**
- * Campo dell'area admin: arrotondato, con icona, come la ricerca del pannello.
+ * Campo dell'admin: etichetta leggibile, asterisco sugli obbligatori, unità dentro il campo.
  * Etichetta, suggerimento ed errore sono collegati al campo come nel TextField del sito.
  */
 export function AdminField({
   label,
   hint,
   error,
+  unit,
+  optional,
   icon,
   trailing,
   id,
+  required,
   className = '',
   ...props
 }: AdminFieldProps) {
@@ -36,20 +45,16 @@ export function AdminField({
 
   return (
     <div className={className}>
-      <label
+      <FieldLabel
         htmlFor={fieldId}
-        className="mb-2 block text-[0.6875rem] font-semibold tracking-[0.18em] text-neutral-400 uppercase"
-      >
-        {label}
-      </label>
+        label={label}
+        unit={unit}
+        required={required}
+        optional={optional}
+      />
 
       <div
-        className={[
-          'bg-notte flex h-13 items-center gap-2.5 rounded-2xl border px-4 transition-colors',
-          // Il focus si vede sul bordo dell'intero campo, icona compresa
-          'focus-within:border-neutral-300',
-          error ? 'border-errore' : 'border-white/10',
-        ].join(' ')}
+        className={`flex h-12 items-center gap-2.5 px-3.5 ${fieldBox(error)}`}
       >
         {icon && (
           <span aria-hidden="true" className="flex text-neutral-500">
@@ -60,9 +65,18 @@ export function AdminField({
           id={fieldId}
           aria-invalid={invalid}
           aria-describedby={describedBy}
-          className="h-full min-w-0 flex-1 bg-transparent text-[0.9375rem] text-neutral-100 outline-none placeholder:text-neutral-600"
+          aria-required={required || undefined}
+          className="h-full min-w-0 flex-1 bg-transparent outline-none placeholder:text-neutral-600 disabled:cursor-not-allowed"
           {...props}
         />
+        {unit && (
+          <span
+            aria-hidden="true"
+            className="shrink-0 text-[0.8125rem] font-semibold text-neutral-500"
+          >
+            {unit}
+          </span>
+        )}
         {trailing}
       </div>
 

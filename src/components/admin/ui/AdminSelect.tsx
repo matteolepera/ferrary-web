@@ -1,11 +1,14 @@
 import type { ComponentProps } from 'react'
 import { FieldMessages } from './FieldMessages'
 import { useFieldA11y } from './useFieldA11y'
+import { FieldLabel } from './FieldLabel'
+import { fieldBox } from './fieldBox'
 
 type AdminSelectProps = ComponentProps<'select'> & {
   label: string
   hint?: string
   error?: string
+  optional?: boolean
 }
 
 /**
@@ -17,6 +20,8 @@ export function AdminSelect({
   hint,
   error,
   id,
+  required,
+  optional,
   className = '',
   children,
   ...props
@@ -29,21 +34,18 @@ export function AdminSelect({
 
   return (
     <div className={className}>
-      <label
+      <FieldLabel
         htmlFor={fieldId}
-        className="mb-2 block text-[0.6875rem] font-semibold tracking-[0.18em] text-neutral-400 uppercase"
-      >
-        {label}
-      </label>
+        label={label}
+        required={required}
+        optional={optional}
+      />
       <select
         id={fieldId}
         aria-invalid={invalid}
         aria-describedby={describedBy}
-        className={[
-          'bg-notte h-13 w-full rounded-2xl border px-4 text-[0.9375rem] text-neutral-100 transition-colors',
-          'outline-none focus:border-neutral-300',
-          error ? 'border-errore' : 'border-white/10',
-        ].join(' ')}
+        aria-required={required || undefined}
+        className={`h-12 w-full px-3.5 ${fieldBox(error)}`}
         {...props}
       >
         {children}
