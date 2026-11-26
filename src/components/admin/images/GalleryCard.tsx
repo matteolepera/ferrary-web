@@ -3,13 +3,15 @@ import {
   ArrowLeftIcon,
   ArrowRightIcon,
   PencilSimpleIcon,
+  PlusIcon,
   StarIcon,
   TrashIcon,
 } from '@phosphor-icons/react'
-import { ImageUploader } from '@/components/admin/images/ImageUploader'
+import { PhotoUploadModal } from '@/components/admin/images/PhotoUploadModal'
 import { PhotoTextModal } from '@/components/admin/images/PhotoTextModal'
 import { AdminButton } from '@/components/admin/ui/AdminButton'
 import { AdminCard } from '@/components/admin/ui/AdminCard'
+import { sectionButtonClass } from '@/components/admin/ui/adminButtonClass'
 import { useImageActions, useVersionImages } from '@/hooks/useVersionImages'
 
 type GalleryCardProps = {
@@ -39,6 +41,8 @@ export function GalleryCard({
   const { data: images, isPending, isError } = useVersionImages(versionId)
   const { update, remove, reorder } = useImageActions(versionId)
   const [panel, setPanel] = useState<Panel | null>(null)
+  // La finestra per aggiungere le foto
+  const [adding, setAdding] = useState(false)
   const [announcement, setAnnouncement] = useState('')
   // La freccia da rimettere a fuoco dopo uno spostamento: l'elemento spostato perde il focus.
   // Un riferimento e non uno stato: è un'informazione di servizio, che non si disegna
@@ -86,21 +90,30 @@ export function GalleryCard({
       delay={delay}
       className={`p-6 ${className}`}
     >
-      <div className="flex flex-wrap items-center gap-2.5">
-        <h2
-          id="versione-foto"
-          className="font-display text-xl font-extrabold tracking-[-0.03em]"
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center gap-2.5">
+          <h2
+            id="versione-foto"
+            className="font-display text-xl font-extrabold tracking-[-0.03em]"
+          >
+            Foto
+          </h2>
+          {images && images.length > 0 && (
+            <span className="rounded-full bg-white/8 px-2.5 py-1 text-[0.6875rem] font-semibold text-neutral-300">
+              {images.length}
+            </span>
+          )}
+        </div>
+        {/* Come «Modifica» nelle altre sezioni: in alto a destra, apre una finestra */}
+        <button
+          type="button"
+          onClick={() => setAdding(true)}
+          className={sectionButtonClass}
         >
-          Foto
-        </h2>
-        {images && images.length > 0 && (
-          <span className="rounded-full bg-white/8 px-2.5 py-1 text-[0.6875rem] font-semibold text-neutral-300">
-            {images.length}
-          </span>
-        )}
+          <PlusIcon aria-hidden="true" size={14} />
+          Aggiungi foto
+        </button>
       </div>
-
-      <ImageUploader versionId={versionId} versionName={versionName} />
 
       {isPending && (
         <div
@@ -260,6 +273,19 @@ export function GalleryCard({
       <p role="status" className="sr-only">
         {announcement}
       </p>
+
+      {adding && (
+        <PhotoUploadModal
+          versionId={versionId}
+          versionName={versionName}
+          onUploaded={(count) =>
+            setAnnouncement(
+              count === 1 ? '1 foto caricata.' : `${count} foto caricate.`,
+            )
+          }
+          onClose={() => setAdding(false)}
+        />
+      )}
 
       {/* La finestra del testo, montata solo quando serve: riparte dal testo salvato */}
       {editing && (

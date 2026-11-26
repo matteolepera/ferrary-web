@@ -4,6 +4,7 @@ import {
   missingCount,
   type SummaryItem,
 } from '@/components/admin/versions/versionSummary'
+import { sectionButtonClass } from '@/components/admin/ui/adminButtonClass'
 
 type VersionSectionCardProps = {
   id: string
@@ -15,12 +16,6 @@ type VersionSectionCardProps = {
   delay?: number
   className?: string
 }
-
-const editButton = [
-  'inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border border-white/20 px-4',
-  'text-[0.8125rem] font-semibold transition-colors hover:border-white/50',
-  'focus-visible:outline-rosso-acceso focus-visible:outline-2 focus-visible:outline-offset-2',
-].join(' ')
 
 /**
  * Una sezione della versione da leggere: i dati in griglia, quelli mancanti con un trattino,
@@ -63,7 +58,7 @@ export function VersionSectionCard({
           type="button"
           onClick={onEdit}
           aria-label={`Modifica ${title.toLowerCase()}`}
-          className={editButton}
+          className={sectionButtonClass}
         >
           <PencilSimpleIcon aria-hidden="true" size={14} />
           Modifica

@@ -25,6 +25,8 @@ type AdminModalProps = {
   submitLabel: string
   /** Il salvataggio è in corso: il pulsante si spegne e lo dice */
   pending?: boolean
+  /** Il salvataggio non è ancora possibile: ad esempio, nessuna foto da caricare */
+  submitDisabled?: boolean
   children: ReactNode
 }
 
@@ -43,6 +45,7 @@ export function AdminModal({
   onSubmit,
   submitLabel,
   pending = false,
+  submitDisabled = false,
   children,
 }: AdminModalProps) {
   const dialog = useRef<HTMLDialogElement>(null)
@@ -173,7 +176,7 @@ export function AdminModal({
                 <AdminButton variant="outline" onClick={requestClose}>
                   Annulla
                 </AdminButton>
-                <AdminButton type="submit" disabled={pending}>
+                <AdminButton type="submit" disabled={pending || submitDisabled}>
                   {pending ? 'Salvataggio…' : submitLabel}
                 </AdminButton>
               </div>

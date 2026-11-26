@@ -14,6 +14,17 @@ const variants: Record<AdminButtonVariant, string> = {
     'border border-rosso-acceso/45 text-rosso-acceso hover:border-rosso-acceso hover:bg-rosso-acceso/10',
   danger: 'bg-rosso text-white hover:bg-rosso-scuro',
 }
+
+/**
+ * Il pulsante piccolo in cima alle sezioni: «Modifica», «＋ Aggiungi foto».
+ * Contornato come outline, ma più basso, per stare accanto al titolo.
+ */
+export const sectionButtonClass = [
+  'inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border border-white/20 px-4',
+  'text-[0.8125rem] font-semibold transition-colors hover:border-white/50',
+  'focus-visible:outline-rosso-acceso focus-visible:outline-2 focus-visible:outline-offset-2',
+].join(' ')
+
 /**
  * Classi del pulsante dell'area admin: a pillola, come nel pannello.
  * Separate dal componente per usarle anche sui Link.
