@@ -17,7 +17,7 @@ test('mostra i risultati per campionato, con i titoli insieme', async () => {
   expect(row.getByText('1 piloti, 1 costruttori')).toBeInTheDocument()
 })
 
-test('aggiunge un campionato, senza inviare il form della versione', async () => {
+test('aggiunge un campionato dalla sua finestra', async () => {
   let sent: unknown = null
   server.use(
     http.post(
@@ -31,18 +31,23 @@ test('aggiunge un campionato, senza inviare il form della versione', async () =>
   signIn()
   renderRoute('/admin/modelli/2/versioni/11')
 
-  const results = await card()
-  fireEvent.change(results.getByLabelText('Campionato'), {
+  fireEvent.click(
+    (await card()).getByRole('button', { name: 'Aggiungi un campionato' }),
+  )
+  const dialog = within(
+    screen.getByRole('dialog', { name: 'Nuovo campionato' }),
+  )
+  fireEvent.change(dialog.getByLabelText('Campionato'), {
     target: { value: 'Ferrari Challenge' },
   })
-  fireEvent.change(results.getByLabelText('Stagione'), {
+  fireEvent.change(dialog.getByLabelText('Stagione'), {
     target: { value: '2021' },
   })
-  fireEvent.change(results.getByLabelText('Vittorie'), {
+  fireEvent.change(dialog.getByLabelText('Vittorie'), {
     target: { value: '3' },
   })
   fireEvent.click(
-    results.getByRole('button', { name: 'Aggiungi il campionato' }),
+    dialog.getByRole('button', { name: 'Aggiungi il campionato' }),
   )
 
   await waitFor(() =>
@@ -53,8 +58,19 @@ test('aggiunge un campionato, senza inviare il form della versione', async () =>
       races: null,
     }),
   )
-  // Il form della versione non è stato inviato
-  expect(screen.queryByText('Modifiche salvate.')).not.toBeInTheDocument()
+})
+
+test('la matita apre il campionato nella sua finestra, già compilato', async () => {
+  signIn()
+  renderRoute('/admin/modelli/2/versioni/21')
+
+  fireEvent.click(
+    await (await card()).findByRole('button', { name: 'Modifica Formula 1' }),
+  )
+
+  const dialog = within(screen.getByRole('dialog', { name: 'Formula 1' }))
+  expect(dialog.getByLabelText('Campionato')).toHaveValue('Formula 1')
+  expect(dialog.getByLabelText('Stagione')).toHaveValue(2004)
 })
 
 test('elimina un campionato, dopo la conferma', async () => {

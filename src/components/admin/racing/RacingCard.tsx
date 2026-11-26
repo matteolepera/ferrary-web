@@ -1,7 +1,9 @@
 import { useState } from 'react'
-import { RacingForm } from '@/components/admin/racing/RacingForm'
+import { PlusIcon } from '@phosphor-icons/react'
+import { RacingModal } from '@/components/admin/racing/RacingModal'
 import { AdminButton } from '@/components/admin/ui/AdminButton'
 import { AdminCard } from '@/components/admin/ui/AdminCard'
+import { sectionButtonClass } from '@/components/admin/ui/adminButtonClass'
 import { Icon } from '@/components/admin/ui/Icon'
 import { useRacingActions, useVersionRacing } from '@/hooks/useVersionRacing'
 import type { AdminRacingRecord } from '@/types/admin'
@@ -56,7 +58,8 @@ export function RacingCard({
 }: RacingCardProps) {
   const { data: records, isPending, isError } = useVersionRacing(versionId)
   const { remove } = useRacingActions(versionId)
-  const [editing, setEditing] = useState<number | null>(null)
+  // La finestra aperta: "new" per un campionato nuovo, l'id per modificarne uno, null se chiusa
+  const [editing, setEditing] = useState<number | 'new' | null>(null)
   const [confirming, setConfirming] = useState<number | null>(null)
 
   const current = records?.find((record) => record.id === editing)
@@ -67,16 +70,23 @@ export function RacingCard({
       delay={delay}
       className={`p-6 ${className}`}
     >
-      <h2
-        id="versione-risultati"
-        className="font-display text-xl font-extrabold tracking-[-0.03em]"
-      >
-        Risultati sportivi
-      </h2>
-      <p className="mt-1 text-[0.8125rem] text-neutral-400">
-        Un campionato per riga, come nella scheda tecnica del sito. Si salvano
-        subito.
-      </p>
+      <div className="flex items-center justify-between gap-4">
+        <h2
+          id="versione-risultati"
+          className="font-display text-xl font-extrabold tracking-[-0.03em]"
+        >
+          Risultati sportivi
+        </h2>
+        <button
+          type="button"
+          aria-label="Aggiungi un campionato"
+          onClick={() => setEditing('new')}
+          className={sectionButtonClass}
+        >
+          <PlusIcon aria-hidden="true" size={14} />
+          Campionato
+        </button>
+      </div>
 
       {isPending && (
         <div
@@ -209,25 +219,15 @@ export function RacingCard({
         </div>
       )}
 
-      <section
-        aria-labelledby="risultati-form"
-        className="border-linea mt-6 border-t pt-6"
-      >
-        <h3
-          id="risultati-form"
-          className="text-rosso-acceso mb-4 text-[0.6875rem] font-semibold tracking-[0.2em] uppercase"
-        >
-          {current
-            ? `Modifica: ${current.championship}`
-            : 'Aggiungi un campionato'}
-        </h3>
-        <RacingForm
-          key={current?.id ?? 'nuovo'}
+      {/* Montata solo quando serve, con la sua chiave: riparte sempre dai dati salvati */}
+      {editing !== null && (
+        <RacingModal
+          key={editing}
           versionId={versionId}
           record={current}
-          onDone={() => setEditing(null)}
+          onClose={() => setEditing(null)}
         />
-      </section>
+      )}
     </AdminCard>
   )
 }
