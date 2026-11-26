@@ -12,9 +12,9 @@ import {
   productionTypes,
   vehicleTypes,
 } from '@/components/admin/versions/options'
-import { PowertrainCard } from '@/components/admin/versions/PowertrainCard'
+import { PowertrainFields } from '@/components/admin/versions/PowertrainFields'
 import type { PowertrainField } from '@/components/admin/versions/powertrain'
-import { SpecsCard } from '@/components/admin/versions/SpecsCard'
+import { SpecsFields } from '@/components/admin/versions/SpecsFields'
 import type { SpecsField } from '@/components/admin/versions/specs'
 import type { VersionValues } from '@/components/admin/versions/versionValues'
 import { VersionPublication } from '@/components/admin/versions/VersionPublication'
@@ -430,19 +430,40 @@ export function VersionForm({ modelId, modelName, version }: VersionFormProps) {
           />
         )}
 
-        <PowertrainCard
-          values={powertrain}
-          onChange={updatePowertrain}
-          errors={errors}
+        {/* Per ora i campi stanno in una card: nei prossimi commit si sposteranno in una finestra */}
+        <AdminCard
+          aria-labelledby="versione-motorizzazione"
           delay={300}
-        />
+          className="col-span-6 p-6 lg:col-span-12"
+        >
+          <h2 id="versione-motorizzazione" className={cardTitle}>
+            Motorizzazione
+          </h2>
+          <div className="mt-5">
+            <PowertrainFields
+              values={powertrain}
+              onChange={updatePowertrain}
+              errors={errors}
+            />
+          </div>
+        </AdminCard>
 
-        <SpecsCard
-          values={specs}
-          onChange={updateSpecs}
-          errors={errors}
+        <AdminCard
+          aria-labelledby="versione-scheda"
           delay={360}
-        />
+          className="col-span-6 p-6 lg:col-span-12"
+        >
+          <h2 id="versione-scheda" className={cardTitle}>
+            Scheda tecnica
+          </h2>
+          <div className="mt-5">
+            <SpecsFields
+              values={specs}
+              onChange={updateSpecs}
+              errors={errors}
+            />
+          </div>
+        </AdminCard>
         {version && user?.role !== 'moderator' && (
           <TrashCard
             description="La versione sparirà dal sito e dall'admin. Si può ripristinare dal cestino."
