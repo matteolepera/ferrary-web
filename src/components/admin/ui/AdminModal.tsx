@@ -6,6 +6,7 @@ import {
   type FormEvent,
   type ReactNode,
 } from 'react'
+import { createPortal } from 'react-dom'
 import { XIcon } from '@phosphor-icons/react'
 import { AdminButton } from './AdminButton'
 
@@ -78,7 +79,9 @@ export function AdminModal({
     onClose()
   }
 
-  return (
+  // In fondo al body: la finestra ha il suo <form>, e non può stare dentro un altro modulo
+  // (come quello della pagina del modello, che contiene l'elenco delle versioni)
+  return createPortal(
     <dialog
       ref={dialog}
       aria-labelledby={titleId}
@@ -178,6 +181,7 @@ export function AdminModal({
           )}
         </footer>
       </form>
-    </dialog>
+    </dialog>,
+    document.body,
   )
 }

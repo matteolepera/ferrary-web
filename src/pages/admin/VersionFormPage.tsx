@@ -1,6 +1,5 @@
 import { useParams } from 'react-router'
 import { isNotFound } from '@/api/errors'
-import { VersionForm } from '@/components/admin/versions/VersionForm'
 import { VersionPage } from '@/components/admin/versions/VersionPage'
 import { useAdminModel } from '@/hooks/useAdminModel'
 import { useAdminVersion } from '@/hooks/useAdminVersion'
@@ -13,24 +12,21 @@ function toId(value: string | undefined) {
 }
 
 /**
- * La pagina del form della versione:
- * /admin/modelli/2/versioni/nuova per crearne una, /admin/modelli/2/versioni/21 per modificarla.
+ * La pagina di una versione: /admin/modelli/2/versioni/21.
+ * Le versioni nuove nascono da una finestra, nella pagina del loro modello.
  */
 export function VersionFormPage() {
   const { id, versionId } = useParams()
   const modelId = toId(id)
-  const isNew = versionId === undefined
   const validVersionId = toId(versionId)
 
   const { data: model, error: modelError } = useAdminModel(modelId)
-  const { data: version, error: versionError } = useAdminVersion(
-    isNew ? undefined : validVersionId,
-  )
+  const { data: version, error: versionError } = useAdminVersion(validVersionId)
 
   const notFound =
     modelId === undefined ||
+    validVersionId === undefined ||
     (!model && isNotFound(modelError)) ||
-    (!isNew && validVersionId === undefined) ||
     (!version && isNotFound(versionError)) ||
     // Una versione di un altro modello: l'indirizzo non è coerente
     (version !== undefined && version.car_model_id !== modelId)
@@ -43,28 +39,28 @@ export function VersionFormPage() {
     )
   }
 
-  if (!model || (!isNew && !version)) {
+  if (!model || !version) {
     return modelError || versionError ? (
       <p role="alert" className="text-[0.9375rem] text-neutral-300">
         Impossibile caricare la versione: il server non risponde.
       </p>
     ) : (
-      <div aria-busy="true" className="grid grid-cols-6 gap-4 lg:grid-cols-12">
-        <div className="bg-ombra col-span-6 h-20 animate-pulse rounded-3xl lg:col-span-12" />
-        <div className="bg-ombra col-span-6 h-80 animate-pulse rounded-3xl lg:col-span-8" />
-        <div className="bg-ombra col-span-6 h-80 animate-pulse rounded-3xl lg:col-span-4" />
+      <div
+        aria-busy="true"
+        className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_20rem]"
+      >
+        <div className="bg-ombra h-96 animate-pulse rounded-3xl" />
+        <div className="bg-ombra h-64 animate-pulse rounded-3xl" />
       </div>
     )
   }
 
-  return version ? (
+  return (
     <VersionPage
       key={version.id}
       modelId={model.id}
       modelName={model.name}
       version={version}
     />
-  ) : (
-    <VersionForm modelId={model.id} modelName={model.name} />
   )
 }

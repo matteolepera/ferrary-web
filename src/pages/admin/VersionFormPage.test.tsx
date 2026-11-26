@@ -4,7 +4,7 @@ import { adminVersions } from '@/test/fixtures'
 import { server, signIn } from '@/test/server'
 import { renderRoute } from '@/test/utils'
 
-test('crea una versione nel modello, senza toccare motorizzazione e scheda tecnica', async () => {
+test('crea una versione dal suo modello, senza motorizzazione e scheda tecnica', async () => {
   let sent: Record<string, unknown> | null = null
   server.use(
     http.post(
@@ -19,28 +19,31 @@ test('crea una versione nel modello, senza toccare motorizzazione e scheda tecni
     ),
   )
   signIn()
-  renderRoute('/admin/modelli/9/versioni/nuova')
+  renderRoute('/admin/modelli/9')
 
-  fireEvent.change(await screen.findByLabelText('Nome'), {
-    target: { value: 'F80' },
+  fireEvent.click(await screen.findByRole('button', { name: 'Nuova versione' }))
+  const dialog = within(screen.getByRole('dialog', { name: 'Nuova versione' }))
+  fireEvent.change(dialog.getByLabelText('Nome'), {
+    target: { value: 'F80 Stradale' },
   })
-  fireEvent.change(screen.getByLabelText('Tipo di veicolo'), {
+  fireEvent.change(dialog.getByLabelText('Tipo di veicolo'), {
     target: { value: 'stradale' },
   })
-  fireEvent.change(screen.getByLabelText('Anno di inizio'), {
+  fireEvent.change(dialog.getByLabelText('Anno di inizio'), {
     target: { value: '2025' },
   })
-  fireEvent.click(screen.getByRole('button', { name: 'Crea versione' }))
+  fireEvent.click(dialog.getByRole('button', { name: 'Crea versione' }))
 
+  // Creata, si arriva alla sua pagina
   expect(
-    await screen.findByRole('heading', { name: 'F80', level: 1 }),
+    await screen.findByRole('heading', { name: 'F80 Stradale', level: 1 }),
   ).toBeInTheDocument()
   expect(screen.getByText('Versione creata: è una bozza.')).toHaveAttribute(
     'role',
     'status',
   )
   expect(sent).toMatchObject({
-    name: 'F80',
+    name: 'F80 Stradale',
     vehicle_type: 'stradale',
     year_start: 2025,
     seats: null,
@@ -69,13 +72,17 @@ test("in produzione non c'è un anno di fine", async () => {
 
 test('una Formula 1 è sempre una monoposto', async () => {
   signIn()
-  renderRoute('/admin/modelli/9/versioni/nuova')
+  renderRoute('/admin/modelli/2/versioni/21')
 
-  fireEvent.change(await screen.findByLabelText('Tipo di veicolo'), {
+  fireEvent.click(
+    await screen.findByRole('button', { name: 'Modifica identità' }),
+  )
+  const dialog = within(screen.getByRole('dialog', { name: 'Identità' }))
+  fireEvent.change(dialog.getByLabelText('Tipo di veicolo'), {
     target: { value: 'f1' },
   })
 
-  const body = screen.getByLabelText('Carrozzeria')
+  const body = dialog.getByLabelText('Carrozzeria')
   expect(body).toHaveValue('monoposto')
   expect(
     within(body)
