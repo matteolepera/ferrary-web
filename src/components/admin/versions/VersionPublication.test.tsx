@@ -25,6 +25,10 @@ test('ritirare una versione pubblicata chiede conferma, parlando della versione'
   expect((await card()).getByRole('alertdialog')).toHaveTextContent(
     'La versione sparirà dal sito. Confermi?',
   )
-  // La scheda tecnica è ancora nel form: la risposta è stata unita alla versione
-  expect(screen.getByLabelText('Lunghezza (mm)')).toHaveValue(4710)
+  // La scheda tecnica è ancora nella pagina: la risposta è stata unita alla versione
+  expect(
+    within(screen.getByRole('region', { name: 'Scheda tecnica' })).getByText(
+      '4710 mm',
+    ),
+  ).toBeInTheDocument()
 })

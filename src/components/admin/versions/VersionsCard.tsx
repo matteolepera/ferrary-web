@@ -1,8 +1,10 @@
+import { useState } from 'react'
 import { Link } from 'react-router'
 import { AdminCard } from '@/components/admin/ui/AdminCard'
 import { adminButtonClass } from '@/components/admin/ui/adminButtonClass'
 import { Icon } from '@/components/admin/ui/Icon'
 import { StatusBadge } from '@/components/admin/ui/StatusBadge'
+import { NewVersionModal } from '@/components/admin/versions/NewVersionModal'
 import {
   bodyTypes,
   labelOf,
@@ -28,6 +30,8 @@ export function VersionsCard({
   className = '',
 }: VersionsCardProps) {
   const { data: versions, isPending, isError } = useModelVersions(model.id)
+  // La finestra per creare una versione
+  const [creating, setCreating] = useState(false)
 
   const hasPublished =
     versions?.some((version) => version.status === 'published') ?? false
@@ -50,13 +54,14 @@ export function VersionsCard({
             Ogni versione ha la sua scheda tecnica, le sue foto e il suo stato.
           </p>
         </div>
-        <Link
-          to={`/admin/modelli/${model.id}/versioni/nuova`}
+        <button
+          type="button"
+          onClick={() => setCreating(true)}
           className={adminButtonClass('outline')}
         >
           <Icon path="M12 5v14M5 12h14" size={16} />
           Nuova versione
-        </Link>
+        </button>
       </div>
 
       {/* Il caso delle schede invisibili: il modello è online, ma il sito non ha niente da mostrare */}
@@ -115,6 +120,14 @@ export function VersionsCard({
             </li>
           ))}
         </ul>
+      )}
+
+      {creating && (
+        <NewVersionModal
+          modelId={model.id}
+          modelName={model.name}
+          onClose={() => setCreating(false)}
+        />
       )}
     </AdminCard>
   )

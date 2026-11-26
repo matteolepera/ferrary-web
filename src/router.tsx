@@ -121,13 +121,6 @@ export const routes: RouteObject[] = [
         }),
       },
       {
-        path: 'modelli/:id/versioni/nuova',
-        lazy: async () => ({
-          Component: (await import('@/pages/admin/VersionFormPage'))
-            .VersionFormPage,
-        }),
-      },
-      {
         path: 'modelli/:id/versioni/:versionId',
         lazy: async () => ({
           Component: (await import('@/pages/admin/VersionFormPage'))

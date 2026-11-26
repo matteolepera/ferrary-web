@@ -20,8 +20,8 @@ test('elenca le versioni del modello, con anni, carrozzeria e stato', async () =
   ).toBeInTheDocument()
   expect(versions.getByText('Bozza')).toBeInTheDocument()
   expect(
-    versions.getByRole('link', { name: 'Nuova versione' }),
-  ).toHaveAttribute('href', '/admin/modelli/2/versioni/nuova')
+    versions.getByRole('button', { name: 'Nuova versione' }),
+  ).toBeInTheDocument()
 })
 
 test('avvisa quando il modello è pubblicato ma nessuna versione lo è', async () => {
