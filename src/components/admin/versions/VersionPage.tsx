@@ -2,7 +2,10 @@ import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router'
 import { GalleryCard } from '@/components/admin/images/GalleryCard'
 import { RacingCard } from '@/components/admin/racing/RacingCard'
-import { AdminCard } from '@/components/admin/ui/AdminCard'
+import {
+  SectionIndex,
+  type SectionIndexItem,
+} from '@/components/admin/ui/SectionIndex'
 import { StatusBadge } from '@/components/admin/ui/StatusBadge'
 import { TrashCard } from '@/components/admin/ui/TrashCard'
 import { CreditsCard } from '@/components/admin/versions/CreditsCard'
@@ -13,10 +16,16 @@ import {
   versionSections,
   type VersionSection,
 } from '@/components/admin/versions/versionSections'
-import { sectionSummary } from '@/components/admin/versions/versionSummary'
+import {
+  sectionSummary,
+  summaryStatus,
+} from '@/components/admin/versions/versionSummary'
+import { useActiveSection } from '@/hooks/useActiveSection'
 import { useAdminEngines } from '@/hooks/useAdminEngines'
 import { useCurrentUser } from '@/hooks/useAuth'
 import { useTrashActions } from '@/hooks/useTrash'
+import { useVersionImages } from '@/hooks/useVersionImages'
+import { useVersionRacing } from '@/hooks/useVersionRacing'
 import type { AdminVersion } from '@/types/admin'
 
 const dateFormat = new Intl.DateTimeFormat('it', {
@@ -32,9 +41,9 @@ type VersionPageProps = {
 }
 
 /**
- * La pagina di una versione: si legge, non si compila. Ogni sezione mostra i suoi dati
- * e «Modifica» la apre in una finestra, che salva solo quella sezione.
- * Foto, persone e risultati si salvano già da soli, e restano come sono.
+ * La pagina di una versione: si legge, non si compila. Le sezioni stanno in una colonna,
+ * tutte larghe uguali; «Modifica» apre la sezione in una finestra, che salva solo quella.
+ * A destra una colonna resta ferma mentre si scorre: la pubblicazione e l'indice.
  */
 export function VersionPage({ modelId, modelName, version }: VersionPageProps) {
   const navigate = useNavigate()
@@ -42,6 +51,9 @@ export function VersionPage({ modelId, modelName, version }: VersionPageProps) {
   const { data: user } = useCurrentUser()
   // I motori del catalogo: la motorizzazione scrive il nome del suo motore
   const { data: engines } = useAdminEngines()
+  // Le stesse richieste della galleria e dei risultati: la cache le fa una volta sola
+  const { data: images } = useVersionImages(version.id)
+  const { data: records } = useVersionRacing(version.id)
   const { trashVersion } = useTrashActions()
   // La sezione aperta in una finestra, o nessuna
   const [editing, setEditing] = useState<VersionSection | null>(null)
@@ -49,22 +61,68 @@ export function VersionPage({ modelId, modelName, version }: VersionPageProps) {
   const justCreated =
     (location.state as { created?: boolean } | null)?.created === true
 
+  /** I dati da leggere di una sezione: servono al blocco e al suo pallino nell'indice */
+  const summary = (section: VersionSection) =>
+    sectionSummary(section, version, engines)
+
+  const credits =
+    (version.designers?.length ?? 0) + (version.drivers?.length ?? 0)
+
+  // L'indice, nell'ordine della pagina; foto, persone e risultati sono pieni o vuoti
+  const index: SectionIndexItem[] = [
+    {
+      id: 'versione-identita',
+      label: 'Identità',
+      status: summaryStatus(summary('identita')),
+    },
+    {
+      id: 'versione-foto',
+      label: 'Foto',
+      status: images?.length ? 'complete' : 'empty',
+    },
+    {
+      id: 'versione-produzione',
+      label: 'Anni e produzione',
+      status: summaryStatus(summary('produzione')),
+    },
+    {
+      id: 'versione-descrizione',
+      label: 'Descrizione',
+      status: summaryStatus(summary('descrizione')),
+    },
+    {
+      id: 'versione-crediti',
+      label: 'Designer e piloti',
+      status: credits > 0 ? 'complete' : 'empty',
+    },
+    {
+      id: 'versione-risultati',
+      label: 'Risultati sportivi',
+      status: records?.length ? 'complete' : 'empty',
+    },
+    {
+      id: 'versione-motorizzazione',
+      label: 'Motorizzazione',
+      status: summaryStatus(summary('motorizzazione')),
+    },
+    {
+      id: 'versione-scheda',
+      label: 'Scheda tecnica',
+      status: summaryStatus(summary('scheda')),
+    },
+  ]
+  const active = useActiveSection(index.map((item) => item.id))
+
   /** Il blocco da leggere di una sezione, con il suo «Modifica» */
-  function sectionCard(
-    section: VersionSection,
-    delay: number,
-    className = 'col-span-6 lg:col-span-12',
-    empty?: string,
-  ) {
+  function sectionCard(section: VersionSection, delay: number, empty?: string) {
     return (
       <VersionSectionCard
         id={`versione-${section}`}
         title={versionSections[section].title}
-        items={sectionSummary(section, version, engines)}
+        items={summary(section)}
         empty={empty}
         onEdit={() => setEditing(section)}
         delay={delay}
-        className={className}
       />
     )
   }
@@ -98,11 +156,45 @@ export function VersionPage({ modelId, modelName, version }: VersionPageProps) {
         </p>
       </header>
 
-      <div className="mt-7 grid grid-cols-6 gap-4 lg:grid-cols-12">
-        {sectionCard('identita', 0, 'col-span-6 lg:col-span-8')}
+      {/* Due colonne: le sezioni a sinistra, a destra la colonna che resta ferma */}
+      <div className="mt-7 grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_20rem]">
+        <div className="flex min-w-0 flex-col gap-4">
+          {sectionCard('identita', 0)}
+          <GalleryCard
+            versionId={version.id}
+            versionName={version.name}
+            delay={60}
+          />
+          {sectionCard('produzione', 120)}
+          {sectionCard('descrizione', 160, 'Ancora nessun testo.')}
+          <CreditsCard version={version} delay={200} />
+          <RacingCard versionId={version.id} delay={240} />
+          {sectionCard(
+            'motorizzazione',
+            280,
+            'Nessuna motorizzazione indicata.',
+          )}
+          {sectionCard('scheda', 320)}
 
-        {/* La colonna di destra: la pubblicazione sopra il riepilogo */}
-        <div className="col-span-6 flex flex-col gap-4 lg:col-span-4">
+          {user?.role !== 'moderator' && (
+            <TrashCard
+              description="La versione sparirà dal sito e dall'admin. Si può ripristinare dal cestino."
+              question={`Spostare ${version.name} nel cestino?`}
+              isPending={trashVersion.isPending}
+              error={trashVersion.error}
+              onConfirm={() =>
+                trashVersion.mutate(version.id, {
+                  onSuccess: () =>
+                    navigate(`/admin/modelli/${modelId}`, { replace: true }),
+                })
+              }
+              delay={360}
+            />
+          )}
+        </div>
+
+        {/* Sotto i 1024 pixel va in cima, prima delle sezioni: la pubblicazione resta a portata */}
+        <aside className="order-first flex flex-col gap-4 lg:sticky lg:top-7 lg:order-none">
           <VersionPublication
             version={version}
             canPublish={user?.role !== 'moderator'}
@@ -110,84 +202,12 @@ export function VersionPage({ modelId, modelName, version }: VersionPageProps) {
             hasUnsavedChanges={false}
             delay={60}
           />
-          <AdminCard
-            aria-labelledby="versione-riepilogo"
-            delay={120}
-            className="p-6"
-          >
-            <h2
-              id="versione-riepilogo"
-              className="font-display text-xl font-extrabold tracking-[-0.03em]"
-            >
-              Riepilogo
-            </h2>
-            <dl className="mt-5 grid grid-cols-2 gap-x-4 gap-y-4 text-sm">
-              <dt className="text-neutral-400">Modello</dt>
-              <dd className="text-right">
-                <Link
-                  to={`/admin/modelli/${modelId}`}
-                  className="hover:text-rosso-acceso font-semibold"
-                >
-                  {modelName}
-                </Link>
-              </dd>
-              <dt className="text-neutral-400">Creata il</dt>
-              <dd className="text-right">
-                {dateFormat.format(new Date(version.created_at))}
-              </dd>
-              <dt className="text-neutral-400">Ultima modifica</dt>
-              <dd className="text-right">
-                {dateFormat.format(new Date(version.updated_at))}
-              </dd>
-            </dl>
-          </AdminCard>
-        </div>
-
-        <GalleryCard
-          versionId={version.id}
-          versionName={version.name}
-          delay={150}
-          className="col-span-6 lg:col-span-12"
-        />
-
-        {sectionCard('produzione', 180)}
-        {sectionCard('descrizione', 240, undefined, 'Ancora nessun testo.')}
-
-        <CreditsCard
-          version={version}
-          delay={270}
-          className="col-span-6 lg:col-span-12"
-        />
-        <RacingCard
-          versionId={version.id}
-          delay={285}
-          className="col-span-6 lg:col-span-12"
-        />
-
-        {sectionCard(
-          'motorizzazione',
-          300,
-          undefined,
-          'Nessuna motorizzazione indicata.',
-        )}
-        {sectionCard('scheda', 360)}
-
-        {user?.role !== 'moderator' && (
-          <TrashCard
-            description="La versione sparirà dal sito e dall'admin. Si può ripristinare dal cestino."
-            question={`Spostare ${version.name} nel cestino?`}
-            isPending={trashVersion.isPending}
-            error={trashVersion.error}
-            onConfirm={() =>
-              trashVersion.mutate(version.id, {
-                onSuccess: () =>
-                  navigate(`/admin/modelli/${modelId}`, { replace: true }),
-              })
-            }
-            delay={420}
-            className="col-span-6 lg:col-span-12"
-          />
-        )}
+          <SectionIndex items={index} active={active} className="max-lg:hidden">
+            Creata il {dateFormat.format(new Date(version.created_at))}
+            <br />
+            Modificata il {dateFormat.format(new Date(version.updated_at))}
+          </SectionIndex>
+        </aside>
       </div>
 
       {/* Montata solo quando serve, con la sezione come chiave: ogni volta parte dai dati salvati */}

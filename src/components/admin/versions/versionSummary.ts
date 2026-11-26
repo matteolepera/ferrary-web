@@ -15,6 +15,7 @@ import {
   powertrainValues,
   type PowertrainField,
 } from '@/components/admin/versions/powertrain'
+import type { SectionStatus } from '@/components/admin/ui/SectionIndex'
 import type { VersionSection } from '@/components/admin/versions/versionSections'
 import { formatLap, formatNumber } from '@/lib/format'
 import type { AdminEngine, AdminVersion, VersionSpecs } from '@/types/admin'
@@ -212,4 +213,16 @@ export function sectionSummary(
     case 'scheda':
       return specsSummary(version)
   }
+}
+
+/** Quanti dati mancano in una sezione */
+export function missingCount(items: SummaryItem[]) {
+  return items.filter((item) => item.value === null).length
+}
+
+/** Lo stato di una sezione per l'indice: vuota se non ha niente, completa se non manca niente */
+export function summaryStatus(items: SummaryItem[]): SectionStatus {
+  const missing = missingCount(items)
+  if (missing === items.length) return 'empty'
+  return missing === 0 ? 'complete' : 'partial'
 }

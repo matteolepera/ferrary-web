@@ -1,6 +1,9 @@
 import { PencilSimpleIcon } from '@phosphor-icons/react'
 import { AdminCard } from '@/components/admin/ui/AdminCard'
-import type { SummaryItem } from '@/components/admin/versions/versionSummary'
+import {
+  missingCount,
+  type SummaryItem,
+} from '@/components/admin/versions/versionSummary'
 
 type VersionSectionCardProps = {
   id: string
@@ -32,6 +35,8 @@ export function VersionSectionCard({
   delay,
   className = '',
 }: VersionSectionCardProps) {
+  const missing = missingCount(items)
+
   return (
     <AdminCard
       aria-labelledby={id}
@@ -39,12 +44,20 @@ export function VersionSectionCard({
       className={`p-6 ${className}`}
     >
       <div className="flex items-center justify-between gap-4">
-        <h2
-          id={id}
-          className="font-display text-xl font-extrabold tracking-[-0.03em]"
-        >
-          {title}
-        </h2>
+        <div className="flex flex-wrap items-center gap-2.5">
+          <h2
+            id={id}
+            className="font-display text-xl font-extrabold tracking-[-0.03em]"
+          >
+            {title}
+          </h2>
+          {/* Fuori dal titolo: il nome della sezione resta "Scheda tecnica" */}
+          {items.length > 0 && missing > 0 && (
+            <span className="rounded-full bg-amber-400/12 px-2.5 py-1 text-[0.6875rem] font-semibold text-amber-300">
+              {missing === 1 ? '1 dato mancante' : `${missing} dati mancanti`}
+            </span>
+          )}
+        </div>
         {/* Per il lettore di schermo: "Modifica scheda tecnica", non solo "Modifica" */}
         <button
           type="button"
@@ -60,7 +73,8 @@ export function VersionSectionCard({
       {items.length === 0 ? (
         <p className="mt-4 text-sm text-neutral-400">{empty}</p>
       ) : (
-        <dl className="mt-5 grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3 xl:grid-cols-4">
+        // Le colonne si riempiono da sole: quattro dati stanno in una riga, dodici in tre
+        <dl className="mt-5 grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] gap-x-6 gap-y-4">
           {items.map((item) => (
             <div
               key={item.label}

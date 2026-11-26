@@ -154,3 +154,24 @@ test('la scheda tecnica si legge nella pagina e si modifica nella sua finestra',
     specs: { top_speed_kmh: 345, length_mm: 4710, chassis_material: 'misto' },
   })
 })
+
+test('l’indice porta alle sezioni e dice quali sono da completare', async () => {
+  signIn()
+  renderRoute('/admin/modelli/2/versioni/21')
+
+  const index = within(
+    await screen.findByRole('navigation', { name: 'Sezioni' }),
+  )
+  expect(
+    index.getByRole('link', { name: 'Scheda tecnica, completa' }),
+  ).toHaveAttribute('href', '#versione-scheda')
+  // Manca il testo in inglese: la sezione lo dice nell'indice e accanto al titolo
+  expect(
+    index.getByRole('link', { name: 'Descrizione, da completare' }),
+  ).toBeInTheDocument()
+  expect(
+    within(screen.getByRole('region', { name: 'Descrizione' })).getByText(
+      '1 dato mancante',
+    ),
+  ).toBeInTheDocument()
+})
