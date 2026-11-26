@@ -1,6 +1,5 @@
 import { useState, type FormEvent } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router'
-import { validationErrors } from '@/api/errors'
 import { AdminCard } from '@/components/admin/ui/AdminCard'
 import { AdminField } from '@/components/admin/ui/AdminField'
 import { AdminSelect } from '@/components/admin/ui/AdminSelect'
@@ -14,29 +13,15 @@ import {
   vehicleTypes,
 } from '@/components/admin/versions/options'
 import { PowertrainCard } from '@/components/admin/versions/PowertrainCard'
-import {
-  powertrainValues,
-  toPowertrainPayload,
-  type PowertrainField,
-  type PowertrainValues,
-} from '@/components/admin/versions/powertrain'
+import type { PowertrainField } from '@/components/admin/versions/powertrain'
 import { SpecsCard } from '@/components/admin/versions/SpecsCard'
-import {
-  specsValues,
-  toSpecsPayload,
-  type SpecsField,
-  type SpecsValues,
-} from '@/components/admin/versions/specs'
+import type { SpecsField } from '@/components/admin/versions/specs'
+import type { VersionValues } from '@/components/admin/versions/versionValues'
 import { VersionPublication } from '@/components/admin/versions/VersionPublication'
-import { useSaveVersion } from '@/hooks/useAdminVersion'
 import { useCurrentUser } from '@/hooks/useAuth'
+import { useVersionDraft } from '@/hooks/useVersionDraft'
 import { slugify } from '@/lib/slugify'
-import type {
-  AdminVersion,
-  BodyType,
-  ProductionType,
-  VehicleType,
-} from '@/types/admin'
+import type { AdminVersion } from '@/types/admin'
 import { GalleryCard } from '@/components/admin/images/GalleryCard'
 import { CreditsCard } from '@/components/admin/versions/CreditsCard'
 import { RacingCard } from '@/components/admin/racing/RacingCard'
@@ -49,33 +34,6 @@ const dateFormat = new Intl.DateTimeFormat('it', {
   year: 'numeric',
 })
 const cardTitle = 'font-display text-xl font-extrabold tracking-[-0.03em]'
-
-/** I campi numerici sono testo nel form: vuoto diventa null, il resto un numero */
-function toNumber(value: string) {
-  return value.trim() === '' ? null : Number(value)
-}
-
-/** Un numero o null, come testo per un campo */
-function toText(value: number | null | undefined) {
-  return value === null || value === undefined ? '' : String(value)
-}
-
-type FormValues = {
-  name: string
-  slug: string
-  vehicle_type: VehicleType | ''
-  body_type: BodyType | ''
-  project_code: string
-  seats: string
-  year_start: string
-  year_end: string
-  in_production: boolean
-  production_type: ProductionType | ''
-  units_produced: string
-  sort_order: string
-  description_it: string
-  description_en: string
-}
 
 type VersionFormProps = {
   modelId: number
@@ -91,40 +49,17 @@ export function VersionForm({ modelId, modelName, version }: VersionFormProps) {
   const navigate = useNavigate()
   const location = useLocation()
   const { data: user } = useCurrentUser()
-  const save = useSaveVersion(modelId, version?.id)
+  // Lo stato della versione e il suo salvataggio vivono in useVersionDraft
+  const draft = useVersionDraft(modelId, version)
+  const { values, powertrain, specs, save, errors } = draft
   const { trashVersion } = useTrashActions()
 
-  const [values, setValues] = useState<FormValues>({
-    name: version?.name ?? '',
-    slug: version?.slug ?? '',
-    vehicle_type: version?.vehicle_type ?? '',
-    body_type: version?.body_type ?? '',
-    project_code: version?.project_code ?? '',
-    seats: toText(version?.seats),
-    year_start: toText(version?.year_start),
-    year_end: toText(version?.year_end),
-    in_production: version?.in_production ?? false,
-    production_type: version?.production_type ?? '',
-    units_produced: toText(version?.units_produced),
-    sort_order: toText(version?.sort_order ?? 1),
-    description_it: version?.description.it ?? '',
-    description_en: version?.description.en ?? '',
-  })
   const [saved, setSaved] = useState(false)
   // Ci sono modifiche non ancora salvate: la pubblicazione deve dirlo
   const [dirty, setDirty] = useState(false)
 
-  // La motorizzazione e la scheda tecnica hanno il loro stato: sono gruppi di campi con regole proprie
-  const [powertrain, setPowertrain] = useState<PowertrainValues>(() =>
-    powertrainValues(version?.powertrain),
-  )
-  const [specs, setSpecs] = useState<SpecsValues>(() =>
-    specsValues(version?.specs),
-  )
-
   const justCreated =
     (location.state as { created?: boolean } | null)?.created === true
-  const errors = validationErrors(save.error)
   const isF1 = values.vehicle_type === 'f1'
 
   /** Dopo ogni modifica: il messaggio "salvate" sparisce, e le modifiche risultano in sospeso */
@@ -133,58 +68,38 @@ export function VersionForm({ modelId, modelName, version }: VersionFormProps) {
     setDirty(true)
   }
 
-  function update<K extends keyof FormValues>(field: K, value: FormValues[K]) {
-    setValues((current) => ({ ...current, [field]: value }))
+  function update<K extends keyof VersionValues>(
+    field: K,
+    value: VersionValues[K],
+  ) {
+    draft.update(field, value)
     touched()
   }
 
   function updatePowertrain(field: PowertrainField, value: string) {
-    setPowertrain((current) => ({ ...current, [field]: value }))
+    draft.updatePowertrain(field, value)
     touched()
   }
 
   function updateSpecs(field: SpecsField, value: string) {
-    setSpecs((current) => ({ ...current, [field]: value }))
+    draft.updateSpecs(field, value)
     touched()
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
-    save.mutate(
-      {
-        name: values.name.trim(),
-        slug: values.slug.trim() || undefined,
-        // Il campo vuoto arriva al backend come null, e lui risponde "obbligatorio"
-        vehicle_type: (values.vehicle_type || null) as VehicleType,
-        body_type: values.body_type || null,
-        project_code: values.project_code.trim() || null,
-        seats: toNumber(values.seats),
-        year_start: toNumber(values.year_start) as number,
-        // In produzione non c'è un anno di fine
-        year_end: values.in_production ? null : toNumber(values.year_end),
-        in_production: values.in_production,
-        production_type: values.production_type || null,
-        units_produced: toNumber(values.units_produced),
-        sort_order: toNumber(values.sort_order) ?? 1,
-        description: { it: values.description_it, en: values.description_en },
-        powertrain: toPowertrainPayload(powertrain),
-        specs: toSpecsPayload(specs),
-      },
-      {
-        onSuccess: (result) => {
-          if (version) {
-            setSaved(true)
-            setDirty(false)
-          } else {
-            navigate(`/admin/modelli/${modelId}/versioni/${result.id}`, {
-              replace: true,
-              state: { created: true },
-            })
-          }
-        },
-      },
-    )
+    draft.submit((result) => {
+      if (version) {
+        setSaved(true)
+        setDirty(false)
+      } else {
+        navigate(`/admin/modelli/${modelId}/versioni/${result.id}`, {
+          replace: true,
+          state: { created: true },
+        })
+      }
+    })
   }
 
   /** Il riepilogo: il modello a cui appartiene e le date */
@@ -310,7 +225,7 @@ export function VersionForm({ modelId, modelName, version }: VersionFormProps) {
               value={values.vehicle_type}
               onChange={(event) => {
                 const vehicleType = event.target
-                  .value as FormValues['vehicle_type']
+                  .value as VersionValues['vehicle_type']
                 update('vehicle_type', vehicleType)
                 // Una Formula 1 è sempre una monoposto
                 if (vehicleType === 'f1') update('body_type', 'monoposto')
@@ -330,7 +245,7 @@ export function VersionForm({ modelId, modelName, version }: VersionFormProps) {
               onChange={(event) =>
                 update(
                   'body_type',
-                  event.target.value as FormValues['body_type'],
+                  event.target.value as VersionValues['body_type'],
                 )
               }
               hint={isF1 ? 'Una Formula 1 è sempre una monoposto.' : undefined}
@@ -436,7 +351,7 @@ export function VersionForm({ modelId, modelName, version }: VersionFormProps) {
               onChange={(event) =>
                 update(
                   'production_type',
-                  event.target.value as FormValues['production_type'],
+                  event.target.value as VersionValues['production_type'],
                 )
               }
               error={errors?.production_type?.[0]}
