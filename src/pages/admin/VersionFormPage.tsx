@@ -1,6 +1,7 @@
 import { useParams } from 'react-router'
 import { isNotFound } from '@/api/errors'
 import { VersionForm } from '@/components/admin/versions/VersionForm'
+import { VersionPage } from '@/components/admin/versions/VersionPage'
 import { useAdminModel } from '@/hooks/useAdminModel'
 import { useAdminVersion } from '@/hooks/useAdminVersion'
 import { NotFoundPage } from '@/pages/NotFoundPage'
@@ -56,12 +57,14 @@ export function VersionFormPage() {
     )
   }
 
-  return (
-    <VersionForm
-      key={version?.id ?? 'nuova'}
+  return version ? (
+    <VersionPage
+      key={version.id}
       modelId={model.id}
       modelName={model.name}
       version={version}
     />
+  ) : (
+    <VersionForm modelId={model.id} modelName={model.name} />
   )
 }

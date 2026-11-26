@@ -53,10 +53,16 @@ test("in produzione non c'è un anno di fine", async () => {
   signIn()
   renderRoute('/admin/modelli/2/versioni/21')
 
-  const yearEnd = await screen.findByLabelText('Anno di fine')
+  fireEvent.click(
+    await screen.findByRole('button', { name: 'Modifica anni e produzione' }),
+  )
+  const dialog = within(
+    screen.getByRole('dialog', { name: 'Anni e produzione' }),
+  )
+  const yearEnd = dialog.getByLabelText('Anno di fine')
   expect(yearEnd).toBeDisabled()
 
-  fireEvent.click(screen.getByLabelText(/In produzione/))
+  fireEvent.click(dialog.getByLabelText(/In produzione/))
 
   expect(yearEnd).toBeEnabled()
 })
@@ -91,18 +97,25 @@ test('togliendo il motore, i dati termici si disattivano e il tipo cambia', asyn
   signIn()
   renderRoute('/admin/modelli/2/versioni/21')
 
-  const engine = await screen.findByLabelText('Motore')
-  await screen.findByRole('option', { name: 'F154 · V8 biturbo' })
+  // Nella pagina la motorizzazione si legge, con il nome del motore
+  const card = within(
+    await screen.findByRole('region', { name: 'Motorizzazione' }),
+  )
+  expect(await card.findByText('F154 · V8 biturbo')).toBeInTheDocument()
+
+  fireEvent.click(card.getByRole('button', { name: 'Modifica motorizzazione' }))
+  const dialog = within(screen.getByRole('dialog', { name: 'Motorizzazione' }))
+  const engine = dialog.getByLabelText('Motore')
   expect(engine).toHaveValue('1')
-  expect(screen.getByText('Ibrido')).toBeInTheDocument()
+  expect(dialog.getByText('Ibrido')).toBeInTheDocument()
 
   fireEvent.change(engine, { target: { value: '' } })
 
-  expect(screen.getByLabelText('Potenza (CV)')).toBeDisabled()
-  expect(screen.getByText('Elettrico')).toBeInTheDocument()
+  expect(dialog.getByLabelText('Potenza (CV)')).toBeDisabled()
+  expect(dialog.getByText('Elettrico')).toBeInTheDocument()
 })
 
-test('mostra la scheda tecnica, con il giro di Fiorano leggibile', async () => {
+test('la scheda tecnica si legge nella pagina e si modifica nella sua finestra', async () => {
   let sent: { specs?: Record<string, unknown> } | null = null
   server.use(
     http.patch(
@@ -116,15 +129,27 @@ test('mostra la scheda tecnica, con il giro di Fiorano leggibile', async () => {
   signIn()
   renderRoute('/admin/modelli/2/versioni/21')
 
-  expect(await screen.findByLabelText('Lunghezza (mm)')).toHaveValue(4710)
-  expect(screen.getByText(/^Si legge 1:19/)).toBeInTheDocument()
+  const card = within(
+    await screen.findByRole('region', { name: 'Scheda tecnica' }),
+  )
+  expect(card.getByText('4710 mm')).toBeInTheDocument()
+  expect(card.getByText('1:19')).toBeInTheDocument()
 
-  fireEvent.change(screen.getByLabelText('Velocità massima (km/h)'), {
+  fireEvent.click(card.getByRole('button', { name: 'Modifica scheda tecnica' }))
+  const dialog = within(screen.getByRole('dialog', { name: 'Scheda tecnica' }))
+  expect(dialog.getByLabelText('Lunghezza (mm)')).toHaveValue(4710)
+  expect(dialog.getByText(/^Si legge 1:19/)).toBeInTheDocument()
+
+  fireEvent.change(dialog.getByLabelText('Velocità massima (km/h)'), {
     target: { value: '345' },
   })
-  fireEvent.click(screen.getByRole('button', { name: 'Salva modifiche' }))
+  fireEvent.click(
+    dialog.getByRole('button', { name: 'Salva la scheda tecnica' }),
+  )
 
-  await screen.findByText('Modifiche salvate.')
+  // La finestra si chiude e la pagina mostra il dato nuovo
+  expect(await card.findByText('345 km/h')).toBeInTheDocument()
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   expect(sent).toMatchObject({
     specs: { top_speed_kmh: 345, length_mm: 4710, chassis_material: 'misto' },
   })
