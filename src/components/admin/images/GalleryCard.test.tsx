@@ -137,10 +137,14 @@ test('modifica il testo alternativo di una foto', async () => {
       name: 'Modifica il testo: SF90 Stradale, vista posteriore',
     }),
   )
-  fireEvent.change(photos.getByLabelText('In inglese'), {
+  // Il testo si modifica in una finestra, con la foto accanto
+  const dialog = within(
+    screen.getByRole('dialog', { name: 'Testo alternativo della foto' }),
+  )
+  fireEvent.change(dialog.getByLabelText('In inglese'), {
     target: { value: 'SF90 Stradale, rear view' },
   })
-  fireEvent.click(photos.getByRole('button', { name: 'Salva' }))
+  fireEvent.click(dialog.getByRole('button', { name: 'Salva il testo' }))
 
   await waitFor(() =>
     expect(sent).toEqual({
@@ -171,7 +175,9 @@ test('aprire la modifica chiude la conferma dell’eliminazione', async () => {
   )
 
   expect(photos.queryByRole('alertdialog')).not.toBeInTheDocument()
-  expect(photos.getByLabelText('Testo alternativo')).toHaveValue(
-    'SF90 Stradale, vista posteriore',
-  )
+  expect(
+    within(
+      screen.getByRole('dialog', { name: 'Testo alternativo della foto' }),
+    ).getByLabelText('Testo alternativo'),
+  ).toHaveValue('SF90 Stradale, vista posteriore')
 })

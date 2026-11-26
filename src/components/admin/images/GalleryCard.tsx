@@ -1,9 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  PencilSimpleIcon,
+  StarIcon,
+  TrashIcon,
+} from '@phosphor-icons/react'
 import { ImageUploader } from '@/components/admin/images/ImageUploader'
+import { PhotoTextModal } from '@/components/admin/images/PhotoTextModal'
 import { AdminButton } from '@/components/admin/ui/AdminButton'
 import { AdminCard } from '@/components/admin/ui/AdminCard'
-import { AdminField } from '@/components/admin/ui/AdminField'
-import { Icon } from '@/components/admin/ui/Icon'
 import { useImageActions, useVersionImages } from '@/hooks/useVersionImages'
 
 type GalleryCardProps = {
@@ -13,16 +19,16 @@ type GalleryCardProps = {
   className?: string
 }
 
-/** Cosa è aperto in una card: la modifica del testo, o la conferma dell'eliminazione */
-type Panel =
-  | { id: number; kind: 'edit'; it: string; en: string }
-  | { id: number; kind: 'delete' }
+/** Cosa è aperto: la finestra del testo, o la conferma dell'eliminazione su una miniatura */
+type Panel = { id: number; kind: 'edit' } | { id: number; kind: 'delete' }
 
 const iconButton =
-  'flex size-8 shrink-0 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-white/10 hover:text-white disabled:pointer-events-none disabled:opacity-25'
+  'flex size-8 shrink-0 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur-sm transition-colors hover:bg-white/25 focus-visible:outline-2 focus-visible:outline-white disabled:pointer-events-none disabled:opacity-30'
 
 /**
- * Le foto della versione: caricamento, copertina, testo alternativo, ordine ed eliminazione.
+ * Le foto della versione, in miniature compatte. Passando su una miniatura (o arrivandoci
+ * con la tastiera) compaiono le sue azioni: spostarla, farla copertina, descriverla, eliminarla.
+ * Tutto si salva subito.
  */
 export function GalleryCard({
   versionId,
@@ -47,6 +53,10 @@ export function GalleryCard({
   }, [images])
 
   const busy = update.isPending || remove.isPending
+  const editing =
+    panel?.kind === 'edit'
+      ? images?.find((image) => image.id === panel.id)
+      : undefined
 
   function move(index: number, step: -1 | 1) {
     if (!images) return
@@ -76,23 +86,26 @@ export function GalleryCard({
       delay={delay}
       className={`p-6 ${className}`}
     >
-      <h2
-        id="versione-foto"
-        className="font-display text-xl font-extrabold tracking-[-0.03em]"
-      >
-        Foto
-      </h2>
-      <p className="mt-1 text-[0.8125rem] text-neutral-400">
-        La copertina rappresenta la versione nell'archivio e nella pagina del
-        modello. L'ordine è quello della galleria.
-      </p>
+      <div className="flex flex-wrap items-center gap-2.5">
+        <h2
+          id="versione-foto"
+          className="font-display text-xl font-extrabold tracking-[-0.03em]"
+        >
+          Foto
+        </h2>
+        {images && images.length > 0 && (
+          <span className="rounded-full bg-white/8 px-2.5 py-1 text-[0.6875rem] font-semibold text-neutral-300">
+            {images.length}
+          </span>
+        )}
+      </div>
 
       <ImageUploader versionId={versionId} versionName={versionName} />
 
       {isPending && (
         <div
           aria-busy="true"
-          className="mt-5 h-48 animate-pulse rounded-2xl bg-white/5"
+          className="mt-5 h-32 animate-pulse rounded-2xl bg-white/5"
         />
       )}
 
@@ -103,200 +116,135 @@ export function GalleryCard({
       )}
 
       {images && images.length === 0 && (
-        <p className="border-linea mt-5 rounded-[1.125rem] border border-dashed px-5 py-8 text-center text-sm text-neutral-400">
+        <p className="mt-4 text-sm text-neutral-400">
           Nessuna foto: la versione comparirà sul sito senza immagini.
         </p>
       )}
 
       {images && images.length > 0 && (
-        <ul className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-4">
+        // Miniature che si dispongono da sole: tante quante ne stanno in una riga
+        <ul className="mt-5 grid grid-cols-[repeat(auto-fill,minmax(11rem,1fr))] gap-3">
           {images.map((image, index) => {
             const alt = image.alt_text.it ?? ''
-            const open = panel?.id === image.id ? panel : null
+            const deleting = panel?.kind === 'delete' && panel.id === image.id
 
             return (
               <li
                 key={image.id}
-                className="border-linea bg-notte overflow-hidden rounded-[1.125rem] border"
+                title={alt}
+                className="group border-linea relative aspect-[4/3] overflow-hidden rounded-2xl border bg-white/5"
               >
-                <div className="relative aspect-[4/3] bg-white/5">
-                  <img
-                    src={image.url}
-                    alt={alt}
-                    loading="lazy"
-                    className="size-full object-cover"
-                  />
-                  {image.is_cover && (
-                    <span className="text-notte absolute top-2.5 left-2.5 rounded-full bg-white px-2.5 py-1 text-[0.625rem] font-bold tracking-[0.08em] uppercase">
-                      Copertina
-                    </span>
-                  )}
-                  <span className="bg-notte/80 absolute top-2.5 right-2.5 rounded-full px-2 py-1 text-[0.625rem] font-bold text-neutral-200 tabular-nums">
-                    {index + 1}
+                <img
+                  src={image.url}
+                  alt={alt}
+                  loading="lazy"
+                  className="size-full object-cover"
+                />
+                {image.is_cover && (
+                  <span className="text-notte absolute top-2 left-2 rounded-full bg-white px-2 py-0.5 text-[0.625rem] font-bold tracking-[0.08em] uppercase">
+                    Copertina
                   </span>
-                </div>
+                )}
+                <span className="bg-notte/80 absolute top-2 right-2 rounded-full px-2 py-0.5 text-[0.625rem] font-bold text-neutral-200 tabular-nums">
+                  {index + 1}
+                </span>
 
-                <div className="p-3.5">
-                  {open?.kind === 'edit' ? (
-                    <div className="flex flex-col gap-3">
-                      <AdminField
-                        label="Testo alternativo"
-                        value={open.it}
-                        onChange={(event) =>
-                          setPanel({ ...open, it: event.target.value })
-                        }
-                        error={
-                          open.it.trim() === ''
-                            ? 'Il testo alternativo in italiano è obbligatorio.'
-                            : undefined
-                        }
-                      />
-                      <AdminField
-                        label="In inglese"
-                        value={open.en}
-                        onChange={(event) =>
-                          setPanel({ ...open, en: event.target.value })
-                        }
-                      />
-                      <div className="flex gap-2">
-                        <AdminButton
-                          disabled={busy || open.it.trim() === ''}
-                          onClick={() =>
-                            update.mutate(
-                              {
-                                id: image.id,
-                                alt_text: {
-                                  it: open.it.trim(),
-                                  en: open.en.trim() || undefined,
-                                },
-                              },
-                              { onSuccess: () => setPanel(null) },
-                            )
-                          }
-                          className="h-9 px-3.5 text-xs"
-                        >
-                          Salva
-                        </AdminButton>
-                        <AdminButton
-                          variant="outline"
-                          onClick={() => setPanel(null)}
-                          className="h-9 px-3.5 text-xs"
-                        >
-                          Annulla
-                        </AdminButton>
-                      </div>
-                    </div>
-                  ) : open?.kind === 'delete' ? (
-                    <div
-                      role="alertdialog"
-                      aria-labelledby={`elimina-${image.id}`}
+                {deleting ? (
+                  // La conferma copre la miniatura: si vede ancora quale foto si sta eliminando
+                  <div
+                    role="alertdialog"
+                    aria-labelledby={`elimina-${image.id}`}
+                    className="bg-notte/85 absolute inset-0 flex flex-col items-center justify-center gap-2.5 p-3 text-center backdrop-blur-sm"
+                  >
+                    <p
+                      id={`elimina-${image.id}`}
+                      className="text-xs font-semibold text-neutral-100"
                     >
-                      <p
-                        id={`elimina-${image.id}`}
-                        className="text-xs font-semibold text-neutral-100"
+                      Eliminare questa foto?
+                    </p>
+                    <div className="flex flex-wrap justify-center gap-2">
+                      <AdminButton
+                        variant="danger"
+                        disabled={busy}
+                        onClick={() =>
+                          remove.mutate(image.id, {
+                            onSuccess: () => setPanel(null),
+                          })
+                        }
+                        className="h-8 px-3 text-xs"
                       >
-                        Eliminare questa foto?
-                      </p>
-                      <div className="mt-2.5 flex gap-2">
-                        <AdminButton
-                          variant="danger"
-                          disabled={busy}
-                          onClick={() =>
-                            remove.mutate(image.id, {
-                              onSuccess: () => setPanel(null),
-                            })
-                          }
-                          className="h-9 px-3.5 text-xs"
-                        >
-                          Sì, elimina
-                        </AdminButton>
-                        <AdminButton
-                          variant="outline"
-                          onClick={() => setPanel(null)}
-                          className="h-9 px-3.5 text-xs"
-                        >
-                          Annulla
-                        </AdminButton>
-                      </div>
+                        Sì, elimina
+                      </AdminButton>
+                      <AdminButton
+                        variant="outline"
+                        onClick={() => setPanel(null)}
+                        className="h-8 px-3 text-xs"
+                      >
+                        Annulla
+                      </AdminButton>
                     </div>
-                  ) : (
-                    <>
-                      <p className="line-clamp-2 min-h-10 text-xs leading-relaxed text-neutral-300">
-                        {alt}
-                      </p>
-
-                      <div className="mt-3 flex items-center justify-between gap-2">
-                        <div className="flex gap-1">
-                          <button
-                            type="button"
-                            id={`sposta-prima-${image.id}`}
-                            aria-label={`Sposta prima: ${alt}`}
-                            disabled={index === 0}
-                            onClick={() => move(index, -1)}
-                            className={iconButton}
-                          >
-                            <Icon path="M15 6l-6 6 6 6" size={15} />
-                          </button>
-                          <button
-                            type="button"
-                            id={`sposta-dopo-${image.id}`}
-                            aria-label={`Sposta dopo: ${alt}`}
-                            disabled={index === images.length - 1}
-                            onClick={() => move(index, 1)}
-                            className={iconButton}
-                          >
-                            <Icon path="M9 6l6 6-6 6" size={15} />
-                          </button>
-                        </div>
-
-                        <div className="flex gap-1">
-                          <button
-                            type="button"
-                            aria-label={`Modifica il testo: ${alt}`}
-                            onClick={() =>
-                              setPanel({
-                                id: image.id,
-                                kind: 'edit',
-                                it: alt,
-                                en: image.alt_text.en ?? '',
-                              })
-                            }
-                            className={iconButton}
-                          >
-                            <Icon path="M4 20l4-1 11-11-3-3L5 16z" size={15} />
-                          </button>
-                          <button
-                            type="button"
-                            aria-label={`Elimina: ${alt}`}
-                            onClick={() =>
-                              setPanel({ id: image.id, kind: 'delete' })
-                            }
-                            className={`${iconButton} hover:bg-rosso`}
-                          >
-                            <Icon
-                              path="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"
-                              size={15}
-                            />
-                          </button>
-                        </div>
-                      </div>
-
+                  </div>
+                ) : (
+                  // Le azioni compaiono passando sopra, o arrivandoci con il tasto Tab
+                  <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-1 bg-gradient-to-t from-black/85 to-transparent p-2 pt-6 opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100">
+                    <div className="flex gap-1">
+                      <button
+                        type="button"
+                        id={`sposta-prima-${image.id}`}
+                        aria-label={`Sposta prima: ${alt}`}
+                        disabled={index === 0}
+                        onClick={() => move(index, -1)}
+                        className={iconButton}
+                      >
+                        <ArrowLeftIcon aria-hidden="true" size={14} />
+                      </button>
+                      <button
+                        type="button"
+                        id={`sposta-dopo-${image.id}`}
+                        aria-label={`Sposta dopo: ${alt}`}
+                        disabled={index === images.length - 1}
+                        onClick={() => move(index, 1)}
+                        className={iconButton}
+                      >
+                        <ArrowRightIcon aria-hidden="true" size={14} />
+                      </button>
+                    </div>
+                    <div className="flex gap-1">
                       {!image.is_cover && (
                         <button
                           type="button"
                           disabled={busy}
                           aria-label={`Usa come copertina: ${alt}`}
+                          title="Usa come copertina: rappresenta la versione nell'archivio"
                           onClick={() =>
                             update.mutate({ id: image.id, is_cover: true })
                           }
-                          className="mt-2.5 text-xs font-semibold text-neutral-300 underline-offset-4 transition-colors hover:text-white hover:underline disabled:opacity-40"
+                          className={iconButton}
                         >
-                          Usa come copertina
+                          <StarIcon aria-hidden="true" size={14} />
                         </button>
                       )}
-                    </>
-                  )}
-                </div>
+                      <button
+                        type="button"
+                        aria-label={`Modifica il testo: ${alt}`}
+                        onClick={() => setPanel({ id: image.id, kind: 'edit' })}
+                        className={iconButton}
+                      >
+                        <PencilSimpleIcon aria-hidden="true" size={14} />
+                      </button>
+                      <button
+                        type="button"
+                        aria-label={`Elimina: ${alt}`}
+                        onClick={() =>
+                          setPanel({ id: image.id, kind: 'delete' })
+                        }
+                        className={`${iconButton} hover:bg-rosso`}
+                      >
+                        <TrashIcon aria-hidden="true" size={14} />
+                      </button>
+                    </div>
+                  </div>
+                )}
               </li>
             )
           })}
@@ -312,6 +260,16 @@ export function GalleryCard({
       <p role="status" className="sr-only">
         {announcement}
       </p>
+
+      {/* La finestra del testo, montata solo quando serve: riparte dal testo salvato */}
+      {editing && (
+        <PhotoTextModal
+          key={editing.id}
+          versionId={versionId}
+          image={editing}
+          onClose={() => setPanel(null)}
+        />
+      )}
     </AdminCard>
   )
 }
