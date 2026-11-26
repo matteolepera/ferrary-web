@@ -1,26 +1,19 @@
 import { useState, type FormEvent } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router'
 import { AdminCard } from '@/components/admin/ui/AdminCard'
-import { AdminField } from '@/components/admin/ui/AdminField'
-import { AdminSelect } from '@/components/admin/ui/AdminSelect'
-import { AdminSwitch } from '@/components/admin/ui/AdminSwitch'
-import { AdminTextarea } from '@/components/admin/ui/AdminTextarea'
 import { StatusBadge } from '@/components/admin/ui/StatusBadge'
 import { adminButtonClass } from '@/components/admin/ui/adminButtonClass'
-import {
-  bodyTypes,
-  productionTypes,
-  vehicleTypes,
-} from '@/components/admin/versions/options'
+import { DescriptionFields } from '@/components/admin/versions/DescriptionFields'
+import { IdentityFields } from '@/components/admin/versions/IdentityFields'
 import { PowertrainFields } from '@/components/admin/versions/PowertrainFields'
 import type { PowertrainField } from '@/components/admin/versions/powertrain'
+import { ProductionFields } from '@/components/admin/versions/ProductionFields'
 import { SpecsFields } from '@/components/admin/versions/SpecsFields'
 import type { SpecsField } from '@/components/admin/versions/specs'
 import type { VersionValues } from '@/components/admin/versions/versionValues'
 import { VersionPublication } from '@/components/admin/versions/VersionPublication'
 import { useCurrentUser } from '@/hooks/useAuth'
 import { useVersionDraft } from '@/hooks/useVersionDraft'
-import { slugify } from '@/lib/slugify'
 import type { AdminVersion } from '@/types/admin'
 import { GalleryCard } from '@/components/admin/images/GalleryCard'
 import { CreditsCard } from '@/components/admin/versions/CreditsCard'
@@ -60,7 +53,6 @@ export function VersionForm({ modelId, modelName, version }: VersionFormProps) {
 
   const justCreated =
     (location.state as { created?: boolean } | null)?.created === true
-  const isF1 = values.vehicle_type === 'f1'
 
   /** Dopo ogni modifica: il messaggio "salvate" sparisce, e le modifiche risultano in sospeso */
   function touched() {
@@ -205,78 +197,8 @@ export function VersionForm({ modelId, modelName, version }: VersionFormProps) {
           <h2 id="versione-identita" className={cardTitle}>
             Identità
           </h2>
-          <div className="mt-5 grid gap-5 md:grid-cols-2">
-            <AdminField
-              label="Nome"
-              value={values.name}
-              onChange={(event) => update('name', event.target.value)}
-              error={errors?.name?.[0]}
-            />
-            <AdminField
-              label="Slug"
-              value={values.slug}
-              placeholder={slugify(values.name)}
-              onChange={(event) => update('slug', event.target.value)}
-              hint="Vuoto: lo generiamo dal nome."
-              error={errors?.slug?.[0]}
-            />
-            <AdminSelect
-              label="Tipo di veicolo"
-              value={values.vehicle_type}
-              onChange={(event) => {
-                const vehicleType = event.target
-                  .value as VersionValues['vehicle_type']
-                update('vehicle_type', vehicleType)
-                // Una Formula 1 è sempre una monoposto
-                if (vehicleType === 'f1') update('body_type', 'monoposto')
-              }}
-              error={errors?.vehicle_type?.[0]}
-            >
-              <option value="">Scegli un tipo</option>
-              {vehicleTypes.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </AdminSelect>
-            <AdminSelect
-              label="Carrozzeria"
-              value={values.body_type}
-              onChange={(event) =>
-                update(
-                  'body_type',
-                  event.target.value as VersionValues['body_type'],
-                )
-              }
-              hint={isF1 ? 'Una Formula 1 è sempre una monoposto.' : undefined}
-              error={errors?.body_type?.[0]}
-            >
-              <option value="">Non indicata</option>
-              {bodyTypes
-                .filter((option) => !isF1 || option.value === 'monoposto')
-                .map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-            </AdminSelect>
-            <AdminField
-              label="Codice di progetto"
-              value={values.project_code}
-              placeholder="F173"
-              onChange={(event) => update('project_code', event.target.value)}
-              error={errors?.project_code?.[0]}
-            />
-            <AdminField
-              label="Posti"
-              type="number"
-              inputMode="numeric"
-              min={1}
-              max={9}
-              value={values.seats}
-              onChange={(event) => update('seats', event.target.value)}
-              error={errors?.seats?.[0]}
-            />
+          <div className="mt-5">
+            <IdentityFields values={values} onChange={update} errors={errors} />
           </div>
         </AdminCard>
 
@@ -311,81 +233,11 @@ export function VersionForm({ modelId, modelName, version }: VersionFormProps) {
           <h2 id="versione-produzione" className={cardTitle}>
             Anni e produzione
           </h2>
-          <div className="mt-5 grid gap-5 md:grid-cols-3">
-            <AdminField
-              label="Anno di inizio"
-              type="number"
-              inputMode="numeric"
-              min={1947}
-              value={values.year_start}
-              onChange={(event) => update('year_start', event.target.value)}
-              error={errors?.year_start?.[0]}
-            />
-            <AdminField
-              label="Anno di fine"
-              type="number"
-              inputMode="numeric"
-              min={1947}
-              value={values.in_production ? '' : values.year_end}
-              disabled={values.in_production}
-              onChange={(event) => update('year_end', event.target.value)}
-              hint={
-                values.in_production
-                  ? 'In produzione: nessun anno di fine.'
-                  : undefined
-              }
-              error={errors?.year_end?.[0]}
-            />
-            <AdminSwitch
-              label="In produzione"
-              hint="Ancora costruita oggi."
-              checked={values.in_production}
-              onChange={(event) =>
-                update('in_production', event.target.checked)
-              }
-              className="self-center"
-            />
-            <AdminSelect
-              label="Tipo di produzione"
-              value={values.production_type}
-              onChange={(event) =>
-                update(
-                  'production_type',
-                  event.target.value as VersionValues['production_type'],
-                )
-              }
-              error={errors?.production_type?.[0]}
-            >
-              <option value="">Non indicato</option>
-              {productionTypes.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </AdminSelect>
-            <AdminField
-              label="Esemplari prodotti"
-              type="number"
-              inputMode="numeric"
-              min={1}
-              value={values.units_produced}
-              onChange={(event) => update('units_produced', event.target.value)}
-              hint={
-                values.production_type === 'one_off'
-                  ? 'Un one-off è un esemplare unico.'
-                  : undefined
-              }
-              error={errors?.units_produced?.[0]}
-            />
-            <AdminField
-              label="Posizione"
-              type="number"
-              inputMode="numeric"
-              min={0}
-              value={values.sort_order}
-              onChange={(event) => update('sort_order', event.target.value)}
-              hint="L'ordine tra le versioni del modello."
-              error={errors?.sort_order?.[0]}
+          <div className="mt-5">
+            <ProductionFields
+              values={values}
+              onChange={update}
+              errors={errors}
             />
           </div>
         </AdminCard>
@@ -398,18 +250,11 @@ export function VersionForm({ modelId, modelName, version }: VersionFormProps) {
           <h2 id="versione-descrizione" className={cardTitle}>
             Descrizione
           </h2>
-          <div className="mt-5 grid gap-5 md:grid-cols-2">
-            <AdminTextarea
-              label="In italiano"
-              value={values.description_it}
-              onChange={(event) => update('description_it', event.target.value)}
-              error={errors?.['description.it']?.[0]}
-            />
-            <AdminTextarea
-              label="In inglese"
-              value={values.description_en}
-              onChange={(event) => update('description_en', event.target.value)}
-              error={errors?.['description.en']?.[0]}
+          <div className="mt-5">
+            <DescriptionFields
+              values={values}
+              onChange={update}
+              errors={errors}
             />
           </div>
         </AdminCard>

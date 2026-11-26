@@ -104,3 +104,16 @@ export function toVersionPayload({
     specs: toSpecsPayload(specs),
   }
 }
+
+/** Cambia un campo della versione, con il tipo giusto per ogni campo */
+export type VersionUpdate = <K extends keyof VersionValues>(
+  field: K,
+  value: VersionValues[K],
+) => void
+
+/** Le props dei campi di una sezione: i valori, come cambiarli e gli errori del backend */
+export type VersionFieldsProps = {
+  values: VersionValues
+  onChange: VersionUpdate
+  errors: Record<string, string[]> | null
+}
