@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { Link, useNavigate } from 'react-router'
+import { useNavigate } from 'react-router'
 import { backendMessage, validationErrors } from '@/api/errors'
 import {
   aspirations,
@@ -15,6 +15,7 @@ import { AdminTextarea } from '@/components/admin/ui/AdminTextarea'
 import { adminButtonClass } from '@/components/admin/ui/adminButtonClass'
 import { useEngineActions } from '@/hooks/useAdminEngines'
 import type { AdminEngine, Aspiration, EngineArchitecture } from '@/types/admin'
+import { BackLink } from '@/components/admin/ui/BackLink'
 
 const cardTitle = 'font-display text-xl font-extrabold tracking-[-0.03em]'
 
@@ -128,12 +129,7 @@ export function EngineForm({ engine }: { engine?: AdminEngine }) {
 
       <header className="flex flex-wrap items-end justify-between gap-5">
         <div>
-          <Link
-            to="/admin/motori"
-            className="text-xs font-semibold text-neutral-400 transition-colors hover:text-white"
-          >
-            <span aria-hidden="true">← </span>Motori
-          </Link>
+          <BackLink to="/admin/motori" label="Motori" />
           <h1 className="font-display mt-3 text-[2.75rem] leading-none font-extrabold tracking-[-0.035em]">
             {engine?.code ?? 'Nuovo motore'}
           </h1>

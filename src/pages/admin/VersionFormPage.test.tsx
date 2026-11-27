@@ -182,3 +182,14 @@ test('l’indice porta alle sezioni e dice quali sono da completare', async () =
     ),
   ).toBeInTheDocument()
 })
+
+test('il pulsante per tornare indietro porta al modello', async () => {
+  signIn()
+  renderRoute('/admin/modelli/2/versioni/21')
+
+  expect(
+    await screen.findByRole('link', {
+      name: 'Torna indietro a SF90 Stradale',
+    }),
+  ).toHaveAttribute('href', '/admin/modelli/2')
+})
