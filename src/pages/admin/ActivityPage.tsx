@@ -1,9 +1,13 @@
 import { isForbidden } from '@/api/errors'
 import { subjectTypes } from '@/components/admin/activity/phrases'
 import { AdminCard } from '@/components/admin/ui/AdminCard'
-import { AdminField } from '@/components/admin/ui/AdminField'
 import { AdminPagination } from '@/components/admin/ui/AdminPagination'
-import { AdminSelect } from '@/components/admin/ui/AdminSelect'
+import {
+  FilterPills,
+  type FilterOption,
+} from '@/components/admin/ui/FilterPills'
+import { FilterDate } from '@/components/admin/ui/FilterDate'
+import { FilterSelect } from '@/components/admin/ui/FilterSelect'
 import { useActivity, useActivityFilters } from '@/hooks/useActivity'
 import { useCurrentUser } from '@/hooks/useAuth'
 import { useStaff } from '@/hooks/useStaff'
@@ -18,7 +22,7 @@ const dayFormat = new Intl.DateTimeFormat('it', {
   year: 'numeric',
 })
 
-const logFilters: { value: ActivityFilters['log']; label: string }[] = [
+const logFilters: FilterOption<NonNullable<ActivityFilters['log']>>[] = [
   { value: undefined, label: 'Tutto' },
   { value: 'catalogo', label: 'Catalogo' },
   { value: 'staff', label: 'Staff' },
@@ -94,35 +98,15 @@ export function ActivityPage() {
         </p>
       ) : (
         <>
-          <div className="mt-7 flex flex-wrap items-end gap-3">
-            <div
-              role="group"
-              aria-label="Filtra per registro"
-              className="flex gap-1.5 self-center"
-            >
-              {logFilters.map(({ value, label }) => {
-                const active = filters.log === value
+          <div className="mt-7 flex flex-wrap items-center gap-3">
+            <FilterPills
+              label="Filtra per registro"
+              options={logFilters}
+              value={filters.log}
+              onChange={(log) => setFilters({ log })}
+            />
 
-                return (
-                  <button
-                    key={label}
-                    type="button"
-                    aria-pressed={active}
-                    onClick={() => setFilters({ log: value })}
-                    className={[
-                      'rounded-full border px-3.5 py-2 text-xs font-semibold transition-colors',
-                      active
-                        ? 'text-notte border-white bg-white'
-                        : 'border-linea text-neutral-300 hover:border-neutral-600 hover:text-white',
-                    ].join(' ')}
-                  >
-                    {label}
-                  </button>
-                )
-              })}
-            </div>
-
-            <AdminSelect
+            <FilterSelect
               label="Persona"
               value={filters.causer_id ?? ''}
               onChange={(event) =>
@@ -132,44 +116,40 @@ export function ActivityPage() {
                     : undefined,
                 })
               }
-              className="min-w-44"
             >
-              <option value="">Tutte</option>
+              <option value="">Tutte le persone</option>
               {staff?.map((person) => (
                 <option key={person.id} value={person.id}>
                   {person.name}
                 </option>
               ))}
-            </AdminSelect>
+            </FilterSelect>
 
-            <AdminSelect
+            <FilterSelect
               label="Elemento"
               value={filters.subject_type ?? ''}
               onChange={(event) =>
                 setFilters({ subject_type: event.target.value || undefined })
               }
-              className="min-w-44"
             >
-              <option value="">Tutti</option>
+              <option value="">Tutti gli elementi</option>
               {Object.entries(subjectTypes).map(([value, { many }]) => (
                 <option key={value} value={value}>
                   {many}
                 </option>
               ))}
-            </AdminSelect>
+            </FilterSelect>
 
-            <AdminField
+            <FilterDate
               label="Dal"
-              type="date"
               value={filters.from ?? ''}
               max={filters.to}
               onChange={(event) =>
                 setFilters({ from: event.target.value || undefined })
               }
             />
-            <AdminField
+            <FilterDate
               label="Al"
-              type="date"
               value={filters.to ?? ''}
               min={filters.from}
               onChange={(event) =>
@@ -189,7 +169,7 @@ export function ActivityPage() {
                     to: undefined,
                   })
                 }
-                className="mb-4 text-xs font-semibold text-neutral-400 underline-offset-4 transition-colors hover:text-white hover:underline"
+                className="text-xs font-semibold text-neutral-400 underline-offset-4 transition-colors hover:text-white hover:underline"
               >
                 Azzera filtri
               </button>
