@@ -7,11 +7,27 @@ test('elenca i piloti per cognome, con nazionalità e data di nascita per esteso
   signIn()
   renderRoute('/admin/piloti')
 
-  const rows = await screen.findAllByRole('row')
+  // Prima arrivano le righe sagoma: aspettiamo quelle vere
+  await screen.findByRole('row', { name: /Charles Leclerc/ })
+  const rows = screen.getAllByRole('row')
   expect(rows[1]).toHaveTextContent('Charles Leclerc')
   expect(within(rows[1]).getByText('Monaco')).toBeInTheDocument()
   expect(within(rows[1]).getByText('16 ottobre 1997')).toBeInTheDocument()
   expect(rows[2]).toHaveTextContent('Michael Schumacher')
+})
+
+test('filtra per nazionalità, con i soli paesi presenti', async () => {
+  signIn()
+  renderRoute('/admin/piloti')
+
+  const filter = await screen.findByLabelText('Filtra per nazionalità')
+  await within(filter).findByRole('option', { name: 'Monaco' })
+  fireEvent.change(filter, { target: { value: 'MC' } })
+
+  expect(screen.getByText('1 pilota con questi filtri')).toBeInTheDocument()
+  expect(
+    screen.queryByRole('row', { name: /Schumacher/ }),
+  ).not.toBeInTheDocument()
 })
 
 test('crea un pilota, con la nazionalità in maiuscolo e la data come la vuole il backend', async () => {

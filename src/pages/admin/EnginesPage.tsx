@@ -7,6 +7,7 @@ import {
   engineSummary,
 } from '@/components/admin/engines/options'
 import { AdminSearch } from '@/components/admin/ui/AdminSearch'
+import { ClearFilters } from '@/components/admin/ui/ClearFilters'
 import {
   FilterPills,
   type FilterOption,
@@ -107,15 +108,7 @@ export function EnginesPage() {
           ))}
         </FilterSelect>
 
-        {list.hasFilters && (
-          <button
-            type="button"
-            onClick={list.clear}
-            className="text-xs font-semibold text-neutral-400 underline-offset-4 transition-colors hover:text-white hover:underline"
-          >
-            Azzera filtri
-          </button>
-        )}
+        <ClearFilters visible={list.hasFilters} onClear={list.clear} />
       </div>
 
       <ListTable

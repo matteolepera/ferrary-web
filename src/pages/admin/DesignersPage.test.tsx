@@ -7,10 +7,28 @@ test('elenca i designer in ordine alfabetico, con tipo e paese per esteso', asyn
   signIn()
   renderRoute('/admin/designer')
 
-  const rows = await screen.findAllByRole('row')
+  // Prima arrivano le righe sagoma: aspettiamo quelle vere
+  await screen.findByRole('row', { name: /Flavio Manzoni/ })
+  const rows = screen.getAllByRole('row')
   expect(rows[1]).toHaveTextContent('Flavio Manzoni')
   expect(within(rows[2]).getByText('Studio')).toBeInTheDocument()
   expect(within(rows[2]).getByText('Italia')).toBeInTheDocument()
+})
+
+test('filtra per tipo, e dice quanti designer restano', async () => {
+  signIn()
+  renderRoute('/admin/designer')
+
+  expect(await screen.findByText('2 designer')).toBeInTheDocument()
+  fireEvent.click(screen.getByRole('button', { name: 'Persona' }))
+
+  expect(screen.getByText('1 designer con questi filtri')).toBeInTheDocument()
+  expect(
+    screen.getByRole('row', { name: /Flavio Manzoni/ }),
+  ).toBeInTheDocument()
+  expect(
+    screen.queryByRole('row', { name: /Pininfarina/ }),
+  ).not.toBeInTheDocument()
 })
 
 test('crea un designer, con il codice del paese in maiuscolo', async () => {

@@ -1,192 +1,145 @@
 import { useState } from 'react'
+import { PlusIcon } from '@phosphor-icons/react'
 import { backendMessage } from '@/api/errors'
 import { DesignerModal } from '@/components/admin/designers/DesignerModal'
 import { designerTypes } from '@/components/admin/designers/options'
-import { AdminButton } from '@/components/admin/ui/AdminButton'
-import { AdminCard } from '@/components/admin/ui/AdminCard'
-import { Icon } from '@/components/admin/ui/Icon'
+import { AdminSearch } from '@/components/admin/ui/AdminSearch'
 import { adminButtonClass } from '@/components/admin/ui/adminButtonClass'
+import { ClearFilters } from '@/components/admin/ui/ClearFilters'
+import {
+  FilterPills,
+  type FilterOption,
+} from '@/components/admin/ui/FilterPills'
+import { FilterSelect } from '@/components/admin/ui/FilterSelect'
+import { ListHeader } from '@/components/admin/ui/ListHeader'
+import { ListTable, listRowClass } from '@/components/admin/ui/ListTable'
+import { RowActions } from '@/components/admin/ui/RowActions'
 import { labelOf } from '@/components/admin/versions/options'
 import {
   useAdminDesigners,
   useDesignerActions,
 } from '@/hooks/useAdminDesigners'
+import { useListParams } from '@/hooks/useListParams'
+import { countryOptions } from '@/lib/countries'
 import { countryName } from '@/lib/format'
+import { paginate } from '@/lib/paginate'
+import type { DesignerType } from '@/types/admin'
 
-const iconButton =
-  'flex size-8 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-white/10 hover:text-white'
+const columns = ['Designer', 'Tipo', 'Paese', 'Versioni', '']
+
+/** Le pillole dei tipi: undefined vuol dire "tutti" */
+const typeFilters: FilterOption<DesignerType>[] = [
+  { value: undefined, label: 'Tutti' },
+  ...designerTypes,
+]
 
 /**
  * I designer: studi e persone che hanno disegnato le Ferrari.
+ * Arrivano tutti: ricerca, filtri e pagine lavorano nel browser.
  */
 export function DesignersPage() {
   const { data: designers, isPending, isError } = useAdminDesigners()
   const { remove } = useDesignerActions()
+  const list = useListParams(['type', 'country'] as const)
   // La finestra aperta: "new" per un designer nuovo, l'id per modificarne uno, null se chiusa
   const [modal, setModal] = useState<number | 'new' | null>(null)
-  const [confirming, setConfirming] = useState<number | null>(null)
 
-  const sorted = [...(designers ?? [])].sort((a, b) =>
-    a.name.localeCompare(b.name, 'it'),
+  // Solo i valori previsti: "?type=pippo" viene ignorato
+  const type = designerTypes.find(
+    (option) => option.value === list.filters.type,
+  )?.value
+  const countries = countryOptions(
+    (designers ?? []).map((designer) => designer.country),
   )
+
+  const query = list.search.trim().toLowerCase()
+  const visible = (designers ?? [])
+    .filter(
+      (designer) =>
+        (!query || designer.name.toLowerCase().includes(query)) &&
+        (!type || designer.type === type) &&
+        (!list.filters.country || designer.country === list.filters.country),
+    )
+    .sort((a, b) => a.name.localeCompare(b.name, 'it'))
+  const page = paginate(visible, list.page)
+
   const current =
     typeof modal === 'number'
-      ? sorted.find((designer) => designer.id === modal)
+      ? designers?.find((designer) => designer.id === modal)
       : undefined
+  const count = designers
+    ? `${visible.length} designer${list.hasFilters ? ' con questi filtri' : ''}`
+    : undefined
 
   return (
     <>
       <title>Designer – Ferrary</title>
 
-      <header className="flex flex-wrap items-end justify-between gap-5">
-        <div>
-          <p className="text-rosso-acceso text-[0.6875rem] font-semibold tracking-[0.22em] uppercase">
-            Catalogo
-          </p>
-          <h1 className="font-display mt-2.5 text-[2.75rem] leading-none font-extrabold tracking-[-0.035em]">
-            Designer
-          </h1>
-          <p className="mt-3 max-w-[60ch] text-sm leading-relaxed text-neutral-400">
-            Gli studi e le persone che hanno disegnato le Ferrari: si collegano
-            alle versioni, con il loro ruolo.
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={() => setModal('new')}
-          className={adminButtonClass('primary')}
+      <ListHeader
+        eyebrow="Catalogo"
+        title="Designer"
+        count={count}
+        action={
+          <button
+            type="button"
+            onClick={() => setModal('new')}
+            className={adminButtonClass('primary')}
+          >
+            <PlusIcon aria-hidden="true" size={16} />
+            Nuovo designer
+          </button>
+        }
+      />
+
+      <div className="mt-7 flex flex-wrap items-center gap-3">
+        <AdminSearch
+          label="Cerca un designer"
+          placeholder="Cerca un designer"
+          value={list.search}
+          // replace: ogni lettera non deve diventare un passo della cronologia
+          onSearch={(search) => list.set({ search }, { replace: true })}
+        />
+        <FilterPills
+          label="Filtra per tipo"
+          options={typeFilters}
+          value={type}
+          onChange={(value) => list.set({ type: value })}
+        />
+        <FilterSelect
+          label="Filtra per paese"
+          value={list.filters.country ?? ''}
+          onChange={(event) =>
+            list.set({ country: event.target.value || undefined })
+          }
         >
-          <span aria-hidden="true">＋</span> Nuovo designer
-        </button>
-      </header>
+          <option value="">Tutti i paesi</option>
+          {countries.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </FilterSelect>
+        <ClearFilters visible={list.hasFilters} onClear={list.clear} />
+      </div>
 
-      <div className="mt-7">
-        <AdminCard className="overflow-hidden">
-          {isPending && (
-            <div
-              aria-busy="true"
-              className="m-6 h-48 animate-pulse rounded-2xl bg-white/5"
-            />
-          )}
-          {isError && (
-            <p className="p-6 text-sm text-neutral-400">
-              Impossibile caricare i designer.
-            </p>
-          )}
-
-          {designers && (
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[36rem] text-left text-sm">
-                <caption className="sr-only">Designer del catalogo</caption>
-                <thead>
-                  <tr className="border-linea border-b">
-                    {['Designer', 'Tipo', 'Paese', 'Versioni', ''].map(
-                      (column, index) => (
-                        <th
-                          key={column || index}
-                          scope="col"
-                          className="px-5 py-4 text-[0.6875rem] font-semibold tracking-[0.18em] text-neutral-400 uppercase first:pl-6"
-                        >
-                          {column || <span className="sr-only">Azioni</span>}
-                        </th>
-                      ),
-                    )}
-                  </tr>
-                </thead>
-                <tbody>
-                  {sorted.map((designer) => (
-                    <tr
-                      key={designer.id}
-                      className="border-linea border-b last:border-b-0"
-                    >
-                      <td className="py-4 pr-5 pl-6">
-                        <p className="font-display font-bold">
-                          {designer.name}
-                        </p>
-                        <p className="mt-0.5 text-xs text-neutral-500">
-                          {designer.slug}
-                        </p>
-                      </td>
-                      <td className="px-5 py-4 text-neutral-300">
-                        {labelOf(designerTypes, designer.type)}
-                      </td>
-                      <td className="px-5 py-4 text-neutral-300">
-                        {countryName(designer.country) ?? '—'}
-                      </td>
-                      <td className="px-5 py-4 text-neutral-300 tabular-nums">
-                        {designer.versions_count ?? 0}
-                      </td>
-                      <td className="px-5 py-4">
-                        {confirming === designer.id ? (
-                          <div
-                            role="alertdialog"
-                            aria-label={`Eliminare ${designer.name}?`}
-                            className="flex items-center gap-2"
-                          >
-                            <AdminButton
-                              variant="danger"
-                              disabled={remove.isPending}
-                              onClick={() =>
-                                remove.mutate(designer.id, {
-                                  onSuccess: () => setConfirming(null),
-                                })
-                              }
-                              className="h-8 px-3 text-xs"
-                            >
-                              Elimina
-                            </AdminButton>
-                            <AdminButton
-                              variant="outline"
-                              onClick={() => setConfirming(null)}
-                              className="h-8 px-3 text-xs"
-                            >
-                              Annulla
-                            </AdminButton>
-                          </div>
-                        ) : (
-                          <div className="flex justify-end gap-1">
-                            <button
-                              type="button"
-                              aria-label={`Modifica ${designer.name}`}
-                              onClick={() => setModal(designer.id)}
-                              className={iconButton}
-                            >
-                              <Icon
-                                path="M4 20l4-1 11-11-3-3L5 16z"
-                                size={15}
-                              />
-                            </button>
-                            <button
-                              type="button"
-                              aria-label={`Elimina ${designer.name}`}
-                              onClick={() => {
-                                remove.reset()
-                                setConfirming(designer.id)
-                              }}
-                              className={`${iconButton} hover:bg-rosso`}
-                            >
-                              <Icon
-                                path="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"
-                                size={15}
-                              />
-                            </button>
-                          </div>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-
-              {sorted.length === 0 && (
-                <p className="px-6 py-12 text-center text-sm text-neutral-400">
-                  Nessun designer nel catalogo: crea il primo.
-                </p>
-              )}
-            </div>
-          )}
-
-          {remove.isError && (
+      <ListTable
+        caption="Designer del catalogo"
+        columns={columns}
+        minWidth="min-w-[36rem]"
+        isPending={isPending}
+        error={isError ? 'Impossibile caricare i designer.' : null}
+        empty={
+          visible.length === 0
+            ? list.hasFilters
+              ? 'Nessun designer con questi filtri.'
+              : 'Nessun designer nel catalogo: crea il primo.'
+            : null
+        }
+        page={page.page}
+        lastPage={page.lastPage}
+        onPageChange={(value) => list.set({ page: value })}
+        footer={
+          remove.isError && (
             <p
               role="alert"
               className="border-linea text-errore border-t px-6 py-4 text-[0.8125rem]"
@@ -194,9 +147,40 @@ export function DesignersPage() {
               {backendMessage(remove.error) ??
                 'Impossibile eliminare il designer. Riprova.'}
             </p>
-          )}
-        </AdminCard>
-      </div>
+          )
+        }
+      >
+        {page.items.map((designer) => (
+          <tr key={designer.id} className={listRowClass}>
+            <td className="py-4 pr-5 pl-6">
+              <p className="font-display text-[0.9375rem] font-bold">
+                {designer.name}
+              </p>
+              <p className="mt-0.5 text-xs text-neutral-500">{designer.slug}</p>
+            </td>
+            <td className="px-5 py-4 text-neutral-300">
+              {labelOf(designerTypes, designer.type)}
+            </td>
+            <td className="px-5 py-4 text-neutral-300">
+              {countryName(designer.country) ?? '—'}
+            </td>
+            <td className="px-5 py-4 text-neutral-300 tabular-nums">
+              {designer.versions_count ?? 0}
+            </td>
+            <td className="px-5 py-4">
+              <RowActions
+                name={designer.name}
+                onEdit={() => setModal(designer.id)}
+                onStartDelete={() => remove.reset()}
+                onDelete={(done) =>
+                  remove.mutate(designer.id, { onSuccess: done })
+                }
+                isPending={remove.isPending}
+              />
+            </td>
+          </tr>
+        ))}
+      </ListTable>
 
       {/* La finestra si monta solo quando serve, e si smonta alla chiusura: riparte sempre pulita */}
       {modal !== null && (
