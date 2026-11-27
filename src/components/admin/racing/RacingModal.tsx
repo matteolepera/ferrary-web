@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { validationErrors } from '@/api/errors'
 import { AdminField } from '@/components/admin/ui/AdminField'
 import { AdminModal } from '@/components/admin/ui/AdminModal'
+import { FormAlert } from '@/components/admin/ui/FormAlert'
 import { AdminTextarea } from '@/components/admin/ui/AdminTextarea'
 import { useRacingActions } from '@/hooks/useVersionRacing'
 import type { AdminRacingRecord } from '@/types/admin'
@@ -126,12 +127,9 @@ export function RacingModal({ versionId, record, onClose }: RacingModalProps) {
       pending={save.isPending}
     >
       {save.isError && !errors && (
-        <p
-          role="alert"
-          className="border-errore/40 bg-errore/10 text-errore mb-5 rounded-2xl border px-4 py-3 text-[0.8125rem]"
-        >
+        <FormAlert className="mb-5">
           Impossibile salvare il campionato. Riprova.
-        </p>
+        </FormAlert>
       )}
 
       <div className="flex flex-col gap-7">

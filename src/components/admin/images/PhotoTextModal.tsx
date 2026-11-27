@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { AdminField } from '@/components/admin/ui/AdminField'
 import { AdminModal } from '@/components/admin/ui/AdminModal'
+import { FormAlert } from '@/components/admin/ui/FormAlert'
 import { useImageActions } from '@/hooks/useVersionImages'
 import type { AdminImage } from '@/types/admin'
 
@@ -50,12 +51,9 @@ export function PhotoTextModal({
       pending={update.isPending}
     >
       {update.isError && (
-        <p
-          role="alert"
-          className="border-errore/40 bg-errore/10 text-errore mb-5 rounded-2xl border px-4 py-3 text-[0.8125rem]"
-        >
+        <FormAlert className="mb-5">
           Impossibile salvare il testo in questo momento. Riprova.
-        </p>
+        </FormAlert>
       )}
 
       <div className="flex flex-col gap-5 sm:flex-row">

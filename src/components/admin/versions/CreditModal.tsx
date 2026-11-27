@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { designerRoles } from '@/components/admin/designers/options'
 import { AdminModal } from '@/components/admin/ui/AdminModal'
+import { FormAlert } from '@/components/admin/ui/FormAlert'
 import { AdminSelect } from '@/components/admin/ui/AdminSelect'
 import {
   designerCredits,
@@ -80,12 +81,9 @@ export function CreditModal({ version, kind, onClose }: CreditModalProps) {
       pending={mutation.isPending}
     >
       {mutation.isError && (
-        <p
-          role="alert"
-          className="border-errore/40 bg-errore/10 text-errore mb-5 rounded-2xl border px-4 py-3 text-[0.8125rem]"
-        >
+        <FormAlert className="mb-5">
           Impossibile salvare il collegamento in questo momento. Riprova.
-        </p>
+        </FormAlert>
       )}
 
       {isDesigner ? (

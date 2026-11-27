@@ -2,6 +2,7 @@ import type { FormEvent } from 'react'
 import { useNavigate } from 'react-router'
 import { AdminField } from '@/components/admin/ui/AdminField'
 import { AdminModal } from '@/components/admin/ui/AdminModal'
+import { FormAlert } from '@/components/admin/ui/FormAlert'
 import { AdminSelect } from '@/components/admin/ui/AdminSelect'
 import { vehicleTypes } from '@/components/admin/versions/options'
 import type { VersionValues } from '@/components/admin/versions/versionValues'
@@ -54,12 +55,9 @@ export function NewVersionModal({
       pending={save.isPending}
     >
       {save.isError && !errors && (
-        <p
-          role="alert"
-          className="border-errore/40 bg-errore/10 text-errore mb-5 rounded-2xl border px-4 py-3 text-[0.8125rem]"
-        >
+        <FormAlert className="mb-5">
           Impossibile creare la versione in questo momento. Riprova.
-        </p>
+        </FormAlert>
       )}
 
       <div className="grid gap-5 sm:grid-cols-2">
