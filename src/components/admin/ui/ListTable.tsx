@@ -18,9 +18,10 @@ type ListTableProps = {
   error?: string | null
   /** Il messaggio se non c'è nessuna riga da mostrare */
   empty?: string | null
-  page: number
-  lastPage: number
-  onPageChange: (page: number) => void
+  /** Le pagine: senza, l'elenco sta tutto in una (ad esempio le famiglie, che sono poche) */
+  page?: number
+  lastPage?: number
+  onPageChange?: (page: number) => void
   /** Sotto la tabella, prima delle pagine: ad esempio l'errore di un'eliminazione */
   footer?: ReactNode
   children: ReactNode
@@ -97,11 +98,13 @@ export function ListTable({
 
       {footer}
 
-      <AdminPagination
-        page={page}
-        lastPage={lastPage}
-        onChange={onPageChange}
-      />
+      {page !== undefined && lastPage !== undefined && onPageChange && (
+        <AdminPagination
+          page={page}
+          lastPage={lastPage}
+          onChange={onPageChange}
+        />
+      )}
     </AdminCard>
   )
 }
