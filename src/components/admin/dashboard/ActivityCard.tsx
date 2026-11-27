@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import { Link } from 'react-router'
 import { AdminCard } from '@/components/admin/ui/AdminCard'
 import { Avatar } from '@/components/admin/ui/Avatar'
 import {
   FilterPills,
   type FilterOption,
 } from '@/components/admin/ui/FilterPills'
+import { ForwardLink } from '@/components/admin/ui/ForwardLink'
 import { timeAgo } from '@/lib/timeAgo'
 import type { ActivityItem } from '@/types/dashboard'
 import { phrase, subjectLabel } from '@/components/admin/activity/phrases'
@@ -47,7 +47,7 @@ export function ActivityCard({
       delay={delay}
       className={`p-6 ${className}`}
     >
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-3">
         <h2
           id="pannello-attivita"
           className="font-display text-xl font-extrabold tracking-[-0.03em]"
@@ -56,12 +56,9 @@ export function ActivityCard({
         </h2>
         {/* Il registro completo è di Admin e Master: gli stessi che vedono le pillole */}
         {showTabs && (
-          <Link
-            to="/admin/registro"
-            className="text-xs font-semibold text-neutral-300 transition-colors hover:text-white"
-          >
-            Registro <span aria-hidden="true">→</span>
-          </Link>
+          <ForwardLink to="/admin/registro" label="Registro attività completo">
+            Registro
+          </ForwardLink>
         )}
       </div>
 

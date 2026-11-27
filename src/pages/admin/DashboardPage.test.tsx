@@ -73,10 +73,9 @@ test('mostra lo staff a chi lo gestisce', async () => {
   const staff = within(await screen.findByRole('region', { name: 'Staff' }))
   expect(await staff.findByText('Giulia')).toBeInTheDocument()
   expect(staff.getByText('Moderatore')).toBeInTheDocument()
-  expect(staff.getByRole('link', { name: 'Gestisci' })).toHaveAttribute(
-    'href',
-    '/admin/staff',
-  )
+  expect(
+    staff.getByRole('link', { name: 'Gestisci lo staff' }),
+  ).toHaveAttribute('href', '/admin/staff')
 })
 
 test('ai moderatori non mostra lo staff, e non lo chiede nemmeno', async () => {

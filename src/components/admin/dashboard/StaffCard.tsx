@@ -1,4 +1,4 @@
-import { Link } from 'react-router'
+import { ForwardLink } from '@/components/admin/ui/ForwardLink'
 import { roleLabels } from '@/components/admin/adminNav'
 import { AdminCard } from '@/components/admin/ui/AdminCard'
 import { Avatar } from '@/components/admin/ui/Avatar'
@@ -31,19 +31,16 @@ export function StaffCard({
       delay={delay}
       className={`p-6 ${className}`}
     >
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-3">
         <h2
           id="pannello-staff"
           className="font-display text-xl font-extrabold tracking-[-0.03em]"
         >
           Staff
         </h2>
-        <Link
-          to="/admin/staff"
-          className="text-xs font-semibold text-neutral-300 transition-colors hover:text-white"
-        >
-          Gestisci <span aria-hidden="true">→</span>
-        </Link>
+        <ForwardLink to="/admin/staff" label="Gestisci lo staff">
+          Gestisci
+        </ForwardLink>
       </div>
 
       {isPending && (
