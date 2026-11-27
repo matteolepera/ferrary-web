@@ -1,8 +1,6 @@
 import { Link } from 'react-router'
 import { AdminButton } from '@/components/admin/ui/AdminButton'
 import { AdminCard } from '@/components/admin/ui/AdminCard'
-import { adminButtonClass } from '@/components/admin/ui/adminButtonClass'
-import { Icon } from '@/components/admin/ui/Icon'
 import { StatusBadge } from '@/components/admin/ui/StatusBadge'
 import { useAdminModelFilters } from '@/hooks/useAdminModelFilters'
 import { useAdminModels } from '@/hooks/useAdminModels'
@@ -10,6 +8,7 @@ import { formatNumber } from '@/lib/format'
 import { timeAgo } from '@/lib/timeAgo'
 import { AdminPagination } from '@/components/admin/ui/AdminPagination'
 import { AdminSearch } from '@/components/admin/ui/AdminSearch'
+import { NewModelButton } from '@/components/admin/models/NewModelButton'
 import { useAdminCategories } from '@/hooks/useAdminModels'
 import type { PublicationStatus } from '@/types/admin'
 
@@ -60,10 +59,7 @@ export function ModelsPage() {
             </p>
           )}
         </div>
-        <Link to="/admin/modelli/nuovo" className={adminButtonClass('primary')}>
-          <Icon path="M12 5v14M5 12h14" size={16} />
-          Nuovo modello
-        </Link>
+        <NewModelButton />
       </header>
 
       <div className="mt-7 flex flex-wrap items-center gap-3">

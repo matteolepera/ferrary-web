@@ -4,29 +4,36 @@ import { adminModels } from '@/test/fixtures'
 import { server, signIn } from '@/test/server'
 import { renderRoute } from '@/test/utils'
 
-test('crea un modello, e porta alla sua pagina in bozza', async () => {
-  signIn()
-  renderRoute('/admin/modelli/nuovo')
+/** Apre la finestra «Nuovo modello» dall'elenco dei modelli */
+async function openNewModel() {
+  fireEvent.click(await screen.findByRole('button', { name: 'Nuovo modello' }))
+  return within(screen.getByRole('dialog', { name: 'Nuovo modello' }))
+}
 
-  fireEvent.change(await screen.findByLabelText('Nome'), {
+test('crea un modello dalla sua finestra, e porta alla sua pagina in bozza', async () => {
+  signIn()
+  renderRoute('/admin/modelli')
+  const dialog = await openNewModel()
+
+  fireEvent.change(dialog.getByLabelText('Nome'), {
     target: { value: 'Testarossa' },
   })
   // L'anteprima dello slug segue il nome
   expect(
-    screen.getByText("Nell'indirizzo del sito: /modelli/testarossa"),
+    dialog.getByText("Nell'indirizzo del sito: /modelli/testarossa"),
   ).toBeInTheDocument()
 
-  await screen.findByRole('option', { name: 'Sportive' })
-  fireEvent.change(screen.getByLabelText('Famiglia'), {
+  await dialog.findByRole('option', { name: 'Sportive' })
+  fireEvent.change(dialog.getByLabelText('Famiglia'), {
     target: { value: '1' },
   })
-  fireEvent.change(screen.getByLabelText('In italiano'), {
+  fireEvent.change(dialog.getByLabelText('In italiano'), {
     target: { value: 'La berlinetta degli anni Ottanta.' },
   })
-  fireEvent.click(screen.getByRole('button', { name: 'Crea modello' }))
+  fireEvent.click(dialog.getByRole('button', { name: 'Crea modello' }))
 
   expect(
-    await screen.findByRole('heading', { name: 'Testarossa' }),
+    await screen.findByRole('heading', { name: 'Testarossa', level: 1 }),
   ).toBeInTheDocument()
   expect(screen.getByText('Modello creato: è una bozza.')).toHaveAttribute(
     'role',
@@ -93,20 +100,21 @@ test('l’indice del modello dice cosa è completo', async () => {
 
 test("mostra l'errore del backend sotto il campo giusto", async () => {
   signIn()
-  renderRoute('/admin/modelli/nuovo')
+  renderRoute('/admin/modelli')
+  const dialog = await openNewModel()
 
-  fireEvent.change(await screen.findByLabelText('Nome'), {
+  fireEvent.change(dialog.getByLabelText('Nome'), {
     target: { value: 'SF90 Stradale' },
   })
-  fireEvent.change(screen.getByLabelText('Slug'), {
+  fireEvent.change(dialog.getByLabelText('Slug'), {
     target: { value: 'sf90-stradale' },
   })
-  fireEvent.click(screen.getByRole('button', { name: 'Crea modello' }))
+  fireEvent.click(dialog.getByRole('button', { name: 'Crea modello' }))
 
   expect(
-    await screen.findByText('Questo slug è già in uso.'),
+    await dialog.findByText('Questo slug è già in uso.'),
   ).toBeInTheDocument()
-  expect(screen.getByLabelText('Slug')).toHaveAttribute('aria-invalid', 'true')
+  expect(dialog.getByLabelText('Slug')).toHaveAttribute('aria-invalid', 'true')
 })
 
 test('un modello che non esiste è un "non trovato"', async () => {
