@@ -3,6 +3,7 @@ import { validationErrors } from '@/api/errors'
 import { roleLabels } from '@/components/admin/adminNav'
 import { AdminField } from '@/components/admin/ui/AdminField'
 import { AdminModal } from '@/components/admin/ui/AdminModal'
+import { FormAlert } from '@/components/admin/ui/FormAlert'
 import { AdminSelect } from '@/components/admin/ui/AdminSelect'
 import { PasswordField } from '@/components/admin/ui/PasswordField'
 import { useStaffActions } from '@/hooks/useStaff'
@@ -73,10 +74,16 @@ export function NewMemberModal({
       pending={create.isPending}
     >
       <div className="flex flex-col gap-5">
+        {create.isError && !errors && (
+          <FormAlert>
+            Impossibile aggiungere la persona in questo momento. Riprova.
+          </FormAlert>
+        )}
         <div className="grid gap-5 sm:grid-cols-2">
           <AdminField
             label="Nome"
             required
+            maxLength={255}
             value={values.name}
             onChange={(event) => update('name', event.target.value)}
             error={errors?.name?.[0]}
@@ -84,6 +91,7 @@ export function NewMemberModal({
           <AdminField
             label="Email"
             required
+            maxLength={255}
             type="email"
             autoComplete="off"
             value={values.email}
@@ -94,6 +102,7 @@ export function NewMemberModal({
         <PasswordField
           label="Password iniziale"
           required
+          minLength={8}
           autoComplete="new-password"
           value={values.password}
           onChange={(event) => update('password', event.target.value)}
@@ -115,12 +124,6 @@ export function NewMemberModal({
             </option>
           ))}
         </AdminSelect>
-
-        {create.isError && !errors && (
-          <p role="alert" className="text-errore text-[0.8125rem]">
-            Impossibile aggiungere la persona in questo momento. Riprova.
-          </p>
-        )}
       </div>
     </AdminModal>
   )

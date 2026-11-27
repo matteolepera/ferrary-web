@@ -4,6 +4,7 @@ import { AdminButton } from '@/components/admin/ui/AdminButton'
 import { AdminCard } from '@/components/admin/ui/AdminCard'
 import { AdminField } from '@/components/admin/ui/AdminField'
 import { AdminSelect } from '@/components/admin/ui/AdminSelect'
+import { FormAlert } from '@/components/admin/ui/FormAlert'
 import { useStaffActions } from '@/hooks/useStaff'
 import type { User } from '@/types/auth'
 
@@ -53,6 +54,7 @@ export function TransferMasterCard({
       <div className="mt-5 grid gap-4 md:grid-cols-2">
         <AdminSelect
           label="Nuovo Master"
+          required
           value={targetId}
           onChange={(event) => {
             setTargetId(event.target.value)
@@ -70,6 +72,7 @@ export function TransferMasterCard({
         {target && (
           <AdminField
             label="Per confermare, scrivi il suo nome"
+            required
             value={confirmation}
             autoComplete="off"
             placeholder={target.name}
@@ -80,10 +83,10 @@ export function TransferMasterCard({
       </div>
 
       {transfer.isError && (
-        <p role="alert" className="text-errore mt-4 text-[0.8125rem]">
+        <FormAlert className="mt-5">
           {backendMessage(transfer.error) ??
             'Impossibile passare il ruolo in questo momento. Riprova.'}
-        </p>
+        </FormAlert>
       )}
 
       <AdminButton
