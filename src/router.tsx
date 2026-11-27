@@ -141,13 +141,6 @@ export const routes: RouteObject[] = [
         }),
       },
       {
-        path: 'motori/nuovo',
-        lazy: async () => ({
-          Component: (await import('@/pages/admin/EngineFormPage'))
-            .EngineFormPage,
-        }),
-      },
-      {
         path: 'motori/:id',
         lazy: async () => ({
           Component: (await import('@/pages/admin/EngineFormPage'))
