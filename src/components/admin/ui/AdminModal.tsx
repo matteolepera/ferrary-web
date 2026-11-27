@@ -138,7 +138,7 @@ export function AdminModal({
         </header>
 
         {/* I campi: se sono tanti scorrono qui, mentre titolo e pulsanti restano fermi */}
-        <div className="min-h-0 flex-1 overflow-y-auto px-7 pt-5 pb-2">
+        <div className="barra-sottile min-h-0 flex-1 overflow-y-auto px-7 pt-5 pb-2">
           {children}
         </div>
 
