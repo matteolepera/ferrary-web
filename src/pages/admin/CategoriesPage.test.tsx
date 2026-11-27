@@ -17,7 +17,9 @@ test('elenca le famiglie nel loro ordine, e ne crea una nuova in fondo', async (
   signIn()
   renderRoute('/admin/famiglie')
 
-  const rows = await screen.findAllByRole('row')
+  // Prima arrivano le righe sagoma: aspettiamo quelle vere
+  await screen.findByRole('row', { name: /Sportive/ })
+  const rows = screen.getAllByRole('row')
   expect(rows[1]).toHaveTextContent('Sportive')
   expect(rows[2]).toHaveTextContent('Hypercar')
 

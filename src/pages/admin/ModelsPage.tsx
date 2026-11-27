@@ -11,18 +11,22 @@ import { AdminSearch } from '@/components/admin/ui/AdminSearch'
 import { NewModelButton } from '@/components/admin/models/NewModelButton'
 import { useAdminCategories } from '@/hooks/useAdminModels'
 import type { PublicationStatus } from '@/types/admin'
+import {
+  FilterPills,
+  type FilterOption,
+} from '@/components/admin/ui/FilterPills'
+import { FilterSelect } from '@/components/admin/ui/FilterSelect'
 
 /** Le colonne, nell'ordine della tabella */
 const columns = ['Modello', 'Famiglia', 'Versioni', 'Stato', 'Ultima modifica']
 
 /** Le pillole degli stati: undefined vuol dire "tutti" */
-const statusFilters: { value: PublicationStatus | undefined; label: string }[] =
-  [
-    { value: undefined, label: 'Tutti' },
-    { value: 'published', label: 'Pubblicati' },
-    { value: 'scheduled', label: 'Programmati' },
-    { value: 'draft', label: 'Bozze' },
-  ]
+const statusFilters: FilterOption<PublicationStatus>[] = [
+  { value: undefined, label: 'Tutti' },
+  { value: 'published', label: 'Pubblicati' },
+  { value: 'scheduled', label: 'Programmati' },
+  { value: 'draft', label: 'Bozze' },
+]
 
 /**
  * L'elenco dei modelli dell'admin: tutti, bozze e programmati compresi.
@@ -71,38 +75,15 @@ export function ModelsPage() {
           onSearch={(search) => setFilters({ search }, { replace: true })}
         />
 
-        <div
-          role="group"
-          aria-label="Filtra per stato"
-          className="flex flex-wrap gap-1.5"
-        >
-          {statusFilters.map(({ value, label }) => {
-            const active = filters.status === value
+        <FilterPills
+          label="Filtra per stato"
+          options={statusFilters}
+          value={filters.status}
+          onChange={(status) => setFilters({ status })}
+        />
 
-            return (
-              <button
-                key={label}
-                type="button"
-                aria-pressed={active}
-                onClick={() => setFilters({ status: value })}
-                className={[
-                  'rounded-full border px-3.5 py-2 text-xs font-semibold transition-colors',
-                  active
-                    ? 'text-notte border-white bg-white'
-                    : 'border-linea text-neutral-300 hover:border-neutral-600 hover:text-white',
-                ].join(' ')}
-              >
-                {label}
-              </button>
-            )
-          })}
-        </div>
-
-        <label className="sr-only" htmlFor="filtro-famiglia">
-          Famiglia
-        </label>
-        <select
-          id="filtro-famiglia"
+        <FilterSelect
+          label="Famiglia"
           value={filters.category_id ?? ''}
           onChange={(event) =>
             setFilters({
@@ -111,7 +92,6 @@ export function ModelsPage() {
                 : undefined,
             })
           }
-          className="bg-ombra h-11 rounded-full border border-white/10 px-4 text-sm text-neutral-100 transition-colors focus:border-neutral-300"
         >
           <option value="">Tutte le famiglie</option>
           {categories?.map((category) => (
@@ -119,7 +99,7 @@ export function ModelsPage() {
               {category.name.it}
             </option>
           ))}
-        </select>
+        </FilterSelect>
 
         {hasFilters && (
           <button

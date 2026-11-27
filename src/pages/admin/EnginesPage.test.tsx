@@ -21,6 +21,26 @@ test('elenca i motori in poche parole, e li cerca per codice o nome', async () =
   expect(screen.getByRole('row', { name: /F154/ })).toBeInTheDocument()
 })
 
+test('filtra per architettura, e dice quanti motori restano', async () => {
+  signIn()
+  renderRoute('/admin/motori')
+
+  expect(await screen.findByText('2 motori')).toBeInTheDocument()
+  fireEvent.click(screen.getByRole('button', { name: 'Piatto' }))
+
+  expect(screen.getByRole('button', { name: 'Piatto' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  )
+  expect(
+    screen.getByText('Nessun motore con questi filtri.'),
+  ).toBeInTheDocument()
+  expect(screen.getByText('0 motori con questi filtri')).toBeInTheDocument()
+
+  fireEvent.click(screen.getByRole('button', { name: 'Azzera filtri' }))
+  expect(screen.getByRole('row', { name: /F140/ })).toBeInTheDocument()
+})
+
 test('crea un motore dalla sua finestra, e porta alla sua pagina', async () => {
   signIn()
   renderRoute('/admin/motori')

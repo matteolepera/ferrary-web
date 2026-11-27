@@ -14,7 +14,7 @@ import {
 } from '@/components/admin/ui/SectionIndex'
 import { StatusBadge } from '@/components/admin/ui/StatusBadge'
 import { TrashCard } from '@/components/admin/ui/TrashCard'
-import { VersionSectionCard } from '@/components/admin/versions/VersionSectionCard'
+import { SectionCard } from '@/components/admin/ui/SectionCard'
 import { VersionsCard } from '@/components/admin/versions/VersionsCard'
 import { summaryStatus } from '@/components/admin/versions/versionSummary'
 import { useActiveSection } from '@/hooks/useActiveSection'
@@ -71,7 +71,7 @@ export function ModelPage({ model }: { model: AdminCarModel }) {
   /** Il blocco da leggere di una sezione, con il suo «Modifica» */
   function sectionCard(section: ModelSection, delay: number, empty?: string) {
     return (
-      <VersionSectionCard
+      <SectionCard
         id={`modello-${section}`}
         title={modelSections[section].title}
         items={summary(section)}

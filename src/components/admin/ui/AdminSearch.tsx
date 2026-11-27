@@ -44,7 +44,7 @@ export function AdminSearch({
   }, [text, value])
 
   return (
-    <div className="bg-ombra flex h-11 min-w-56 flex-1 items-center gap-2.5 rounded-full border border-white/10 px-4 transition-colors focus-within:border-neutral-300 md:max-w-80">
+    <div className="bg-ombra flex h-12 min-w-56 flex-1 items-center gap-2.5 rounded-full border border-white/10 px-4 transition-colors focus-within:border-neutral-300 md:max-w-80">
       <label htmlFor={id} className="sr-only">
         {label}
       </label>

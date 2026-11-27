@@ -13,7 +13,7 @@ import {
   SectionIndex,
   type SectionIndexItem,
 } from '@/components/admin/ui/SectionIndex'
-import { VersionSectionCard } from '@/components/admin/versions/VersionSectionCard'
+import { SectionCard } from '@/components/admin/ui/SectionCard'
 import { summaryStatus } from '@/components/admin/versions/versionSummary'
 import { useActiveSection } from '@/hooks/useActiveSection'
 import type { AdminEngine } from '@/types/admin'
@@ -75,7 +75,7 @@ export function EnginePage({ engine }: { engine: AdminEngine }) {
       <div className="mt-7 grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <div className="flex min-w-0 flex-col gap-4">
           {(['dati', 'descrizione'] as const).map((section, position) => (
-            <VersionSectionCard
+            <SectionCard
               key={section}
               id={`motore-${section}`}
               title={engineSections[section].title}

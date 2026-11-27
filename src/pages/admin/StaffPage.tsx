@@ -1,9 +1,11 @@
 import { useState } from 'react'
+import { PlusIcon } from '@phosphor-icons/react'
 import { isForbidden } from '@/api/errors'
 import { NewMemberModal } from '@/components/admin/staff/NewMemberModal'
 import { adminButtonClass } from '@/components/admin/ui/adminButtonClass'
 import { assignableRoles } from '@/components/admin/staff/permissions'
 import { AdminCard } from '@/components/admin/ui/AdminCard'
+import { ListHeader } from '@/components/admin/ui/ListHeader'
 import { useCurrentUser } from '@/hooks/useAuth'
 import { useStaff } from '@/hooks/useStaff'
 import { StaffRow } from '@/components/admin/staff/StaffRow'
@@ -25,29 +27,36 @@ export function StaffPage() {
     <>
       <title>Staff – Ferrary</title>
 
-      <header className="flex flex-wrap items-end justify-between gap-5">
-        <div>
-          <p className="text-rosso-acceso text-[0.6875rem] font-semibold tracking-[0.22em] uppercase">
-            Persone
-          </p>
-          <h1 className="font-display mt-2.5 text-[2.75rem] leading-none font-extrabold tracking-[-0.035em]">
-            Staff
-          </h1>
-          <p role="status" className="mt-3 min-h-5 text-sm text-neutral-300">
-            {message}
-          </p>
-        </div>
-        {/* Solo chi può assegnare almeno un ruolo può aggiungere qualcuno */}
-        {roles.length > 0 && !isForbidden(error) && (
-          <button
-            type="button"
-            onClick={() => setAdding(true)}
-            className={adminButtonClass('primary')}
-          >
-            <span aria-hidden="true">＋</span> Nuovo membro
-          </button>
-        )}
-      </header>
+      <ListHeader
+        eyebrow="Persone"
+        title="Staff"
+        count={
+          staff
+            ? staff.length === 1
+              ? '1 persona'
+              : `${staff.length} persone`
+            : undefined
+        }
+        action={
+          <div className="flex flex-wrap items-center justify-end gap-4">
+            {/* L'esito delle azioni sullo staff, accanto al pulsante come nelle pagine di dettaglio */}
+            <p role="status" className="text-sm text-neutral-300">
+              {message}
+            </p>
+            {/* Solo chi può assegnare almeno un ruolo può aggiungere qualcuno */}
+            {roles.length > 0 && !isForbidden(error) && (
+              <button
+                type="button"
+                onClick={() => setAdding(true)}
+                className={adminButtonClass('primary')}
+              >
+                <PlusIcon aria-hidden="true" size={16} />
+                Nuovo membro
+              </button>
+            )}
+          </div>
+        }
+      />
 
       {isForbidden(error) ? (
         <p
@@ -57,7 +66,7 @@ export function StaffPage() {
           La gestione dello staff è riservata ad Admin e Master.
         </p>
       ) : (
-        <div className="mt-5 flex flex-col gap-4">
+        <div className="mt-7 flex flex-col gap-4">
           <AdminCard className="overflow-hidden">
             {isPending && (
               <div
