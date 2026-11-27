@@ -10,7 +10,7 @@ import { StatusBadge } from '@/components/admin/ui/StatusBadge'
 import { TrashCard } from '@/components/admin/ui/TrashCard'
 import { CreditsCard } from '@/components/admin/versions/CreditsCard'
 import { VersionPublication } from '@/components/admin/versions/VersionPublication'
-import { VersionSectionCard } from '@/components/admin/versions/VersionSectionCard'
+import { SectionCard } from '@/components/admin/ui/SectionCard'
 import { VersionSectionModal } from '@/components/admin/versions/VersionSectionModal'
 import {
   versionSections,
@@ -117,7 +117,7 @@ export function VersionPage({ modelId, modelName, version }: VersionPageProps) {
   /** Il blocco da leggere di una sezione, con il suo «Modifica» */
   function sectionCard(section: VersionSection, delay: number, empty?: string) {
     return (
-      <VersionSectionCard
+      <SectionCard
         id={`versione-${section}`}
         title={versionSections[section].title}
         items={summary(section)}

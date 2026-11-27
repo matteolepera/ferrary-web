@@ -6,7 +6,7 @@ import {
 } from '@/components/admin/versions/versionSummary'
 import { sectionButtonClass } from '@/components/admin/ui/adminButtonClass'
 
-type VersionSectionCardProps = {
+type SectionCardProps = {
   id: string
   title: string
   items: SummaryItem[]
@@ -18,10 +18,10 @@ type VersionSectionCardProps = {
 }
 
 /**
- * Una sezione della versione da leggere: i dati in griglia, quelli mancanti con un trattino,
- * e «Modifica» che apre la finestra della sezione.
+ * Una sezione da leggere, nelle pagine di versioni, modelli e motori: i dati in griglia,
+ * quelli mancanti con un trattino, e «Modifica» che apre la finestra della sezione.
  */
-export function VersionSectionCard({
+export function SectionCard({
   id,
   title,
   items,
@@ -29,7 +29,7 @@ export function VersionSectionCard({
   onEdit,
   delay,
   className = '',
-}: VersionSectionCardProps) {
+}: SectionCardProps) {
   const missing = missingCount(items)
 
   return (
