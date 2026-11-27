@@ -4,6 +4,7 @@ import { isTooManyRequests, validationErrors } from '@/api/errors'
 import { Monogram } from '@/components/admin/Monogram'
 import { AdminButton } from '@/components/admin/ui/AdminButton'
 import { AdminField } from '@/components/admin/ui/AdminField'
+import { FormAlert } from '@/components/admin/ui/FormAlert'
 import { PasswordField } from '@/components/admin/ui/PasswordField'
 import { PageLoader } from '@/components/layout/PageLoader'
 import { Logo } from '@/components/Logo'
@@ -139,14 +140,7 @@ export function LoginPage() {
               noValidate
               className="mt-7 flex flex-col gap-5"
             >
-              {generalError && (
-                <p
-                  role="alert"
-                  className="border-errore/40 bg-errore/10 text-errore rounded-2xl border px-4 py-3 text-[0.8125rem]"
-                >
-                  {generalError}
-                </p>
-              )}
+              {generalError && <FormAlert>{generalError}</FormAlert>}
 
               <AdminField
                 label="Email"

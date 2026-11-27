@@ -6,6 +6,7 @@ import {
   ModelMainFields,
 } from '@/components/admin/models/ModelFields'
 import { AdminModal } from '@/components/admin/ui/AdminModal'
+import { FormAlert } from '@/components/admin/ui/FormAlert'
 import { adminButtonClass } from '@/components/admin/ui/adminButtonClass'
 import { useModelDraft } from '@/hooks/useModelDraft'
 
@@ -42,12 +43,9 @@ function NewModelModal({ onClose }: { onClose: () => void }) {
       pending={save.isPending}
     >
       {save.isError && !errors && (
-        <p
-          role="alert"
-          className="border-errore/40 bg-errore/10 text-errore mb-5 rounded-2xl border px-4 py-3 text-[0.8125rem]"
-        >
+        <FormAlert className="mb-5">
           Impossibile creare il modello in questo momento. Riprova.
-        </p>
+        </FormAlert>
       )}
 
       <div className="flex flex-col gap-7">

@@ -9,6 +9,7 @@ import {
   type EngineSection,
 } from '@/components/admin/engines/engineSections'
 import { AdminModal } from '@/components/admin/ui/AdminModal'
+import { FormAlert } from '@/components/admin/ui/FormAlert'
 import { useEngineDraft } from '@/hooks/useEngineDraft'
 import type { AdminEngine } from '@/types/admin'
 
@@ -17,9 +18,6 @@ type EngineSectionModalProps = {
   section: EngineSection
   onClose: () => void
 }
-
-const alertClass =
-  'border-errore/40 bg-errore/10 text-errore mb-5 rounded-2xl border px-4 py-3 text-[0.8125rem]'
 
 /**
  * La finestra di una sezione del motore: parte dai dati salvati,
@@ -62,14 +60,14 @@ export function EngineSectionModal({
       pending={save.isPending}
     >
       {save.isError && !errors && (
-        <p role="alert" className={alertClass}>
+        <FormAlert className="mb-5">
           Impossibile salvare in questo momento. Riprova.
-        </p>
+        </FormAlert>
       )}
       {otherError && (
-        <p role="alert" className={alertClass}>
+        <FormAlert className="mb-5">
           Da sistemare in un’altra sezione: {otherError}
-        </p>
+        </FormAlert>
       )}
 
       {section === 'dati' ? (

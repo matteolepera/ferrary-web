@@ -1,5 +1,6 @@
 import type { FormEvent } from 'react'
 import { AdminModal } from '@/components/admin/ui/AdminModal'
+import { FormAlert } from '@/components/admin/ui/FormAlert'
 import { DescriptionFields } from '@/components/admin/versions/DescriptionFields'
 import { IdentityFields } from '@/components/admin/versions/IdentityFields'
 import { PowertrainFields } from '@/components/admin/versions/PowertrainFields'
@@ -19,9 +20,6 @@ type VersionSectionModalProps = {
   section: VersionSection
   onClose: () => void
 }
-
-const alertClass =
-  'border-errore/40 bg-errore/10 text-errore mb-5 rounded-2xl border px-4 py-3 text-[0.8125rem]'
 
 /**
  * La finestra di una sezione della versione. Parte dai dati salvati, cambia solo i campi
@@ -62,14 +60,14 @@ export function VersionSectionModal({
       pending={save.isPending}
     >
       {save.isError && !errors && (
-        <p role="alert" className={alertClass}>
+        <FormAlert className="mb-5">
           Impossibile salvare in questo momento. Riprova.
-        </p>
+        </FormAlert>
       )}
       {otherError && (
-        <p role="alert" className={alertClass}>
+        <FormAlert className="mb-5">
           Da sistemare in un’altra sezione: {otherError}
-        </p>
+        </FormAlert>
       )}
 
       {section === 'identita' && (

@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { validationErrors } from '@/api/errors'
 import { AdminField } from '@/components/admin/ui/AdminField'
 import { AdminModal } from '@/components/admin/ui/AdminModal'
+import { FormAlert } from '@/components/admin/ui/FormAlert'
 import { useCategoryActions } from '@/hooks/useCategoryActions'
 import { slugify } from '@/lib/slugify'
 import type { AdminCategory } from '@/types/admin'
@@ -72,10 +73,14 @@ export function CategoryModal({
       pending={save.isPending}
     >
       <div className="flex flex-col gap-5">
+        {save.isError && !errors && (
+          <FormAlert>Impossibile salvare in questo momento. Riprova.</FormAlert>
+        )}
         <div className="grid gap-5 sm:grid-cols-2">
           <AdminField
             label="Nome in italiano"
             required
+            maxLength={100}
             value={values.it}
             onChange={(event) => update('it', event.target.value)}
             error={errors?.['name.it']?.[0]}
@@ -83,6 +88,7 @@ export function CategoryModal({
           <AdminField
             label="Nome in inglese"
             optional
+            maxLength={100}
             value={values.en}
             placeholder={values.it}
             onChange={(event) => update('en', event.target.value)}
@@ -93,29 +99,31 @@ export function CategoryModal({
         <AdminField
           label="Slug"
           optional
+          maxLength={120}
           value={values.slug}
           placeholder={slugify(values.it)}
           onChange={(event) => update('slug', event.target.value)}
-          hint={`Vuoto: si crea dal nome. Nell'indirizzo dell'archivio: ?category=${values.slug || slugify(values.it) || '…'}`}
+          hint={
+            category
+              ? // Il backend non lo rigenera: cambiarlo cambia gli indirizzi del sito
+                `Cambiarlo cambia gli indirizzi del sito: ?category=${values.slug || '…'}`
+              : `Vuoto: si crea dal nome. Nell'indirizzo dell'archivio: ?category=${values.slug || slugify(values.it) || '…'}`
+          }
           error={errors?.slug?.[0]}
         />
         <AdminField
           label="Posizione"
+          optional
           type="number"
           inputMode="numeric"
           min={0}
+          max={65535}
           value={values.position}
           onChange={(event) => update('position', event.target.value)}
           hint="L'ordine nella home, nel piè di pagina e nei filtri."
           error={errors?.sort_order?.[0]}
           className="max-w-48"
         />
-
-        {save.isError && !errors && (
-          <p role="alert" className="text-errore text-[0.8125rem]">
-            Impossibile salvare in questo momento. Riprova.
-          </p>
-        )}
       </div>
     </AdminModal>
   )

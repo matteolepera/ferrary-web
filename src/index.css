@@ -93,3 +93,31 @@
     display: none;
   }
 }
+
+/* La barra di scorrimento sottile e scura: nelle finestre dell'admin, dove quella del sistema stona sul fondo nero */
+@utility barra-sottile {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 0.18) transparent;
+
+  /* Safari non conosce le due regole sopra: usa queste */
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+    /* Un po' di spazio sopra e sotto: la barra non tocca il bordo della zona che scorre */
+    margin-block: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    /* Il bordo trasparente assottiglia la barra visibile senza ridurre l'area da afferrare */
+    border: 3px solid transparent;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.18) padding-box;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(255 255 255 / 0.32);
+  }
+}

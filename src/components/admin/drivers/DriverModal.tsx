@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { validationErrors } from '@/api/errors'
 import { AdminField } from '@/components/admin/ui/AdminField'
 import { AdminModal } from '@/components/admin/ui/AdminModal'
+import { FormAlert } from '@/components/admin/ui/FormAlert'
 import { useDriverActions } from '@/hooks/useAdminDrivers'
 import { todayInput } from '@/lib/birthDate'
 import { countryName } from '@/lib/format'
@@ -71,10 +72,14 @@ export function DriverModal({ driver, onClose }: DriverModalProps) {
       pending={save.isPending}
     >
       <div className="flex flex-col gap-5">
+        {save.isError && !errors && (
+          <FormAlert>Impossibile salvare in questo momento. Riprova.</FormAlert>
+        )}
         <div className="grid gap-5 sm:grid-cols-2">
           <AdminField
             label="Nome"
             required
+            maxLength={100}
             value={values.first_name}
             placeholder="Charles"
             onChange={(event) => update('first_name', event.target.value)}
@@ -83,6 +88,7 @@ export function DriverModal({ driver, onClose }: DriverModalProps) {
           <AdminField
             label="Cognome"
             required
+            maxLength={100}
             value={values.last_name}
             placeholder="Leclerc"
             onChange={(event) => update('last_name', event.target.value)}
@@ -116,18 +122,13 @@ export function DriverModal({ driver, onClose }: DriverModalProps) {
         <AdminField
           label="Slug"
           optional
+          maxLength={200}
           value={values.slug}
           placeholder={slugify(`${values.first_name} ${values.last_name}`)}
           onChange={(event) => update('slug', event.target.value)}
-          hint="Vuoto: lo generiamo da nome e cognome."
+          hint="Vuoto: si crea da nome e cognome."
           error={errors?.slug?.[0]}
         />
-
-        {save.isError && !errors && (
-          <p role="alert" className="text-errore text-[0.8125rem]">
-            Impossibile salvare in questo momento. Riprova.
-          </p>
-        )}
       </div>
     </AdminModal>
   )
