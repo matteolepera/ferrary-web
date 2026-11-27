@@ -2,8 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router'
 import { AdminCard } from '@/components/admin/ui/AdminCard'
 import { AdminSearch } from '@/components/admin/ui/AdminSearch'
-import { adminButtonClass } from '@/components/admin/ui/adminButtonClass'
-import { Icon } from '@/components/admin/ui/Icon'
+import { NewEngineButton } from '@/components/admin/engines/NewEngineButton'
 import {
   aspirations,
   displacement,
@@ -48,10 +47,7 @@ export function EnginesPage() {
             Motori
           </h1>
         </div>
-        <Link to="/admin/motori/nuovo" className={adminButtonClass('primary')}>
-          <Icon path="M12 5v14M5 12h14" size={16} />
-          Nuovo motore
-        </Link>
+        <NewEngineButton />
       </header>
 
       <div className="mt-7">

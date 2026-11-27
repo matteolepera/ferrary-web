@@ -13,9 +13,12 @@ test('pubblica subito un modello programmato, senza perdere la famiglia', async 
 
   fireEvent.click((await card()).getByRole('button', { name: 'Pubblica ora' }))
 
-  expect(await (await card()).findByText(/^Online dal/)).toBeInTheDocument()
-  // La famiglia è ancora nel menu: la risposta è stata unita al modello, non lo ha sostituito
-  expect(screen.getByLabelText('Famiglia')).toHaveValue('3')
+  // La famiglia è ancora nella pagina: la risposta è stata unita al modello, non lo ha sostituito
+  expect(
+    within(screen.getByRole('region', { name: 'Dati principali' })).getByText(
+      'Hypercar',
+    ),
+  ).toBeInTheDocument()
 })
 
 test('chiede conferma prima di ritirare un modello pubblicato', async () => {

@@ -1,30 +1,39 @@
-import { fireEvent, screen } from '@testing-library/react'
-import { signIn } from '@/test/server'
+import { fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { http, HttpResponse } from 'msw'
+import { adminModels } from '@/test/fixtures'
+import { server, signIn } from '@/test/server'
 import { renderRoute } from '@/test/utils'
 
-test('crea un modello, e porta alla sua pagina in bozza', async () => {
-  signIn()
-  renderRoute('/admin/modelli/nuovo')
+/** Apre la finestra «Nuovo modello» dall'elenco dei modelli */
+async function openNewModel() {
+  fireEvent.click(await screen.findByRole('button', { name: 'Nuovo modello' }))
+  return within(screen.getByRole('dialog', { name: 'Nuovo modello' }))
+}
 
-  fireEvent.change(await screen.findByLabelText('Nome'), {
+test('crea un modello dalla sua finestra, e porta alla sua pagina in bozza', async () => {
+  signIn()
+  renderRoute('/admin/modelli')
+  const dialog = await openNewModel()
+
+  fireEvent.change(dialog.getByLabelText('Nome'), {
     target: { value: 'Testarossa' },
   })
   // L'anteprima dello slug segue il nome
   expect(
-    screen.getByText("Nell'indirizzo del sito: /modelli/testarossa"),
+    dialog.getByText("Nell'indirizzo del sito: /modelli/testarossa"),
   ).toBeInTheDocument()
 
-  await screen.findByRole('option', { name: 'Sportive' })
-  fireEvent.change(screen.getByLabelText('Famiglia'), {
+  await dialog.findByRole('option', { name: 'Sportive' })
+  fireEvent.change(dialog.getByLabelText('Famiglia'), {
     target: { value: '1' },
   })
-  fireEvent.change(screen.getByLabelText('In italiano'), {
+  fireEvent.change(dialog.getByLabelText('In italiano'), {
     target: { value: 'La berlinetta degli anni Ottanta.' },
   })
-  fireEvent.click(screen.getByRole('button', { name: 'Crea modello' }))
+  fireEvent.click(dialog.getByRole('button', { name: 'Crea modello' }))
 
   expect(
-    await screen.findByRole('heading', { name: 'Testarossa' }),
+    await screen.findByRole('heading', { name: 'Testarossa', level: 1 }),
   ).toBeInTheDocument()
   expect(screen.getByText('Modello creato: è una bozza.')).toHaveAttribute(
     'role',
@@ -32,35 +41,80 @@ test('crea un modello, e porta alla sua pagina in bozza', async () => {
   )
 })
 
-test('modifica un modello esistente', async () => {
+test('il modello si legge, e i dati principali si modificano nella loro finestra', async () => {
+  let sent: Record<string, unknown> | null = null
+  server.use(
+    http.patch(
+      'http://localhost:8000/api/admin/models/:id',
+      async ({ request }) => {
+        sent = (await request.json()) as Record<string, unknown>
+        return HttpResponse.json({ data: { ...adminModels[0], ...sent } })
+      },
+    ),
+  )
   signIn()
   renderRoute('/admin/modelli/2')
 
-  const name = await screen.findByLabelText('Nome')
+  const card = within(
+    await screen.findByRole('region', { name: 'Dati principali' }),
+  )
+  expect(await card.findByText('Sportive')).toBeInTheDocument()
+
+  fireEvent.click(
+    card.getByRole('button', { name: 'Modifica dati principali' }),
+  )
+  const dialog = within(screen.getByRole('dialog', { name: 'Dati principali' }))
+  const name = dialog.getByLabelText('Nome')
   expect(name).toHaveValue('SF90 Stradale')
 
   fireEvent.change(name, { target: { value: 'SF90 Stradale Assetto Fiorano' } })
-  fireEvent.click(screen.getByRole('button', { name: 'Salva modifiche' }))
+  fireEvent.click(
+    dialog.getByRole('button', { name: 'Salva i dati principali' }),
+  )
 
-  expect(await screen.findByText('Modifiche salvate.')).toBeInTheDocument()
+  // Salvato, la finestra si chiude; il resto del modello è partito com'era
+  await waitFor(() =>
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument(),
+  )
+  expect(sent).toMatchObject({
+    name: 'SF90 Stradale Assetto Fiorano',
+    category_id: 1,
+    description: { it: 'Ibrida plug-in.' },
+  })
+})
+
+test('l’indice del modello dice cosa è completo', async () => {
+  signIn()
+  renderRoute('/admin/modelli/2')
+
+  const index = within(
+    await screen.findByRole('navigation', { name: 'Sezioni' }),
+  )
+  expect(
+    index.getByRole('link', { name: 'Descrizione, completa' }),
+  ).toHaveAttribute('href', '#modello-descrizione')
+  expect(
+    index.getByRole('link', { name: 'Versioni, completa' }),
+  ).toBeInTheDocument()
 })
 
 test("mostra l'errore del backend sotto il campo giusto", async () => {
   signIn()
-  renderRoute('/admin/modelli/nuovo')
+  renderRoute('/admin/modelli')
+  const dialog = await openNewModel()
 
-  fireEvent.change(await screen.findByLabelText('Nome'), {
+  fireEvent.change(dialog.getByLabelText('Nome'), {
     target: { value: 'SF90 Stradale' },
   })
-  fireEvent.change(screen.getByLabelText('Slug'), {
+  fireEvent.change(dialog.getByLabelText('Slug'), {
     target: { value: 'sf90-stradale' },
   })
-  fireEvent.click(screen.getByRole('button', { name: 'Crea modello' }))
+  fireEvent.click(dialog.getByRole('button', { name: 'Crea modello' }))
 
   expect(
-    await screen.findByText('Questo slug è già in uso.'),
+    await dialog.findByText('Questo slug è già in uso.'),
   ).toBeInTheDocument()
-  expect(screen.getByLabelText('Slug')).toHaveAttribute('aria-invalid', 'true')
+  expect(dialog.getByLabelText('Slug')).toHaveAttribute('aria-invalid', 'true')
 })
 
 test('un modello che non esiste è un "non trovato"', async () => {

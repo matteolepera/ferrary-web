@@ -1,23 +1,19 @@
 import { useParams } from 'react-router'
 import { isNotFound } from '@/api/errors'
-import { ModelForm } from '@/components/admin/models/ModelForm'
+import { ModelPage } from '@/components/admin/models/ModelPage'
 import { useAdminModel } from '@/hooks/useAdminModel'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 
 /**
- * La pagina del form: /admin/modelli/nuovo per crearne uno, /admin/modelli/2 per modificarlo.
+ * La pagina di un modello: /admin/modelli/2.
+ * I modelli nuovi nascono da una finestra, nell'elenco dei modelli o nel pannello.
  */
 export function ModelFormPage() {
   const { id } = useParams()
-  const isNew = id === undefined
   const modelId = Number(id)
   const validId = Number.isInteger(modelId) && modelId > 0 ? modelId : undefined
 
-  const { data: model, error } = useAdminModel(isNew ? undefined : validId)
-
-  if (isNew) {
-    return <ModelForm />
-  }
+  const { data: model, error } = useAdminModel(validId)
 
   // Un id che non è un numero, o un modello che non esiste
   if (validId === undefined || (!model && isNotFound(error))) {
@@ -30,13 +26,15 @@ export function ModelFormPage() {
         Impossibile caricare il modello: il server non risponde.
       </p>
     ) : (
-      <div aria-busy="true" className="grid grid-cols-6 gap-4 lg:grid-cols-12">
-        <div className="bg-ombra col-span-6 h-20 animate-pulse rounded-3xl lg:col-span-12" />
-        <div className="bg-ombra col-span-6 h-72 animate-pulse rounded-3xl lg:col-span-8" />
-        <div className="bg-ombra col-span-6 h-72 animate-pulse rounded-3xl lg:col-span-4" />
+      <div
+        aria-busy="true"
+        className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_20rem]"
+      >
+        <div className="bg-ombra h-96 animate-pulse rounded-3xl" />
+        <div className="bg-ombra h-64 animate-pulse rounded-3xl" />
       </div>
     )
   }
 
-  return <ModelForm key={model.id} model={model} />
+  return <ModelPage key={model.id} model={model} />
 }

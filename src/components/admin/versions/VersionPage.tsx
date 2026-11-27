@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import { GalleryCard } from '@/components/admin/images/GalleryCard'
 import { RacingCard } from '@/components/admin/racing/RacingCard'
 import {
@@ -27,6 +27,7 @@ import { useTrashActions } from '@/hooks/useTrash'
 import { useVersionImages } from '@/hooks/useVersionImages'
 import { useVersionRacing } from '@/hooks/useVersionRacing'
 import type { AdminVersion } from '@/types/admin'
+import { BackLink } from '@/components/admin/ui/BackLink'
 
 const dateFormat = new Intl.DateTimeFormat('it', {
   day: 'numeric',
@@ -133,13 +134,7 @@ export function VersionPage({ modelId, modelName, version }: VersionPageProps) {
 
       <header className="flex flex-wrap items-end justify-between gap-5">
         <div>
-          <Link
-            to={`/admin/modelli/${modelId}`}
-            className="text-xs font-semibold text-neutral-400 transition-colors hover:text-white"
-          >
-            <span aria-hidden="true">← </span>
-            {modelName}
-          </Link>
+          <BackLink to={`/admin/modelli/${modelId}`} label={modelName} />
           <h1 className="font-display mt-3 text-[2.75rem] leading-none font-extrabold tracking-[-0.035em]">
             {version.name}
           </h1>

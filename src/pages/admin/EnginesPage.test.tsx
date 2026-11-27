@@ -21,23 +21,55 @@ test('elenca i motori in poche parole, e li cerca per codice o nome', async () =
   expect(screen.getByRole('row', { name: /F154/ })).toBeInTheDocument()
 })
 
-test("l'angolo della V si compila solo per i motori a V", async () => {
+test('crea un motore dalla sua finestra, e porta alla sua pagina', async () => {
   signIn()
-  renderRoute('/admin/motori/nuovo')
+  renderRoute('/admin/motori')
 
-  const angle = await screen.findByLabelText('Angolo della V (°)')
-  expect(angle).toBeDisabled()
+  fireEvent.click(await screen.findByRole('button', { name: 'Nuovo motore' }))
+  const dialog = within(screen.getByRole('dialog', { name: 'Nuovo motore' }))
 
-  fireEvent.change(screen.getByLabelText('Architettura'), {
+  fireEvent.change(dialog.getByLabelText('Codice'), {
+    target: { value: 'F163' },
+  })
+  fireEvent.change(dialog.getByLabelText('Architettura'), {
     target: { value: 'V' },
   })
-  fireEvent.change(screen.getByLabelText('Cilindri'), {
-    target: { value: '12' },
+  fireEvent.change(dialog.getByLabelText('Angolo della V (°)'), {
+    target: { value: '120' },
   })
-  fireEvent.change(angle, { target: { value: '65' } })
+  fireEvent.change(dialog.getByLabelText('Cilindri'), {
+    target: { value: '6' },
+  })
+  fireEvent.change(dialog.getByLabelText('Cilindrata (cm³)'), {
+    target: { value: '2992' },
+  })
+  // Il motore in breve segue i campi
+  expect(dialog.getByText('V6 a 120°, 2992 cm³')).toBeInTheDocument()
+  fireEvent.change(dialog.getByLabelText('Aspirazione'), {
+    target: { value: 'turbo' },
+  })
+  fireEvent.click(dialog.getByRole('button', { name: 'Crea motore' }))
 
-  expect(angle).toBeEnabled()
-  expect(screen.getByText('V12 a 65°')).toBeInTheDocument()
+  expect(
+    await screen.findByRole('heading', { name: 'F163', level: 1 }),
+  ).toBeInTheDocument()
+  expect(screen.getByText('Motore creato.')).toHaveAttribute('role', 'status')
+})
+
+test('la pagina del motore si legge, e «Modifica» apre la sezione', async () => {
+  signIn()
+  renderRoute('/admin/motori/1')
+
+  const data = within(
+    await screen.findByRole('region', { name: 'Dati tecnici' }),
+  )
+  expect(data.getByText('90°')).toBeInTheDocument()
+  expect(data.getByText('3990 cm³')).toBeInTheDocument()
+
+  fireEvent.click(screen.getByRole('button', { name: 'Modifica descrizione' }))
+
+  const dialog = within(screen.getByRole('dialog', { name: 'Descrizione' }))
+  expect(dialog.getByLabelText('In italiano')).toHaveValue('Il V8 biturbo.')
 })
 
 test('se il motore è usato, il backend spiega perché non si elimina', async () => {

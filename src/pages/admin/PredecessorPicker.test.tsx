@@ -1,7 +1,14 @@
-import { fireEvent, screen } from '@testing-library/react'
+import { fireEvent, screen, waitFor } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
 import { server, signIn } from '@/test/server'
 import { renderRoute } from '@/test/utils'
+
+/** Apre la finestra dei dati principali, dove si sceglie il predecessore */
+async function openMainData() {
+  fireEvent.click(
+    await screen.findByRole('button', { name: 'Modifica dati principali' }),
+  )
+}
 
 test('cerca un modello, lo sceglie con la tastiera e lo salva come predecessore', async () => {
   let sent: unknown = null
@@ -16,6 +23,7 @@ test('cerca un modello, lo sceglie con la tastiera e lo salva come predecessore'
   )
   signIn()
   renderRoute('/admin/modelli/9')
+  await openMainData()
 
   const search = await screen.findByRole('combobox', { name: 'Predecessore' })
   fireEvent.focus(search)
@@ -37,14 +45,17 @@ test('cerca un modello, lo sceglie con la tastiera e lo salva come predecessore'
     }),
   ).toBeInTheDocument()
 
-  fireEvent.click(screen.getByRole('button', { name: 'Salva modifiche' }))
-  await screen.findByText('Modifiche salvate.')
+  fireEvent.click(
+    screen.getByRole('button', { name: 'Salva i dati principali' }),
+  )
+  await waitFor(() => expect(sent).toMatchObject({ predecessor_id: 2 }))
   expect(sent).toMatchObject({ predecessor_id: 2 })
 })
 
 test('un modello non può precedere se stesso', async () => {
   signIn()
   renderRoute('/admin/modelli/2')
+  await openMainData()
 
   const search = await screen.findByRole('combobox', { name: 'Predecessore' })
   fireEvent.focus(search)
@@ -63,6 +74,7 @@ test('un modello non può precedere se stesso', async () => {
 test('togliendo il predecessore il focus torna nella ricerca', async () => {
   signIn()
   renderRoute('/admin/modelli/9')
+  await openMainData()
 
   const search = await screen.findByRole('combobox', { name: 'Predecessore' })
   fireEvent.focus(search)

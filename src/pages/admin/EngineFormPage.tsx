@@ -1,25 +1,22 @@
 import { useParams } from 'react-router'
 import { isNotFound } from '@/api/errors'
-import { EngineForm } from '@/components/admin/engines/EngineForm'
+import { EnginePage } from '@/components/admin/engines/EnginePage'
 import { useAdminEngine } from '@/hooks/useAdminEngines'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 
 /**
- * La pagina del form del motore: /admin/motori/nuovo, oppure /admin/motori/3.
+ * La pagina di un motore: /admin/motori/3.
+ * I motori nuovi nascono da una finestra, nell'elenco dei motori.
  */
 export function EngineFormPage() {
   const { id } = useParams()
-  const isNew = id === undefined
   const engineId = Number(id)
   const validId =
     Number.isInteger(engineId) && engineId > 0 ? engineId : undefined
 
-  const { data: engine, error } = useAdminEngine(isNew ? undefined : validId)
+  const { data: engine, error } = useAdminEngine(validId)
 
-  if (isNew) {
-    return <EngineForm />
-  }
-
+  // Un id che non è un numero, o un motore che non esiste
   if (validId === undefined || (!engine && isNotFound(error))) {
     return <NotFoundPage backTo="/admin/motori" />
   }
@@ -32,10 +29,13 @@ export function EngineFormPage() {
     ) : (
       <div
         aria-busy="true"
-        className="bg-ombra h-96 animate-pulse rounded-3xl"
-      />
+        className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_20rem]"
+      >
+        <div className="bg-ombra h-96 animate-pulse rounded-3xl" />
+        <div className="bg-ombra h-64 animate-pulse rounded-3xl" />
+      </div>
     )
   }
 
-  return <EngineForm key={engine.id} engine={engine} />
+  return <EnginePage key={engine.id} engine={engine} />
 }

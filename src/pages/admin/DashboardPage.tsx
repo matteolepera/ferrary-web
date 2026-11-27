@@ -2,7 +2,6 @@ import { Link } from 'react-router'
 import { AdminButton } from '@/components/admin/ui/AdminButton'
 import { AdminCard } from '@/components/admin/ui/AdminCard'
 import { adminButtonClass } from '@/components/admin/ui/adminButtonClass'
-import { Icon } from '@/components/admin/ui/Icon'
 import { useCurrentUser } from '@/hooks/useAuth'
 import { useDashboard } from '@/hooks/useDashboard'
 import { formatNumber } from '@/lib/format'
@@ -11,6 +10,7 @@ import { ScheduleCard } from '@/components/admin/dashboard/ScheduleCard'
 import { ToCompleteCard } from '@/components/admin/dashboard/ToCompleteCard'
 import { ActivityCard } from '@/components/admin/dashboard/ActivityCard'
 import { StaffCard } from '@/components/admin/dashboard/StaffCard'
+import { NewModelButton } from '@/components/admin/models/NewModelButton'
 
 /** La frase del banner: cosa aspetta lo staff, al singolare o al plurale */
 function summary({ drafts, scheduled }: DashboardCounts) {
@@ -63,10 +63,7 @@ export function DashboardPage() {
             Pannello
           </h1>
         </div>
-        <Link to="/admin/modelli/nuovo" className={adminButtonClass('primary')}>
-          <Icon path="M12 5v14M5 12h14" size={16} />
-          Nuovo modello
-        </Link>
+        <NewModelButton />
       </header>
 
       {isError ? (
