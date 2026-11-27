@@ -1,6 +1,7 @@
 import { useParams } from 'react-router'
 import { isNotFound } from '@/api/errors'
 import { ModelForm } from '@/components/admin/models/ModelForm'
+import { ModelPage } from '@/components/admin/models/ModelPage'
 import { useAdminModel } from '@/hooks/useAdminModel'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 
@@ -37,6 +38,6 @@ export function ModelFormPage() {
       </div>
     )
   }
-
-  return <ModelForm key={model.id} model={model} />
+  // Un modello che esiste si legge, sezione per sezione
+  return <ModelPage key={model.id} model={model} />
 }

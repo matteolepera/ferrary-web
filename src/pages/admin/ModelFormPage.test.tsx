@@ -1,5 +1,7 @@
-import { fireEvent, screen } from '@testing-library/react'
-import { signIn } from '@/test/server'
+import { fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { http, HttpResponse } from 'msw'
+import { adminModels } from '@/test/fixtures'
+import { server, signIn } from '@/test/server'
 import { renderRoute } from '@/test/utils'
 
 test('crea un modello, e porta alla sua pagina in bozza', async () => {
@@ -32,17 +34,61 @@ test('crea un modello, e porta alla sua pagina in bozza', async () => {
   )
 })
 
-test('modifica un modello esistente', async () => {
+test('il modello si legge, e i dati principali si modificano nella loro finestra', async () => {
+  let sent: Record<string, unknown> | null = null
+  server.use(
+    http.patch(
+      'http://localhost:8000/api/admin/models/:id',
+      async ({ request }) => {
+        sent = (await request.json()) as Record<string, unknown>
+        return HttpResponse.json({ data: { ...adminModels[0], ...sent } })
+      },
+    ),
+  )
   signIn()
   renderRoute('/admin/modelli/2')
 
-  const name = await screen.findByLabelText('Nome')
+  const card = within(
+    await screen.findByRole('region', { name: 'Dati principali' }),
+  )
+  expect(await card.findByText('Sportive')).toBeInTheDocument()
+
+  fireEvent.click(
+    card.getByRole('button', { name: 'Modifica dati principali' }),
+  )
+  const dialog = within(screen.getByRole('dialog', { name: 'Dati principali' }))
+  const name = dialog.getByLabelText('Nome')
   expect(name).toHaveValue('SF90 Stradale')
 
   fireEvent.change(name, { target: { value: 'SF90 Stradale Assetto Fiorano' } })
-  fireEvent.click(screen.getByRole('button', { name: 'Salva modifiche' }))
+  fireEvent.click(
+    dialog.getByRole('button', { name: 'Salva i dati principali' }),
+  )
 
-  expect(await screen.findByText('Modifiche salvate.')).toBeInTheDocument()
+  // Salvato, la finestra si chiude; il resto del modello è partito com'era
+  await waitFor(() =>
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument(),
+  )
+  expect(sent).toMatchObject({
+    name: 'SF90 Stradale Assetto Fiorano',
+    category_id: 1,
+    description: { it: 'Ibrida plug-in.' },
+  })
+})
+
+test('l’indice del modello dice cosa è completo', async () => {
+  signIn()
+  renderRoute('/admin/modelli/2')
+
+  const index = within(
+    await screen.findByRole('navigation', { name: 'Sezioni' }),
+  )
+  expect(
+    index.getByRole('link', { name: 'Descrizione, completa' }),
+  ).toHaveAttribute('href', '#modello-descrizione')
+  expect(
+    index.getByRole('link', { name: 'Versioni, completa' }),
+  ).toBeInTheDocument()
 })
 
 test("mostra l'errore del backend sotto il campo giusto", async () => {
