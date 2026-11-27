@@ -3,6 +3,7 @@ import { validationErrors } from '@/api/errors'
 import { designerTypes } from '@/components/admin/designers/options'
 import { AdminField } from '@/components/admin/ui/AdminField'
 import { AdminModal } from '@/components/admin/ui/AdminModal'
+import { FormAlert } from '@/components/admin/ui/FormAlert'
 import { AdminSelect } from '@/components/admin/ui/AdminSelect'
 import { useDesignerActions } from '@/hooks/useAdminDesigners'
 import { countryName } from '@/lib/format'
@@ -68,9 +69,13 @@ export function DesignerModal({ designer, onClose }: DesignerModalProps) {
       pending={save.isPending}
     >
       <div className="flex flex-col gap-5">
+        {save.isError && !errors && (
+          <FormAlert>Impossibile salvare in questo momento. Riprova.</FormAlert>
+        )}
         <AdminField
           label="Nome"
           required
+          maxLength={150}
           value={values.name}
           placeholder="Pininfarina"
           onChange={(event) => update('name', event.target.value)}
@@ -79,7 +84,7 @@ export function DesignerModal({ designer, onClose }: DesignerModalProps) {
         <div className="grid gap-5 sm:grid-cols-2">
           <AdminSelect
             label="Tipo"
-            optional
+            required
             value={values.type}
             onChange={(event) => update('type', event.target.value)}
             error={errors?.type?.[0]}
@@ -110,18 +115,13 @@ export function DesignerModal({ designer, onClose }: DesignerModalProps) {
         <AdminField
           label="Slug"
           optional
+          maxLength={170}
           value={values.slug}
           placeholder={slugify(values.name)}
           onChange={(event) => update('slug', event.target.value)}
-          hint="Vuoto: lo generiamo dal nome."
+          hint="Vuoto: si crea dal nome."
           error={errors?.slug?.[0]}
         />
-
-        {save.isError && !errors && (
-          <p role="alert" className="text-errore text-[0.8125rem]">
-            Impossibile salvare in questo momento. Riprova.
-          </p>
-        )}
       </div>
     </AdminModal>
   )
