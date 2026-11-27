@@ -1,6 +1,10 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
 import { AdminCard } from '@/components/admin/ui/AdminCard'
+import {
+  FilterPills,
+  type FilterOption,
+} from '@/components/admin/ui/FilterPills'
 import { Icon } from '@/components/admin/ui/Icon'
 import { timeAgo } from '@/lib/timeAgo'
 import type { CompletionIssue, ToCompleteItem } from '@/types/dashboard'
@@ -11,10 +15,9 @@ const issueLabels: Record<CompletionIssue, string> = {
   no_specs: 'Dati incompleti',
 }
 
-type Filter = 'all' | CompletionIssue
-
-const filters: { value: Filter; label: string }[] = [
-  { value: 'all', label: 'Tutto' },
+/** Le pillole dei filtri: undefined vuol dire "tutto" */
+const filters: FilterOption<CompletionIssue>[] = [
+  { value: undefined, label: 'Tutto' },
   { value: 'draft', label: 'Bozze' },
   { value: 'no_photos', label: 'Senza foto' },
   { value: 'no_specs', label: 'Dati incompleti' },
@@ -37,14 +40,18 @@ export function ToCompleteCard({
   delay,
   className = '',
 }: ToCompleteCardProps) {
-  const [filter, setFilter] = useState<Filter>('all')
+  const [filter, setFilter] = useState<CompletionIssue>()
 
-  const countFor = (value: Filter) =>
-    value === 'all'
-      ? items.length
-      : items.filter((item) => item.issues.includes(value)).length
+  // Ogni pillola dice quante schede dà: chi guarda sa dove conviene cliccare
+  const options = filters.map(({ value, label }) => ({
+    value,
+    label,
+    count: value
+      ? items.filter((item) => item.issues.includes(value)).length
+      : items.length,
+  }))
   const visible = items
-    .filter((item) => filter === 'all' || item.issues.includes(filter))
+    .filter((item) => !filter || item.issues.includes(filter))
     .slice(0, VISIBLE)
 
   return (
@@ -66,35 +73,12 @@ export function ToCompleteCard({
           </p>
         </div>
 
-        <div
-          role="group"
-          aria-label="Filtra per mancanza"
-          className="flex flex-wrap gap-1.5"
-        >
-          {filters.map(({ value, label }) => {
-            const active = value === filter
-
-            return (
-              <button
-                key={value}
-                type="button"
-                aria-pressed={active}
-                onClick={() => setFilter(value)}
-                className={[
-                  'flex items-center gap-1.5 rounded-full border px-3.5 py-2 text-xs font-semibold transition-colors',
-                  active
-                    ? 'text-notte border-white bg-white'
-                    : 'border-linea text-neutral-300 hover:border-neutral-600 hover:text-white',
-                ].join(' ')}
-              >
-                {label}
-                <span className="tabular-nums opacity-60">
-                  {countFor(value)}
-                </span>
-              </button>
-            )
-          })}
-        </div>
+        <FilterPills
+          label="Filtra per mancanza"
+          options={options}
+          value={filter}
+          onChange={setFilter}
+        />
       </div>
 
       {visible.length > 0 ? (
