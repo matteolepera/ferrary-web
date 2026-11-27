@@ -1,5 +1,7 @@
 import { useId, useState, type KeyboardEvent } from 'react'
+import { FieldLabel } from '@/components/admin/ui/FieldLabel'
 import { FieldMessages } from '@/components/admin/ui/FieldMessages'
+import { fieldBox } from '@/components/admin/ui/fieldBox'
 import { Icon } from '@/components/admin/ui/Icon'
 import { useFieldA11y } from '@/components/admin/ui/useFieldA11y'
 import { useAdminModels } from '@/hooks/useAdminModels'
@@ -82,19 +84,14 @@ export function PredecessorPicker({
 
   return (
     <div>
-      <label
-        htmlFor={fieldId}
-        className="mb-2 block text-[0.6875rem] font-semibold tracking-[0.18em] text-neutral-400 uppercase"
-      >
-        Predecessore
-      </label>
+      {/* La stessa etichetta degli altri campi: il predecessore non è obbligatorio */}
+      <FieldLabel htmlFor={fieldId} label="Predecessore" optional />
 
       {value ? (
-        <div className="bg-notte flex h-13 items-center justify-between gap-3 rounded-2xl border border-white/10 px-4">
-          <span
-            id={fieldId}
-            className="truncate text-[0.9375rem] font-semibold"
-          >
+        <div
+          className={`flex h-12 items-center justify-between gap-3 pr-2 pl-3.5 ${fieldBox(error)}`}
+        >
+          <span id={fieldId} className="truncate">
             {value.name}
           </span>
           <button
@@ -112,10 +109,7 @@ export function PredecessorPicker({
       ) : (
         <div className="relative">
           <div
-            className={[
-              'bg-notte flex h-13 items-center gap-2.5 rounded-2xl border px-4 transition-colors focus-within:border-neutral-300',
-              error ? 'border-errore' : 'border-white/10',
-            ].join(' ')}
+            className={`flex h-12 items-center gap-2.5 px-3.5 ${fieldBox(error)}`}
           >
             <span aria-hidden="true" className="flex text-neutral-500">
               <Icon
@@ -148,7 +142,7 @@ export function PredecessorPicker({
               onFocus={() => setOpen(true)}
               onBlur={() => setOpen(false)}
               onKeyDown={handleKeyDown}
-              className="h-full min-w-0 flex-1 bg-transparent text-[0.9375rem] text-neutral-100 outline-none placeholder:text-neutral-600"
+              className="h-full min-w-0 flex-1 bg-transparent outline-none placeholder:text-neutral-600"
             />
           </div>
 
