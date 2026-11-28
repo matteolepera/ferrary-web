@@ -355,6 +355,8 @@ export const dashboard: Dashboard = {
       updated_at: '2026-10-28T10:00:00+00:00',
     },
   ],
+  // Nel database ce ne sono più di quelle mandate: il pannello mostra solo le più recenti
+  to_complete_counts: { all: 9, draft: 1, no_photos: 1, no_specs: 8 },
   activity: [
     {
       id: 41,

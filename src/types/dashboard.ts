@@ -29,6 +29,9 @@ export type ToCompleteItem = {
   updated_at: string
 }
 
+/** Quante versioni hanno ogni mancanza, contate nel database: i numeri dei filtri del pannello */
+export type ToCompleteCounts = Record<'all' | CompletionIssue, number>
+
 export type ActivityItem = {
   id: number
   log: 'catalogo' | 'staff'
@@ -43,7 +46,9 @@ export type ActivityItem = {
 export type Dashboard = {
   counts: DashboardCounts
   scheduled: ScheduledItem[]
+  /** Le più recenti di ogni filtro, insieme e senza doppioni */
   to_complete: ToCompleteItem[]
+  to_complete_counts: ToCompleteCounts
   activity: ActivityItem[]
 }
 

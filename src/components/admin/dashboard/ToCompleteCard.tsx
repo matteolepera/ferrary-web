@@ -7,7 +7,11 @@ import {
 } from '@/components/admin/ui/FilterPills'
 import { Icon } from '@/components/admin/ui/Icon'
 import { timeAgo } from '@/lib/timeAgo'
-import type { CompletionIssue, ToCompleteItem } from '@/types/dashboard'
+import type {
+  CompletionIssue,
+  ToCompleteCounts,
+  ToCompleteItem,
+} from '@/types/dashboard'
 
 const issueLabels: Record<CompletionIssue, string> = {
   draft: 'Bozza',
@@ -23,11 +27,13 @@ const filters: FilterOption<CompletionIssue>[] = [
   { value: 'no_specs', label: 'Dati incompleti' },
 ]
 
-/** Quante card mostrare: il backend ne manda di più, perché ne restino anche filtrando */
+/** Quante card mostrare: il backend manda le 6 più recenti di ogni filtro */
 const VISIBLE = 6
 
 type ToCompleteCardProps = {
   items: ToCompleteItem[]
+  /** I numeri veri, contati nel database: le card sono solo le più recenti */
+  counts: ToCompleteCounts
   delay?: number
   className?: string
 }
@@ -37,22 +43,22 @@ type ToCompleteCardProps = {
  */
 export function ToCompleteCard({
   items,
+  counts,
   delay,
   className = '',
 }: ToCompleteCardProps) {
   const [filter, setFilter] = useState<CompletionIssue>()
 
-  // Ogni pillola dice quante schede dà: chi guarda sa dove conviene cliccare
+  // Ogni pillola dice quante schede ha davvero quella mancanza, non solo quelle mostrate
   const options = filters.map(({ value, label }) => ({
     value,
     label,
-    count: value
-      ? items.filter((item) => item.issues.includes(value)).length
-      : items.length,
+    count: counts[value ?? 'all'],
   }))
   const visible = items
     .filter((item) => !filter || item.issues.includes(filter))
     .slice(0, VISIBLE)
+  const total = counts[filter ?? 'all']
 
   return (
     <AdminCard
@@ -150,9 +156,16 @@ export function ToCompleteCard({
         </ul>
       ) : (
         <p className="border-linea mt-5 rounded-[1.125rem] border border-dashed px-5 py-8 text-center text-sm text-neutral-400">
-          {items.length === 0
+          {counts.all === 0
             ? 'Tutto completo: ogni versione ha foto e scheda tecnica.'
             : 'Nessuna scheda con questa mancanza.'}
+        </p>
+      )}
+
+      {/* Le card sono solo le più recenti: se ce ne sono altre, lo diciamo invece di lasciarlo intuire */}
+      {visible.length > 0 && total > visible.length && (
+        <p className="mt-4 text-[0.8125rem] text-neutral-400">
+          Le {visible.length} modificate più di recente, su {total}.
         </p>
       )}
     </AdminCard>
