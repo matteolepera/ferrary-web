@@ -48,7 +48,7 @@ test('i numeri sono quelli del database, e dice quante card mostra', () => {
 })
 
 test('festeggia quando non manca niente', () => {
-  renderCard([])
+  renderCard([], { all: 0, draft: 0, no_photos: 0, no_specs: 0 })
 
   expect(
     screen.getByText('Tutto completo: ogni versione ha foto e scheda tecnica.'),

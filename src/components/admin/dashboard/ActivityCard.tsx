@@ -45,7 +45,7 @@ export function ActivityCard({
     <AdminCard
       aria-labelledby="pannello-attivita"
       delay={delay}
-      className={`p-6 ${className}`}
+      className={`flex flex-col p-6 ${className}`}
     >
       <div className="flex items-center justify-between gap-3">
         <h2
@@ -74,7 +74,7 @@ export function ActivityCard({
       )}
 
       {visible.length > 0 ? (
-        <ul className="mt-2">
+        <ul className="barra-sottile mt-2 lg:h-0 lg:min-h-48 lg:grow lg:overflow-y-auto lg:pr-2">
           {visible.map((item) => (
             <li
               key={item.id}
