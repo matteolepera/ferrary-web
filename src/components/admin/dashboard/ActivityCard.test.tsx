@@ -1,9 +1,12 @@
 import { fireEvent, render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router'
 import { ActivityCard } from '@/components/admin/dashboard/ActivityCard'
 import { dashboard } from '@/test/fixtures'
 
 test('racconta ogni azione in una frase', () => {
-  render(<ActivityCard items={dashboard.activity} showTabs />)
+  render(<ActivityCard items={dashboard.activity} showTabs />, {
+    wrapper: MemoryRouter,
+  })
 
   const items = screen.getAllByRole('listitem')
   expect(items[0]).toHaveTextContent('Matteo ha programmato 812 GTS')
@@ -11,7 +14,9 @@ test('racconta ogni azione in una frase', () => {
 })
 
 test('le schede separano il catalogo dallo staff', () => {
-  render(<ActivityCard items={dashboard.activity} showTabs />)
+  render(<ActivityCard items={dashboard.activity} showTabs />, {
+    wrapper: MemoryRouter,
+  })
 
   fireEvent.click(screen.getByRole('button', { name: 'Staff' }))
 

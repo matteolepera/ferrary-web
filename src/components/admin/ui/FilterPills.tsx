@@ -2,6 +2,8 @@
 export type FilterOption<T extends string> = {
   value: T | undefined
   label: string
+  /** Quanti risultati dà la scelta, accanto all'etichetta: facoltativo */
+  count?: number
 }
 
 type FilterPillsProps<T extends string> = {
@@ -38,7 +40,7 @@ export function FilterPills<T extends string>({
             aria-pressed={active}
             onClick={() => onChange(option.value)}
             className={[
-              'h-full rounded-full px-4 text-sm font-semibold whitespace-nowrap transition-colors',
+              'flex h-full items-center gap-1.5 rounded-full px-4 text-sm font-semibold whitespace-nowrap transition-colors',
               'focus-visible:outline-rosso-acceso focus-visible:outline-2 focus-visible:outline-offset-2',
               active
                 ? 'text-notte bg-white'
@@ -46,6 +48,9 @@ export function FilterPills<T extends string>({
             ].join(' ')}
           >
             {option.label}
+            {option.count !== undefined && (
+              <span className="tabular-nums opacity-60">{option.count}</span>
+            )}
           </button>
         )
       })}

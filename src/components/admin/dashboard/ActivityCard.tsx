@@ -1,21 +1,25 @@
 import { useState } from 'react'
 import { AdminCard } from '@/components/admin/ui/AdminCard'
 import { Avatar } from '@/components/admin/ui/Avatar'
+import {
+  FilterPills,
+  type FilterOption,
+} from '@/components/admin/ui/FilterPills'
+import { ForwardLink } from '@/components/admin/ui/ForwardLink'
 import { timeAgo } from '@/lib/timeAgo'
 import type { ActivityItem } from '@/types/dashboard'
 import { phrase, subjectLabel } from '@/components/admin/activity/phrases'
 
-type Tab = 'all' | ActivityItem['log']
-
-const tabs: { value: Tab; label: string }[] = [
-  { value: 'all', label: 'Tutto' },
+/** Le pillole dei registri: undefined vuol dire "tutto" */
+const logs: FilterOption<ActivityItem['log']>[] = [
+  { value: undefined, label: 'Tutto' },
   { value: 'catalogo', label: 'Catalogo' },
   { value: 'staff', label: 'Staff' },
 ]
 
 type ActivityCardProps = {
   items: ActivityItem[]
-  /** Le schede servono solo a chi riceve anche il log dello staff */
+  /** Le pillole e il link al registro servono solo a chi riceve anche il log dello staff */
   showTabs: boolean
   /** Il nome di chi guarda: il suo avatar è rosso */
   currentUserName?: string
@@ -33,54 +37,44 @@ export function ActivityCard({
   delay,
   className = '',
 }: ActivityCardProps) {
-  const [tab, setTab] = useState<Tab>('all')
+  const [log, setLog] = useState<ActivityItem['log']>()
 
-  const visible = items.filter((item) => tab === 'all' || item.log === tab)
+  const visible = items.filter((item) => !log || item.log === log)
 
   return (
     <AdminCard
       aria-labelledby="pannello-attivita"
       delay={delay}
-      className={`p-6 ${className}`}
+      className={`flex flex-col p-6 ${className}`}
     >
-      <h2
-        id="pannello-attivita"
-        className="font-display text-xl font-extrabold tracking-[-0.03em]"
-      >
-        Attività recente
-      </h2>
+      <div className="flex items-center justify-between gap-3">
+        <h2
+          id="pannello-attivita"
+          className="font-display text-xl font-extrabold tracking-[-0.03em]"
+        >
+          Attività recente
+        </h2>
+        {/* Il registro completo è di Admin e Master: gli stessi che vedono le pillole */}
+        {showTabs && (
+          <ForwardLink to="/admin/registro" label="Registro attività completo">
+            Registro
+          </ForwardLink>
+        )}
+      </div>
 
       {showTabs && (
-        <div
-          role="group"
-          aria-label="Filtra per registro"
-          className="border-linea mt-3.5 flex gap-4.5 border-b"
-        >
-          {tabs.map(({ value, label }) => {
-            const active = value === tab
-
-            return (
-              <button
-                key={value}
-                type="button"
-                aria-pressed={active}
-                onClick={() => setTab(value)}
-                className={[
-                  '-mb-px border-b-2 pb-2.5 text-xs font-semibold transition-colors',
-                  active
-                    ? 'border-rosso text-white'
-                    : 'border-transparent text-neutral-400 hover:text-white',
-                ].join(' ')}
-              >
-                {label}
-              </button>
-            )
-          })}
+        <div className="mt-4">
+          <FilterPills
+            label="Filtra per registro"
+            options={logs}
+            value={log}
+            onChange={setLog}
+          />
         </div>
       )}
 
       {visible.length > 0 ? (
-        <ul className="mt-1">
+        <ul className="barra-sottile mt-2 lg:h-0 lg:min-h-48 lg:grow lg:overflow-y-auto lg:pr-2">
           {visible.map((item) => (
             <li
               key={item.id}

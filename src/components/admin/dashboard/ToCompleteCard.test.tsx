@@ -3,10 +3,13 @@ import { MemoryRouter } from 'react-router'
 import { ToCompleteCard } from '@/components/admin/dashboard/ToCompleteCard'
 import { dashboard } from '@/test/fixtures'
 
-function renderCard(items = dashboard.to_complete) {
+function renderCard(
+  items = dashboard.to_complete,
+  counts = dashboard.to_complete_counts,
+) {
   render(
     <MemoryRouter>
-      <ToCompleteCard items={items} />
+      <ToCompleteCard items={items} counts={counts} />
     </MemoryRouter>,
   )
 }
@@ -33,8 +36,19 @@ test('filtra per mancanza, e lo dice quando non resta niente', () => {
   expect(screen.queryByText('SF90 Spider')).not.toBeInTheDocument()
 })
 
+test('i numeri sono quelli del database, e dice quante card mostra', () => {
+  renderCard()
+
+  expect(
+    screen.getByRole('button', { name: /^Dati incompleti/ }),
+  ).toHaveTextContent('8')
+  expect(
+    screen.getByText('Le 2 modificate più di recente, su 9.'),
+  ).toBeInTheDocument()
+})
+
 test('festeggia quando non manca niente', () => {
-  renderCard([])
+  renderCard([], { all: 0, draft: 0, no_photos: 0, no_specs: 0 })
 
   expect(
     screen.getByText('Tutto completo: ogni versione ha foto e scheda tecnica.'),

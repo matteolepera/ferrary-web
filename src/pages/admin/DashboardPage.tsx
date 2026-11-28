@@ -176,6 +176,7 @@ export function DashboardPage() {
 
               <ToCompleteCard
                 items={data.to_complete}
+                counts={data.to_complete_counts}
                 delay={320}
                 className="col-span-6 lg:col-span-8"
               />
