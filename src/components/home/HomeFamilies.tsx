@@ -5,6 +5,7 @@ import {
   GROUP_MARK,
   groupCategories,
 } from '@/components/archive/categoryGroups'
+import { RowTrack } from '@/components/home/RowTrack'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { YPanel } from '@/components/ui/YPanel'
 import { YSegments } from '@/components/ui/YSegments'
@@ -31,6 +32,9 @@ export function HomeFamilies() {
   const [view, setView] = useState({ start: 0, size: 1 })
   // Il gruppo in vista: cambia scorrendo, o scegliendolo nella barra
   const [activeGroup, setActiveGroup] = useState<string | null>(null)
+  // Vero mentre si trascina la traccia: l'aggancio alle carte si spegne,
+  // altrimenti la fila tornerebbe indietro a ogni passo
+  const [dragging, setDragging] = useState(false)
 
   // Il gruppo appena scelto nella barra: finché la fila scorre per arrivarci,
   // il calcolo del gruppo in vista resta fermo, così gli altri gruppi non si accendono di passaggio
@@ -104,6 +108,14 @@ export function HomeFamilies() {
       start.offsetLeft - parseFloat(getComputedStyle(element).paddingLeft)
   }
 
+  /** Porta la fila a mostrare la parte che comincia a "fraction" (da 0 a 1): la usa la traccia */
+  function seek(fraction: number, behavior: ScrollBehavior) {
+    const element = row.current
+    if (!element) return
+
+    element.scrollTo({ left: fraction * element.scrollWidth, behavior })
+  }
+
   return (
     <section
       id="famiglie"
@@ -174,7 +186,12 @@ export function HomeFamilies() {
           */}
           <div
             ref={row}
-            className={`senza-barra relative mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pt-1 pb-2 md:mt-12 ${rowInset}`}
+            className={[
+              'senza-barra relative mt-10 flex gap-4 overflow-x-auto scroll-smooth pt-1 pb-2 md:mt-12',
+              // Lasciata la traccia, l'aggancio torna e la fila si ferma sulla carta più vicina
+              dragging ? '' : 'snap-x snap-mandatory',
+              rowInset,
+            ].join(' ')}
           >
             {groups.map((group) => (
               <div
@@ -293,21 +310,15 @@ export function HomeFamilies() {
             ))}
           </div>
 
-          {/* La traccia: quale parte della fila si vede. Sparisce se si vede tutta */}
+          {/* La traccia: quale parte della fila si vede, e si trascina. Sparisce se si vede tutta */}
           {view.size < 1 && (
             <div className="mx-auto max-w-[1360px] px-5 md:px-10">
-              <div
-                aria-hidden="true"
-                className="relative mt-6 h-0.5 bg-white/8 md:mt-8"
-              >
-                <span
-                  className="bg-rosso-acceso absolute top-0 h-full shadow-[0_0_10px_rgba(255,59,48,0.6)] transition-[left] duration-150"
-                  style={{
-                    left: `${view.start * 100}%`,
-                    width: `${view.size * 100}%`,
-                  }}
-                />
-              </div>
+              <RowTrack
+                start={view.start}
+                size={view.size}
+                onSeek={seek}
+                onDragChange={setDragging}
+              />
             </div>
           )}
         </>
